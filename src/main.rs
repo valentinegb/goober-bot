@@ -65,7 +65,7 @@ rp_command!(
     "Your victim >:3",
     [
         "{a} booped {b}!!! <:floofOwO:1226944711768412280>",
-        "{b} just got booped by {a}?? <:floofLoad:1226944689546989710>",
+        "{b} just got booped by {a}?? <a:afloofLoad:1227015489792905360>",
         "Lmao I just saw {a} boop {b} <:floofLol:1226944692541980692>",
         "Dear {b},\n\nGet booped, nerd. <:floofSmug:1226944728734629970>\n\nSincerely, {a}",
         "{a} booped {b}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
