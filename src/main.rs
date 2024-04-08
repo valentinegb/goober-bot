@@ -3,6 +3,7 @@ use poise::serenity_prelude::{ClientBuilder, GatewayIntents, GuildId, Mentionabl
 use rand::{seq::SliceRandom, thread_rng};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
+use tracing::info;
 
 struct Data {} // User data, which is stored and accessible in all command invocations
 
@@ -53,6 +54,7 @@ async fn boop(
     }
 
     ctx.say(picked_message).await?;
+    info!("Responded to /boop with \"{picked_message}\"");
 
     Ok(())
 }
@@ -96,6 +98,7 @@ async fn gnaw(
     }
 
     ctx.say(picked_message).await?;
+    info!("Responded to /gnaw with \"{picked_message}\"");
 
     Ok(())
 }
@@ -120,6 +123,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                     GuildId::new(1225919005362098176),
                 )
                 .await?;
+                info!("Registered commands");
 
                 Ok(Data {})
             })
