@@ -10,98 +10,80 @@ struct Data {} // User data, which is stored and accessible in all command invoc
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-/// Boops a being :3c
-#[poise::command(slash_command, context_menu_command = "Boop")]
-async fn boop(
-    ctx: Context<'_>,
-    #[description = "Your victim >:3"] user: User,
-) -> Result<(), Error> {
-    let messages = [
-        format!(
-            "{} booped {}!!! <:floofOwO:1226944711768412280>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-        format!(
-            "{} just got booped by {}?? <:floofLoad:1226944689546989710>",
-            user.mention(),
-            ctx.author().mention(),
-        ),
-        format!(
-            "Lmao I just saw {} boop {} <:floofLol:1226944692541980692>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-        format!(
-            "Dear {},\n\nGet booped, nerd. <:floofSmug:1226944728734629970>\n\nSincerely, {}",
-            user.mention(),
-            ctx.author().mention(),
-        ),
-        format!(
-            "{} booped {}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-    ];
-    let picked_message;
+/// ```
+/// rp_command!(
+///     name: ident,
+///     context_menu_name: literal,
+///     description: literal,
+///     user_description: literal,
+///     [ message..: literal ],
+/// );
+/// ```
+macro_rules! rp_command {
+    (
+        $name:ident,
+        $context_menu_name:literal,
+        $description:literal,
+        $user_description:literal,
+        [$($message:literal),+$(,)?]$(,)?
+    ) => {
+        #[doc = $description]
+        #[poise::command(slash_command, context_menu_command = $context_menu_name)]
+        async fn $name(
+            ctx: Context<'_>,
+            #[description = $user_description] user: User,
+        ) -> Result<(), Error> {
+            let messages = [
+                $(format!(
+                    $message,
+                    a = ctx.author().mention(),
+                    b = user.mention(),
+                )),+
+            ];
+            let picked_message;
 
-    {
-        let mut rng = thread_rng();
+            {
+                let mut rng = thread_rng();
 
-        picked_message = messages
-            .choose(&mut rng)
-            .ok_or("Failed to choose random message")?;
-    }
+                picked_message = messages
+                    .choose(&mut rng)
+                    .ok_or("Failed to choose random message")?;
+            }
 
-    ctx.say(picked_message).await?;
-    info!("Responded to /boop with \"{picked_message}\"");
+            ctx.say(picked_message).await?;
+            info!("Responded to a command with \"{picked_message}\"");
 
-    Ok(())
+            Ok(())
+        }
+    };
 }
 
-/// Embrace the bobin within us all and gnaw on one's bones
-#[poise::command(slash_command, context_menu_command = "Gnaw Bones")]
-async fn gnaw(
-    ctx: Context<'_>,
-    #[description = "The subject of today's gnawing"] user: User,
-) -> Result<(), Error> {
-    let messages = [
-        format!(
-            "{} is gnawing on {}'s bones <:floofNom:1226944708366831637>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-        format!(
-            "{} craves the bones of {} <:floofNom:1226944708366831637>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-        format!(
-            "{} hungers for the bones of a {} <:floofNom:1226944708366831637>",
-            ctx.author().mention(),
-            user.mention(),
-        ),
-        format!(
-            "Hey uh, {}, did you know there's a {} gnawing on your bones? <:floofLurk:1226944909446090922>",
-            user.mention(),
-            ctx.author().mention(),
-        ),
-    ];
-    let picked_message;
+rp_command!(
+    boop,
+    "Boop",
+    "Boops a being :3c",
+    "Your victim >:3",
+    [
+        "{a} booped {b}!!! <:floofOwO:1226944711768412280>",
+        "{b} just got booped by {a}?? <:floofLoad:1226944689546989710>",
+        "Lmao I just saw {a} boop {b} <:floofLol:1226944692541980692>",
+        "Dear {b},\n\nGet booped, nerd. <:floofSmug:1226944728734629970>\n\nSincerely, {a}",
+        "{a} booped {b}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
+    ],
+);
 
-    {
-        let mut rng = thread_rng();
-
-        picked_message = messages
-            .choose(&mut rng)
-            .ok_or("Failed to choose random message")?;
-    }
-
-    ctx.say(picked_message).await?;
-    info!("Responded to /gnaw with \"{picked_message}\"");
-
-    Ok(())
-}
+rp_command!(
+    gnaw,
+    "Gnaw Bones",
+    "Embrace the bobin within us all and gnaw on one's bones",
+    "The subject of today's gnawing",
+    [
+        "{a} is gnawing on {b}'s bones <:floofNom:1226944708366831637>",
+        "{a} craves the bones of {b} <:floofNom:1226944708366831637>",
+        "{a} hungers for the bones of a {b} <:floofNom:1226944708366831637>",
+        "Hey uh, {b}, did you know there's a {a} gnawing on your bones? <:floofLurk:1226944909446090922>",
+    ],
+);
 
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
