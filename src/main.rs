@@ -15,7 +15,7 @@ async fn boop(
     #[description = "Your victim >:3"] user: User,
 ) -> Result<(), Error> {
     ctx.say(format!(
-        "{} booped {}!!! <:huh:1226261094818123887>",
+        "{} booped {}!!! <:floofOwO:1226944711768412280>",
         ctx.author().mention(),
         user.mention(),
     ))
@@ -31,7 +31,7 @@ async fn gnaw(
     #[description = "The subject of today's gnawing"] user: User,
 ) -> Result<(), Error> {
     ctx.say(format!(
-        "{} is gnawing on {}'s bones <:devious:1225988465464705096>",
+        "{} is gnawing on {}'s bones <:floofNom:1226944708366831637>",
         ctx.author().mention(),
         user.mention(),
     ))
