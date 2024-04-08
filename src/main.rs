@@ -1,18 +1,28 @@
 use std::env;
 
 use anyhow::Context as _;
-use poise::serenity_prelude::{self, ClientBuilder, GatewayIntents, GuildId};
+use poise::serenity_prelude::{self, ClientBuilder, GatewayIntents, GuildId, Member, Mentionable};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
 struct Data {} // User data, which is stored and accessible in all command invocations
+
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-/// Responds with "world!"
+/// Boops a being :3c
 #[poise::command(slash_command)]
-async fn hello(ctx: Context<'_>) -> Result<(), Error> {
-    ctx.say("world!").await?;
+async fn boop(
+    ctx: Context<'_>,
+    #[description = "Your victim >:3"] member: Member,
+) -> Result<(), Error> {
+    ctx.say(format!(
+        "{} booped {}!!! <:huh:1226261094818123887>",
+        ctx.author().mention(),
+        member.mention(),
+    ))
+    .await?;
+
     Ok(())
 }
 
@@ -25,7 +35,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![hello()],
+            commands: vec![boop()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
