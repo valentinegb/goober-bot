@@ -26,6 +26,22 @@ async fn boop(
     Ok(())
 }
 
+/// Embrace the bobin within us all and gnaw on one's bones
+#[poise::command(slash_command)]
+async fn gnaw(
+    ctx: Context<'_>,
+    #[description = "The subject of today's gnawing"] member: Member,
+) -> Result<(), Error> {
+    ctx.say(format!(
+        "{} is gnawing on {}'s bones <:devious:1225988465464705096>",
+        ctx.author().mention(),
+        member.mention(),
+    ))
+    .await?;
+
+    Ok(())
+}
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
@@ -35,7 +51,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop()],
+            commands: vec![boop(), gnaw()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
