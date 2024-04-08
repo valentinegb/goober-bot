@@ -98,6 +98,23 @@ rp_command!(
     ],
 );
 
+rp_command!(
+    meow,
+    "Meow At",
+    "You know what you are",
+    "Get their attention",
+    [
+        "Uhh, {a} just meowed at {b} <:floofWhat:1226944914315804683>",
+        "{a} is a furry and they want {b} to know it <:floofMischief:1226944697579077692>",
+        "{a} is so silly, they think {b} can understand their meowing <:floofLol:1226944692541980692>",
+        "{b}, be afraid... {a} is meowing at you <:floofPeek:1226944911857815594>",
+        "{b}, {a} is meowing at you, won't you give them what they want? <:floofPlead:1226944718735151266>",
+        "{b}, I have a message for you: \"meow meow meow meow meow meow meow meow\"\n{a} gave it to me <:floofHappy:1226944682815258755>",
+        "{a} just *nya*-ed all over the place- {b}, clean this up! <:floofWhat:1226944914315804683>",
+        "{b}... sire... I have a message for you, from {a}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me <:floofNervous:1226944704541622394>",
+    ],
+);
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
@@ -107,7 +124,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop(), gnaw(), bite()],
+            commands: vec![boop(), gnaw(), bite(), meow()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
