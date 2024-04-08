@@ -1,7 +1,7 @@
 use std::env;
 
 use anyhow::Context as _;
-use poise::serenity_prelude::{self, ClientBuilder, GatewayIntents, GuildId, Member, Mentionable};
+use poise::serenity_prelude::{self, ClientBuilder, GatewayIntents, GuildId, Mentionable, User};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
@@ -11,15 +11,15 @@ type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
 /// Boops a being :3c
-#[poise::command(slash_command)]
+#[poise::command(slash_command, context_menu_command = "Boop")]
 async fn boop(
     ctx: Context<'_>,
-    #[description = "Your victim >:3"] member: Member,
+    #[description = "Your victim >:3"] user: User,
 ) -> Result<(), Error> {
     ctx.say(format!(
         "{} booped {}!!! <:huh:1226261094818123887>",
         ctx.author().mention(),
-        member.mention(),
+        user.mention(),
     ))
     .await?;
 
@@ -27,15 +27,15 @@ async fn boop(
 }
 
 /// Embrace the bobin within us all and gnaw on one's bones
-#[poise::command(slash_command)]
+#[poise::command(slash_command, context_menu_command = "Gnaw Bones")]
 async fn gnaw(
     ctx: Context<'_>,
-    #[description = "The subject of today's gnawing"] member: Member,
+    #[description = "The subject of today's gnawing"] user: User,
 ) -> Result<(), Error> {
     ctx.say(format!(
         "{} is gnawing on {}'s bones <:devious:1225988465464705096>",
         ctx.author().mention(),
-        member.mention(),
+        user.mention(),
     ))
     .await?;
 
