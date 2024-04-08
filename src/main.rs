@@ -92,7 +92,7 @@ rp_command!(
     "The skin-haver in question",
     [
         "D- did {a} just bite {b}?? <:floofOwO:1226944711768412280>",
-        "Awww, {a} gave {b} a love bite... I think <:floofTired:1226944734640078878>",
+        "Awww, {a} gave {b} a love bite... I think- actually, it's hard to say <:floofTired:1226944734640078878>",
         "The intrusive thoughts won and now {a}'s biting {b} <:floofMischief:1226944697579077692>",
         "\\*CHOMP\\*\n{a} bit {b} <:floofNom:1226944708366831637>",
     ],
