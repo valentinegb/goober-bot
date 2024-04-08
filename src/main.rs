@@ -1,5 +1,6 @@
 use anyhow::Context as _;
 use poise::serenity_prelude::{ClientBuilder, GatewayIntents, GuildId, Mentionable, User};
+use rand::{seq::SliceRandom, thread_rng};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
@@ -14,12 +15,44 @@ async fn boop(
     ctx: Context<'_>,
     #[description = "Your victim >:3"] user: User,
 ) -> Result<(), Error> {
-    ctx.say(format!(
-        "{} booped {}!!! <:floofOwO:1226944711768412280>",
-        ctx.author().mention(),
-        user.mention(),
-    ))
-    .await?;
+    let messages = [
+        format!(
+            "{} booped {}!!! <:floofOwO:1226944711768412280>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+        format!(
+            "{} just got booped by {}?? <:floofLoad:1226944689546989710>",
+            user.mention(),
+            ctx.author().mention(),
+        ),
+        format!(
+            "Lmao I just saw {} boop {} <:floofLol:1226944692541980692>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+        format!(
+            "Dear {},\n\nGet booped, nerd. <:floofSmug:1226944728734629970>\n\nSincerely, {}",
+            user.mention(),
+            ctx.author().mention(),
+        ),
+        format!(
+            "{} booped {}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+    ];
+    let picked_message;
+
+    {
+        let mut rng = thread_rng();
+
+        picked_message = messages
+            .choose(&mut rng)
+            .ok_or("Failed to choose random message")?;
+    }
+
+    ctx.say(picked_message).await?;
 
     Ok(())
 }
@@ -30,12 +63,39 @@ async fn gnaw(
     ctx: Context<'_>,
     #[description = "The subject of today's gnawing"] user: User,
 ) -> Result<(), Error> {
-    ctx.say(format!(
-        "{} is gnawing on {}'s bones <:floofNom:1226944708366831637>",
-        ctx.author().mention(),
-        user.mention(),
-    ))
-    .await?;
+    let messages = [
+        format!(
+            "{} is gnawing on {}'s bones <:floofNom:1226944708366831637>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+        format!(
+            "{} craves the bones of {} <:floofNom:1226944708366831637>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+        format!(
+            "{} hungers for the bones of a {} <:floofNom:1226944708366831637>",
+            ctx.author().mention(),
+            user.mention(),
+        ),
+        format!(
+            "Hey uh, {}, did you know there's a {} gnawing on your bones? <:floofLurk:1226944909446090922>",
+            user.mention(),
+            ctx.author().mention(),
+        ),
+    ];
+    let picked_message;
+
+    {
+        let mut rng = thread_rng();
+
+        picked_message = messages
+            .choose(&mut rng)
+            .ok_or("Failed to choose random message")?;
+    }
+
+    ctx.say(picked_message).await?;
 
     Ok(())
 }
