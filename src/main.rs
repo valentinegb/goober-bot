@@ -85,6 +85,19 @@ rp_command!(
     ],
 );
 
+rp_command!(
+    bite,
+    "Bite",
+    "Express a wide range of emotions via- your teeth in somebody's skin",
+    "The skin-haver in question",
+    [
+        "D- did {a} just bite {b}?? <:floofOwO:1226944711768412280>",
+        "Awww, {a} gave {b} a love bite... I think <:floofTired:1226944734640078878>",
+        "The intrusive thoughts won and now {a}'s biting {b} <:floofMischief:1226944697579077692>",
+        "\\*CHOMP\\*\n{a} bit {b} <:floofNom:1226944708366831637>",
+    ],
+);
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
@@ -94,7 +107,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop(), gnaw()],
+            commands: vec![boop(), gnaw(), bite()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
