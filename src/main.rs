@@ -1,5 +1,7 @@
+use std::env;
+
 use anyhow::Context as _;
-use poise::serenity_prelude::{ClientBuilder, GatewayIntents};
+use poise::serenity_prelude::{self, ClientBuilder, GatewayIntents, GuildId};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 
@@ -28,7 +30,24 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
-                poise::builtins::register_globally(ctx, &framework.options().commands).await?;
+                // Register commands globally when deployed, otherwise only in
+                // test server
+                let test_server = GuildId::new(1226752252593573898);
+
+                if let Ok(shuttle) = env::var("SHUTTLE") {
+                    if shuttle == "true" {
+                        poise::builtins::register_globally(ctx, &framework.options().commands)
+                            .await?;
+                        test_server.set_commands(ctx, vec![]).await?;
+
+                        return Ok(Data {});
+                    }
+                }
+
+                serenity_prelude::Command::set_global_commands(ctx, vec![]).await?;
+                poise::builtins::register_in_guild(ctx, &framework.options().commands, test_server)
+                    .await?;
+
                 Ok(Data {})
             })
         })
