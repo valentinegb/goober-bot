@@ -115,6 +115,21 @@ rp_command!(
     ],
 );
 
+rp_command!(
+    murder,
+    "Murder",
+    "MURRRRRDEERRRRRRRRRRR",
+    "KILL THEM KILL THEM KILL THEM >:D",
+    [
+        "{a} crept up behind {b} and murdered them!!! <:floofOwO:1226944711768412280>",
+        "{a} just pulled out a bazooka and blew {b} up!?!? <:floofOwO:1226944711768412280>",
+        "{a} stared directly into {b}'s eyes and shouted \"POMEGRANATE\", triggering the cognitohazard previously planted in {b}'s brain, killing them instantly <:floofNervous:1226944704541622394>",
+        "{a} just went \"BOO\", giving {b} a fatal heart attack <:floofOwO:1226944711768412280>",
+        "{a} just went \"OOGA BOOGA\", giving {b} a fatal heart attack <:floofOwO:1226944711768412280>",
+        "{a} killed {b} when the lights went out so no one would know it was them... <:floofSmug:1226944728734629970>",
+    ],
+);
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
@@ -124,7 +139,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop(), gnaw(), bite(), meow()],
+            commands: vec![boop(), gnaw(), bite(), meow(), murder()],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
