@@ -8,7 +8,7 @@ use std::{
 
 use poise::serenity_prelude::{self, prelude::TypeMapKey, ChannelId, Message};
 use rand::{seq::SliceRandom, thread_rng};
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, warn};
 
 pub(super) struct BoredomTracker;
 
@@ -33,30 +33,32 @@ pub(super) async fn check_for_boredom_acknowledgment(
         {
             let data = ctx.data.read().await;
 
-            if referenced_message.id.get() == data
-                .get::<BoredomMessage>()
-                .ok_or("Failed to get BoredomMessage (it may not have a value, which is probably okay)")?
-                .load(atomic::Ordering::SeqCst)
-            {
-                let messages = [
-                    "Omg you're alive!!! <:floofBlep:1226944673281609788>",
-                    "\\*gasp\\* contact has been established! <:floofOwO:1226944711768412280>",
-                    "Oh, phew, you're not dead! <:floofTired:1226944734640078878>",
-                    "Yaaaaay friends!!! <:floofBlep:1226944673281609788>",
-                ];
-                let picked_message;
+            match data.get::<BoredomMessage>() {
+                Some(boredom_message) => {
+                    if referenced_message.id.get() == boredom_message.load(atomic::Ordering::SeqCst)
+                    {
+                        let messages = [
+                            "Omg you're alive!!! <:floofBlep:1226944673281609788>",
+                            "\\*gasp\\* contact has been established! <:floofOwO:1226944711768412280>",
+                            "Oh, phew, you're not dead! <:floofTired:1226944734640078878>",
+                            "Yaaaaay friends!!! <:floofBlep:1226944673281609788>",
+                        ];
+                        let picked_message;
 
-                {
-                    let mut rng = thread_rng();
+                        {
+                            let mut rng = thread_rng();
 
-                    picked_message = messages
-                        .choose(&mut rng)
-                        .ok_or("Failed to choose random message")?;
+                            picked_message = messages
+                                .choose(&mut rng)
+                                .ok_or("Failed to choose random message")?;
+                        }
+
+                        new_message.reply_ping(ctx, *picked_message).await?;
+                        info!("Replyed to boredom acknowledgment: {picked_message:?}");
+                        write_data = true;
+                    }
                 }
-
-                new_message.reply_ping(ctx, *picked_message).await?;
-                info!("Replyed to boredom acknowledgment: {picked_message:?}");
-                write_data = true;
+                None => warn!("There is no BoredomMessage, but this is probably okay"),
             }
         }
 
