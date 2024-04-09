@@ -39,6 +39,7 @@ type Context<'a> = poise::Context<'a, UserData, Error>;
 ///     context_menu_name: literal,
 ///     description: literal,
 ///     user_description: literal,
+///     self_message: literal,
 ///     [ message..: literal ],
 /// );
 /// ```
@@ -48,6 +49,7 @@ macro_rules! rp_command {
         $context_menu_name:literal,
         $description:literal,
         $user_description:literal,
+        $self_message:literal,
         [$($message:literal),+$(,)?]$(,)?
     ) => {
         #[doc = $description]
@@ -60,16 +62,20 @@ macro_rules! rp_command {
 
             data.insert::<BoredomTracker>(Arc::new(AtomicBool::new(false)));
 
+            let author_mention = ctx.author().mention();
+            let self_message = format!($self_message, a = author_mention);
             let messages = [
                 $(format!(
                     $message,
-                    a = ctx.author().mention(),
+                    a = author_mention,
                     b = user.mention(),
                 )),+
             ];
             let picked_message;
 
-            {
+            if (user.id == ctx.framework().bot_id) {
+                picked_message = &self_message;
+            } else {
                 let mut rng = thread_rng();
 
                 picked_message = messages
@@ -90,6 +96,7 @@ rp_command!(
     "Boop",
     "Boops a being :3c",
     "Your victim >:3",
+    "I have been booped by {a} <:floofOwO:1226944711768412280>",
     [
         "{a} booped {b}!!! <:floofOwO:1226944711768412280>",
         "{b} just got booped by {a}?? <a:afloofLoad:1227015489792905360>",
@@ -104,6 +111,7 @@ rp_command!(
     "Gnaw Bones",
     "Embrace the bobin within us all and gnaw on one's bones",
     "The subject of today's gnawing",
+    "GRAAAHH {a} STOP GNAWING MY BONES GET OFF HELP <:floofScared:1226944726096285777>",
     [
         "{a} is gnawing on {b}'s bones <:floofNom:1226944708366831637>",
         "{a} craves the bones of {b} <:floofNom:1226944708366831637>",
@@ -117,6 +125,7 @@ rp_command!(
     "Bite",
     "Express a wide range of emotions via- your teeth in somebody's skin",
     "The skin-haver in question",
+    "Help please {a}'s biting me <:floofOwO:1226944711768412280>",
     [
         "D- did {a} just bite {b}?? <:floofOwO:1226944711768412280>",
         "Awww, {a} gave {b} a love bite... I think- actually, it's hard to say <:floofTired:1226944734640078878>",
@@ -130,6 +139,7 @@ rp_command!(
     "Meow At",
     "You know what you are",
     "Get their attention",
+    "Hm? What's that {a}? Oh I see... mhm... okay, okay, I understand <:floofCat:1226944674988687491>",
     [
         "Uhh, {a} just meowed at {b} <:floofWhat:1226944914315804683>",
         "{a} is a furry and they want {b} to know it <:floofMischief:1226944697579077692>",
@@ -147,6 +157,7 @@ rp_command!(
     "Murder",
     "MURRRRRDEERRRRRRRRRRR",
     "KILL THEM KILL THEM KILL THEM >:D",
+    "GAH {a} HAS A KNIFE AND IS RUNNING AT ME WAAAA <:floofScared:1226944726096285777>",
     [
         "{a} crept up behind {b} and murdered them!!! <:floofOwO:1226944711768412280>",
         "{a} just pulled out a bazooka and blew {b} up!?!? <:floofOwO:1226944711768412280>",
