@@ -2,7 +2,7 @@
 
 [![Rust](https://github.com/valentinegb/goober-bot/actions/workflows/rust.yml/badge.svg)](https://github.com/valentinegb/goober-bot/actions/workflows/rust.yml)
 
-Bot that is also a goober for the Gooberland Discord server
+Bot that is also a goober for the [Gooberland Discord server](https://discord.gg/NCd88hxUFc)
 
 ## Features
 - silly
