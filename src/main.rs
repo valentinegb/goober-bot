@@ -1,37 +1,21 @@
-use std::{
-    sync::{
-        atomic::{self, AtomicBool, AtomicU64},
-        Arc,
-    },
-    time::Duration,
-};
+mod boredom;
+
+use std::sync::{atomic::AtomicBool, Arc};
 
 use anyhow::Context as _;
+use boredom::{check_for_boredom, check_for_boredom_acknowledgment, BoredomTracker};
 use poise::serenity_prelude::{
-    prelude::TypeMapKey, ChannelId, ClientBuilder, FullEvent, GatewayIntents, GuildId, Mentionable,
-    User,
+    ClientBuilder, FullEvent, GatewayIntents, GuildId, Mentionable, User,
 };
 use rand::{seq::SliceRandom, thread_rng};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
-use tracing::{debug, error, info};
+use tracing::info;
 
 struct UserData {} // User data, which is stored and accessible in all command invocations
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, UserData, Error>;
-
-struct BoredomTracker;
-
-impl TypeMapKey for BoredomTracker {
-    type Value = Arc<AtomicBool>;
-}
-
-struct BoredomMessage;
-
-impl TypeMapKey for BoredomMessage {
-    type Value = Arc<AtomicU64>;
-}
 
 /// ```
 /// rp_command!(
@@ -78,7 +62,7 @@ macro_rules! rp_command {
             }
 
             ctx.say(picked_message).await?;
-            info!("Responded to a command with \"{picked_message}\"");
+            info!("Responded to a command: {picked_message:?}");
 
             Ok(())
         }
@@ -169,48 +153,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
                     if let FullEvent::Message { new_message } = event {
-                        if let Some(referenced_message) = &new_message.referenced_message {
-                            let mut write_data = false;
-
-                            // Read data
-                            {
-                                let data = ctx.data.read().await;
-
-                                if referenced_message.id.get() == data
-                                    .get::<BoredomMessage>()
-                                    .ok_or("Failed to get BoredomMessage (it may not have a value, which is probably okay)")?
-                                    .load(atomic::Ordering::SeqCst)
-                                {
-                                    let messages = [
-                                        "Omg you're alive!!! <:floofBlep:1226944673281609788>",
-                                        "\\*gasp\\* contact has been established! <:floofOwO:1226944711768412280>",
-                                        "Oh, phew, you're not dead! <:floofTired:1226944734640078878>",
-                                        "Yaaaaay friends!!! <:floofBlep:1226944673281609788>",
-                                    ];
-                                    let picked_message;
-
-                                    {
-                                        let mut rng = thread_rng();
-
-                                        picked_message = messages
-                                            .choose(&mut rng)
-                                            .ok_or("Failed to choose random message")?;
-                                    }
-
-                                    new_message.reply_ping(ctx, *picked_message).await?;
-                                    info!("Replyed to boredom acknowledgment: {picked_message}");
-                                    write_data = true;
-                                }
-                            }
-
-                            // Write data
-                            if write_data {
-                                let mut data = ctx.data.write().await;
-
-                                data.insert::<BoredomTracker>(Arc::new(AtomicBool::new(false)));
-                                data.remove::<BoredomMessage>();
-                            }
-                        }
+                        check_for_boredom_acknowledgment(ctx, new_message).await?;
                     }
 
                     Ok(())
@@ -232,80 +175,8 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
                 data.insert::<BoredomTracker>(Arc::new(AtomicBool::new(true)));
                 info!("Initialized BoredomTracker");
-
-                let bored_ctx = ctx.clone();
-
-                tokio::spawn(async move {
-                    loop {
-                        // Sleep for 2 days
-                        tokio::time::sleep(Duration::from_secs(60 * 60 * 24 * 2)).await;
-                        debug!("It's time to check for boredom!");
-
-                        let mut boredom_message_value = None;
-                        let mut boredom_tracker_value = None;
-
-                        // Read data
-                        {
-                            let data = bored_ctx.data.read().await;
-
-                            match data.get::<BoredomTracker>() {
-                                Some(boredom_tracker) => {
-                                    if boredom_tracker.load(atomic::Ordering::SeqCst) {
-                                        debug!("... I'm bored");
-
-                                        let messages = [
-                                            "Waaaaa nobody's talking to me <:floofCry:1226944679833112598>",
-                                            "Hello? Did you guys die? <:floofOwO:1226944711768412280>",
-                                            "Guys... I'm bored... <:floofSad:1226944722908483665>",
-                                            "Hi hello I am the engagement inspector, here for your bi-daily engagement inspection and- WOAH WOAH WOAH, these engagement levels are too low!!! You guys gotta start doing fun stuff right now!!!",
-                                            "Are you ignoring me??? Nobody's said anything to me in a while... <:floofAngry:1226944671423660133>",
-                                        ];
-                                        let picked_message;
-
-                                        {
-                                            let mut rng = thread_rng();
-
-                                            picked_message = messages.choose(&mut rng);
-                                        }
-
-                                        match picked_message {
-                                            Some(picked_message) => match ChannelId::new(1226773600258883675)
-                                                .say(&bored_ctx, *picked_message)
-                                                .await
-                                            {
-                                                Ok(message) => {
-                                                    info!("Sent boredom message: {picked_message}");
-                                                    boredom_message_value = Some(Arc::new(AtomicU64::new(message.id.get())));
-                                                }
-                                                Err(err) => error!("Failed to send bored message: {err}"),
-                                            },
-                                            None => error!("Failed to choose random message"),
-                                        }
-                                    } else {
-                                        debug!("... I'm not bored!");
-                                        boredom_tracker_value = Some(Arc::new(AtomicBool::new(true)));
-                                    }
-                                }
-                                None => error!("Failed to get BoredomTracker"),
-                            }
-                        }
-
-                        // Write data
-                        {
-                            let mut data = bored_ctx.data.write().await;
-
-                            if let Some(value) = boredom_message_value {
-                                debug!("I'm saving my boredom message");
-                                data.insert::<BoredomMessage>(value);
-                            }
-
-                            if let Some(value) = boredom_tracker_value {
-                                debug!("I'll be bored next time unless I'm interacted with");
-                                data.insert::<BoredomTracker>(value);
-                            }
-                        }
-                    }
-                });
+                tokio::spawn(check_for_boredom(ctx.clone()));
+                info!("Started checking for boredom");
 
                 Ok(UserData {})
             })
