@@ -112,8 +112,8 @@ impl fmt::Display for FloofEmoji {
 ///     description: literal,
 ///     user_description: literal,
 ///     [ (message: literal, emoji: expr).. ],
-///     (bot_message: literal, emoji: expr),
-///     (self_message: literal, emoji: expr),
+///     (bot_message: literal, bot_emoji: expr),
+///     (self_message: literal, self_emoji: expr),
 /// );
 /// ```
 ///
