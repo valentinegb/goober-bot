@@ -294,7 +294,7 @@ rp_command!(
         ("{a} killed {b} when the lights went out so no one would know it was them... {e}", FloofEmoji::FloofSmug),
     ],
     ("GAH {a} HAS A KNIFE AND IS RUNNING AT ME WAAAA {e}", FloofEmoji::FloofScared),
-    ("BAH- {a} JUST K-KILLED THEMSELF??? NOOOOOOOOOO {e}", FloofEmoji::FloofScared),
+    ("BAH- {a} JUST K-KILLED THEMSELVES??? NOOOOOOOOOO {e}", FloofEmoji::FloofScared),
 );
 
 #[shuttle_runtime::main]
