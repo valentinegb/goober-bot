@@ -108,7 +108,6 @@ impl fmt::Display for FloofEmoji {
 /// ```
 /// rp_command!(
 ///     name: ident,
-///     context_menu_name: literal,
 ///     description: literal,
 ///     user_description: literal,
 ///     [ (message: literal, emoji: expr).. ],
@@ -127,7 +126,6 @@ impl fmt::Display for FloofEmoji {
 macro_rules! rp_command {
     (
         $name:ident,
-        $context_menu_name:literal,
         $description:literal,
         $user_description:literal,
         [$(($message:literal, $emoji:expr$(,)?)),+$(,)?],
@@ -135,7 +133,7 @@ macro_rules! rp_command {
         ($self_message:literal, $self_emoji:expr$(,)?)$(,)?
     ) => {
         #[doc = $description]
-        #[poise::command(slash_command, context_menu_command = $context_menu_name)]
+        #[poise::command(slash_command)]
         async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: User,
@@ -187,7 +185,6 @@ macro_rules! rp_command {
 
 rp_command!(
     boop,
-    "Boop",
     "Boops a being :3c",
     "Your victim >:3",
     [
@@ -212,7 +209,6 @@ rp_command!(
 
 rp_command!(
     gnaw,
-    "Gnaw Bones",
     "Embrace the bobin within us all and gnaw on one's bones",
     "The subject of today's gnawing",
     [
@@ -239,7 +235,6 @@ rp_command!(
 
 rp_command!(
     bite,
-    "Bite",
     "Express a wide range of emotions via- your teeth in somebody's skin",
     "The skin-haver in question",
     [
@@ -263,7 +258,6 @@ rp_command!(
 
 rp_command!(
     meow,
-    "Meow At",
     "You know what you are",
     "Get their attention",
     [
@@ -282,7 +276,6 @@ rp_command!(
 
 rp_command!(
     murder,
-    "Murder",
     "MURRRRRDEERRRRRRRRRRR",
     "KILL THEM KILL THEM KILL THEM >:D",
     [
@@ -299,7 +292,6 @@ rp_command!(
 
 rp_command!(
     pat,
-    "Pat Head",
     "Let them know that they're a good being :>",
     "Good being in question",
     [
