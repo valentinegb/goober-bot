@@ -109,7 +109,7 @@ rp_command!(
         "{a} booped {b}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
     ],
     "I have been booped by {a} <:floofOwO:1226944711768412280>",
-    "{a} just booped themself... that's a little sad, won't someone else boop them? <:floofSad:1226944722908483665>",
+    "{a} just booped themselves... that's a little sad, won't someone else boop them? <:floofSad:1226944722908483665>",
 );
 
 rp_command!(
@@ -139,7 +139,7 @@ rp_command!(
         "\\*CHOMP\\*\n{a} bit {b} <:floofNom:1226944708366831637>",
     ],
     "Help please {a}'s biting me <:floofOwO:1226944711768412280>",
-    "{a} bit theirself... why'd they do that? <a:afloofLoad:1227015489792905360>",
+    "{a} bit themselves... why'd they do that? <a:afloofLoad:1227015489792905360>",
 );
 
 rp_command!(
@@ -158,7 +158,7 @@ rp_command!(
         "{b}... sire... I have a message for you, from {a}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me <:floofNervous:1226944704541622394>",
     ],
     "Hm? What's that {a}? Oh I see... mhm... okay, okay, I understand <:floofCat:1226944674988687491>",
-    "{a} is meowing at themself lol, schizophrenic cat <:floofCat:1226944674988687491>",
+    "{a} is meowing at themselves lol, schizophrenic cat <:floofCat:1226944674988687491>",
 );
 
 rp_command!(
