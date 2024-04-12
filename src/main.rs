@@ -41,6 +41,7 @@ type Context<'a> = poise::Context<'a, UserData, Error>;
 ///     user_description: literal,
 ///     [ message..: literal ],
 ///     bot_message: literal,
+///     self_message: literal,
 /// );
 /// ```
 macro_rules! rp_command {
@@ -50,7 +51,8 @@ macro_rules! rp_command {
         $description:literal,
         $user_description:literal,
         [$($message:literal),+$(,)?],
-        $bot_message:literal$(,)?
+        $bot_message:literal,
+        $self_message:literal$(,)?
     ) => {
         #[doc = $description]
         #[poise::command(slash_command, context_menu_command = $context_menu_name)]
@@ -64,6 +66,7 @@ macro_rules! rp_command {
 
             let author_mention = ctx.author().mention();
             let bot_message = format!($bot_message, a = author_mention);
+            let self_message = format!($self_message, a = author_mention);
             let messages = [
                 $(format!(
                     $message,
@@ -73,8 +76,10 @@ macro_rules! rp_command {
             ];
             let picked_message;
 
-            if (user.id == ctx.framework().bot_id) {
+            if user.id == ctx.framework().bot_id {
                 picked_message = &bot_message;
+            } else if user.id == ctx.author().id {
+                picked_message = &self_message;
             } else {
                 let mut rng = thread_rng();
 
@@ -104,6 +109,7 @@ rp_command!(
         "{a} booped {b}, I think they're trying to pick a fight <:floofNervous:1226944704541622394>",
     ],
     "I have been booped by {a} <:floofOwO:1226944711768412280>",
+    "{a} just booped themself... that's a little sad, won't someone else boop them? <:floofSad:1226944722908483665>",
 );
 
 rp_command!(
@@ -118,6 +124,7 @@ rp_command!(
         "Hey uh, {b}, did you know there's a {a} gnawing on your bones? <:floofLurk:1226944909446090922>",
     ],
     "GRAAAHH {a} STOP GNAWING MY BONES GET OFF HELP <:floofScared:1226944726096285777>",
+    "{a}'s gnawing on... their own bones? Are they good...? <a:afloofLoad:1227015489792905360>",
 );
 
 rp_command!(
@@ -132,6 +139,7 @@ rp_command!(
         "\\*CHOMP\\*\n{a} bit {b} <:floofNom:1226944708366831637>",
     ],
     "Help please {a}'s biting me <:floofOwO:1226944711768412280>",
+    "{a} bit themself... why'd they do that? <a:afloofLoad:1227015489792905360>",
 );
 
 rp_command!(
@@ -150,6 +158,7 @@ rp_command!(
         "{b}... sire... I have a message for you, from {a}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me <:floofNervous:1226944704541622394>",
     ],
     "Hm? What's that {a}? Oh I see... mhm... okay, okay, I understand <:floofCat:1226944674988687491>",
+    "{a} is meowing at themself lol, schizophrenic cat <:floofCat:1226944674988687491>",
 );
 
 rp_command!(
@@ -166,6 +175,7 @@ rp_command!(
         "{a} killed {b} when the lights went out so no one would know it was them... <:floofSmug:1226944728734629970>",
     ],
     "GAH {a} HAS A KNIFE AND IS RUNNING AT ME WAAAA <:floofScared:1226944726096285777>",
+    "BAH- {a} JUST K-KILLED THEMSELF??? NOOOOOOOOOO <:floofScared:1226944726096285777>",
 );
 
 #[shuttle_runtime::main]
