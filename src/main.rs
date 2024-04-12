@@ -297,6 +297,36 @@ rp_command!(
     ("BAH- {a} JUST K-KILLED THEMSELVES??? NOOOOOOOOOO {e}", FloofEmoji::FloofScared),
 );
 
+rp_command!(
+    pat,
+    "Pat Head",
+    "Let them know that they're a good being :>",
+    "Good being in question",
+    [
+        (
+            "{a} gave {b} a little pat on the head {e}",
+            FloofEmoji::FloofPat,
+        ),
+        (
+            "{a} wants {b} to know they are a good being by giving them a pat on the head {e}",
+            FloofEmoji::FloofPat,
+        ),
+        ("{b} got pat on the head by {a} {e}", FloofEmoji::FloofPat),
+        (
+            "{b} has been selected to receive a soothing pat on the head from {a} {e}",
+            FloofEmoji::FloofPat,
+        ),
+    ],
+    (
+        "Awawawawa {a} gave me a pat pat on the head {e}",
+        FloofEmoji::FloofPat,
+    ),
+    (
+        "Aw, {a} pat themselves on the head, won't someone else give them a little pat? {e}",
+        FloofEmoji::FloofPlead,
+    ),
+);
+
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
@@ -305,7 +335,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
         .context("'DISCORD_TOKEN' was not found")?;
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop(), gnaw(), bite(), meow(), murder()],
+            commands: vec![boop(), gnaw(), bite(), meow(), murder(), pat()],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
                     if let FullEvent::Message { new_message } = event {
