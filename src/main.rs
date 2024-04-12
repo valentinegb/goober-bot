@@ -139,7 +139,7 @@ rp_command!(
         "\\*CHOMP\\*\n{a} bit {b} <:floofNom:1226944708366831637>",
     ],
     "Help please {a}'s biting me <:floofOwO:1226944711768412280>",
-    "{a} bit themself... why'd they do that? <a:afloofLoad:1227015489792905360>",
+    "{a} bit theirself... why'd they do that? <a:afloofLoad:1227015489792905360>",
 );
 
 rp_command!(
