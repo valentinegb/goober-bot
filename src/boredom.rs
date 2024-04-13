@@ -26,19 +26,19 @@ use poise::serenity_prelude::{self, prelude::TypeMapKey, ChannelId, Message};
 use rand::{seq::SliceRandom, thread_rng};
 use tracing::{debug, error, info, warn};
 
-pub(super) struct BoredomTracker;
+pub(crate) struct BoredomTracker;
 
 impl TypeMapKey for BoredomTracker {
     type Value = Arc<AtomicBool>;
 }
 
-pub(super) struct BoredomMessage;
+pub(crate) struct BoredomMessage;
 
 impl TypeMapKey for BoredomMessage {
     type Value = Arc<AtomicU64>;
 }
 
-pub(super) async fn check_for_boredom_acknowledgment(
+pub(crate) async fn check_for_boredom_acknowledgment(
     ctx: &serenity_prelude::Context,
     new_message: &Message,
 ) -> Result<(), super::Error> {
@@ -90,7 +90,7 @@ pub(super) async fn check_for_boredom_acknowledgment(
     Ok(())
 }
 
-pub(super) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
+pub(crate) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
     loop {
         // Sleep for 2 days
         tokio::time::sleep(Duration::from_secs(60 * 60 * 24 * 2)).await;
