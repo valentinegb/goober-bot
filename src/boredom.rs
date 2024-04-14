@@ -23,8 +23,9 @@ use std::{
 };
 
 use poise::serenity_prelude::{self, prelude::TypeMapKey, ChannelId, Message};
-use rand::{seq::SliceRandom, thread_rng};
 use tracing::{debug, error, info, warn};
+
+use crate::utility::choose_str;
 
 pub(crate) struct BoredomTracker;
 
@@ -53,23 +54,14 @@ pub(crate) async fn check_for_boredom_acknowledgment(
                 Some(boredom_message) => {
                     if referenced_message.id.get() == boredom_message.load(atomic::Ordering::SeqCst)
                     {
-                        let messages = [
+                        let picked_message = choose_str(&[
                             "Omg you're alive!!! <:floofBlep:1226944673281609788>",
                             "\\*gasp\\* contact has been established! <:floofOwO:1226944711768412280>",
                             "Oh, phew, you're not dead! <:floofTired:1226944734640078878>",
                             "Yaaaaay friends!!! <:floofBlep:1226944673281609788>",
-                        ];
-                        let picked_message;
+                        ])?;
 
-                        {
-                            let mut rng = thread_rng();
-
-                            picked_message = messages
-                                .choose(&mut rng)
-                                .ok_or("Failed to choose random message")?;
-                        }
-
-                        new_message.reply_ping(ctx, *picked_message).await?;
+                        new_message.reply_ping(ctx, &picked_message).await?;
                         info!("Replyed to boredom acknowledgment: {picked_message:?}");
                         write_data = true;
                     }
@@ -108,24 +100,17 @@ pub(crate) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
                     if boredom_tracker.load(atomic::Ordering::SeqCst) {
                         debug!("... I'm bored");
 
-                        let messages = [
+                        let picked_message = choose_str(&[
                             "Waaaaa nobody's talking to me <:floofCry:1226944679833112598>",
                             "Hello? Did you guys die? <:floofOwO:1226944711768412280>",
                             "Guys... I'm bored... <:floofSad:1226944722908483665>",
                             "Hi hello I am the engagement inspector, here for your bi-daily engagement inspection and- WOAH WOAH WOAH, these engagement levels are too low!!! You guys gotta start doing fun stuff right now!!!",
                             "Are you ignoring me??? Nobody's said anything to me in a while... <:floofAngry:1226944671423660133>",
-                        ];
-                        let picked_message;
-
-                        {
-                            let mut rng = thread_rng();
-
-                            picked_message = messages.choose(&mut rng);
-                        }
+                        ]);
 
                         match picked_message {
-                            Some(picked_message) => match ChannelId::new(1226773600258883675)
-                                .say(&ctx, *picked_message)
+                            Ok(picked_message) => match ChannelId::new(1226773600258883675)
+                                .say(&ctx, &picked_message)
                                 .await
                             {
                                 Ok(message) => {
@@ -135,7 +120,7 @@ pub(crate) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
                                 }
                                 Err(err) => error!("Failed to send bored message: {err}"),
                             },
-                            None => error!("Failed to choose random message"),
+                            Err(err) => error!("Failed to choose random message: {err}"),
                         }
                     } else {
                         debug!("... I'm not bored!");

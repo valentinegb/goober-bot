@@ -1,10 +1,9 @@
 use std::sync::{atomic::AtomicBool, Arc};
 
 use poise::serenity_prelude::{Mentionable, User};
-use rand::{seq::SliceRandom, thread_rng};
 use tracing::info;
 
-use super::{boredom::BoredomTracker, Context, Error, FloofEmoji};
+use super::{boredom::BoredomTracker, utility::choose_str, Context, Error, FloofEmoji};
 
 /// ```
 /// rp_command!(
@@ -44,39 +43,32 @@ macro_rules! rp_command {
             data.insert::<BoredomTracker>(Arc::new(AtomicBool::new(false)));
 
             let author_mention = ctx.author().mention();
-            let bot_message = format!(
-                $bot_message,
-                a = author_mention,
-                e = $bot_emoji,
-            );
-            let self_message = format!(
-                $self_message,
-                a = author_mention,
-                e = $self_emoji,
-            );
-            let messages = [
-                $(format!(
-                    $message,
-                    a = author_mention,
-                    b = user.mention(),
-                    e = $emoji,
-                )),+
-            ];
             let picked_message;
 
             if user.id == ctx.framework().bot_id {
-                picked_message = &bot_message;
+                picked_message = format!(
+                    $bot_message,
+                    a = author_mention,
+                    e = $bot_emoji,
+                );
             } else if user.id == ctx.author().id {
-                picked_message = &self_message;
+                picked_message = format!(
+                    $self_message,
+                    a = author_mention,
+                    e = $self_emoji,
+                );
             } else {
-                let mut rng = thread_rng();
-
-                picked_message = messages
-                    .choose(&mut rng)
-                    .ok_or("Failed to choose random message")?;
+                picked_message = choose_str(&[
+                    $(format!(
+                        $message,
+                        a = author_mention,
+                        b = user.mention(),
+                        e = $emoji,
+                    )),+
+                ])?;
             }
 
-            ctx.say(picked_message).await?;
+            ctx.say(&picked_message).await?;
             info!("Responded to a command: {picked_message:?}");
 
             Ok(())

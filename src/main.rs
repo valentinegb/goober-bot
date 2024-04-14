@@ -16,6 +16,8 @@
 
 mod boredom;
 mod rp_commands;
+mod rps;
+mod utility;
 
 use std::{
     fmt,
