@@ -25,7 +25,7 @@ use std::{
 use poise::serenity_prelude::{self, prelude::TypeMapKey, ChannelId, Message};
 use tracing::{debug, error, info, warn};
 
-use crate::utility::choose_str;
+use crate::{utility::choose_str, FloofEmoji};
 
 pub(crate) struct BoredomTracker;
 
@@ -55,10 +55,13 @@ pub(crate) async fn check_for_boredom_acknowledgment(
                     if referenced_message.id.get() == boredom_message.load(atomic::Ordering::SeqCst)
                     {
                         let picked_message = choose_str(&[
-                            "Omg you're alive!!! <:floofBlep:1226944673281609788>",
-                            "\\*gasp\\* contact has been established! <:floofOwO:1226944711768412280>",
-                            "Oh, phew, you're not dead! <:floofTired:1226944734640078878>",
-                            "Yaaaaay friends!!! <:floofBlep:1226944673281609788>",
+                            format!("Omg you're alive!!! {}", FloofEmoji::FloofBlep),
+                            format!(
+                                "\\*gasp\\* contact has been established! {}",
+                                FloofEmoji::FloofOwo
+                            ),
+                            format!("Oh, phew, you're not dead! {}", FloofEmoji::FloofTired),
+                            format!("Yaaaaay friends!!! {}", FloofEmoji::FloofBlep),
                         ])?;
 
                         new_message.reply_ping(ctx, &picked_message).await?;
@@ -101,11 +104,11 @@ pub(crate) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
                         debug!("... I'm bored");
 
                         let picked_message = choose_str(&[
-                            "Waaaaa nobody's talking to me <:floofCry:1226944679833112598>",
-                            "Hello? Did you guys die? <:floofOwO:1226944711768412280>",
-                            "Guys... I'm bored... <:floofSad:1226944722908483665>",
-                            "Hi hello I am the engagement inspector, here for your bi-daily engagement inspection and- WOAH WOAH WOAH, these engagement levels are too low!!! You guys gotta start doing fun stuff right now!!!",
-                            "Are you ignoring me??? Nobody's said anything to me in a while... <:floofAngry:1226944671423660133>",
+                            format!("Waaaaa nobody's talking to me {}", FloofEmoji::FloofCry),
+                            format!("Hello? Did you guys die? {}", FloofEmoji::FloofOwo),
+                            format!("Guys... I'm bored... {}", FloofEmoji::FloofSad),
+                            format!("Hi hello I am the engagement inspector, here for your bi-daily engagement inspection and- WOAH WOAH WOAH, these engagement levels are too low!!! You guys gotta start doing fun stuff right now!!! {}", FloofEmoji::FloofNervous),
+                            format!("Are you ignoring me??? Nobody's said anything to me in a while... {}", FloofEmoji::FloofAngry),
                         ]);
 
                         match picked_message {
