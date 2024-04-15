@@ -20,7 +20,7 @@ pub(super) async fn collective(
         CreateMessage::new().content(format!("{} said: \"{message}\"", ctx.author().mention()));
 
     if let Some(attachment) = attachment {
-        let attachment_builder = CreateAttachment::url(ctx, &attachment.proxy_url).await?;
+        let attachment_builder = CreateAttachment::url(ctx, &attachment.url).await?;
 
         webhook_builder = webhook_builder.add_file(attachment_builder.clone());
         message_builder = message_builder.add_file(attachment_builder);
