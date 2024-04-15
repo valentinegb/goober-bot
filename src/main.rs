@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod boredom;
+mod collective;
 mod confess;
 mod rp_commands;
 mod utility;
@@ -32,6 +33,7 @@ use tracing::info;
 
 use crate::{
     boredom::{check_for_boredom, check_for_boredom_acknowledgment, BoredomTracker},
+    collective::collective,
     confess::confess,
     rp_commands::{bite, boop, gnaw, meow, murder, pat},
 };
@@ -39,6 +41,7 @@ use crate::{
 /// User data, which is stored and accessible in all command invocations
 struct UserData {
     confessions_webhook_url: String,
+    collective_webhook_url: String,
 }
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -122,9 +125,21 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     let confessions_webhook_url = secret_store
         .get("CONFESSIONS_WEBHOOK_URL")
         .context("'CONFESSIONS_WEBHOOK_URL' was not found")?;
+    let collective_webhook_url = secret_store
+        .get("COLLECTIVE_WEBHOOK_URL")
+        .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![boop(), gnaw(), bite(), meow(), murder(), pat(), confess()],
+            commands: vec![
+                boop(),
+                gnaw(),
+                bite(),
+                meow(),
+                murder(),
+                pat(),
+                confess(),
+                collective(),
+            ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
                     if let FullEvent::Message { new_message } = event {
@@ -155,6 +170,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
                 Ok(UserData {
                     confessions_webhook_url,
+                    collective_webhook_url,
                 })
             })
         })
