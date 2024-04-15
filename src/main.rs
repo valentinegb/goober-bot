@@ -17,7 +17,6 @@
 mod boredom;
 mod confess;
 mod rp_commands;
-mod rps;
 mod utility;
 
 use std::{
