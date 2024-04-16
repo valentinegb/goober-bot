@@ -17,17 +17,19 @@
 mod boredom;
 mod collective;
 mod confess;
+mod debug;
 mod portside;
 mod rp_commands;
 mod utility;
 
 use std::{
+    collections::HashSet,
     fmt,
     sync::{atomic::AtomicBool, Arc},
 };
 
 use anyhow::Context as _;
-use poise::serenity_prelude::{ClientBuilder, FullEvent, GatewayIntents, GuildId};
+use poise::serenity_prelude::{ClientBuilder, FullEvent, GatewayIntents, GuildId, UserId};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 use tracing::info;
@@ -141,6 +143,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                 pat(),
                 confess(),
                 collective(),
+                debug::embeds(),
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
@@ -160,6 +163,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                     Ok(())
                 })
             },
+            owners: HashSet::from([UserId::new(1016154932354744330)]),
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
