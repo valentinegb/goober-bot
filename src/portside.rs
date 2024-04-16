@@ -15,6 +15,7 @@ pub(super) async fn check_portside_reactions(
     if reaction.emoji.unicode_eq("🍅") {
         let reaction_message = reaction.message(&ctx).await?;
         let reaction_message_id = reaction.message_id.to_string();
+        let reaction_message_link = reaction_message.link();
         let tomato_reaction = reaction_message
             .reactions
             .into_iter()
@@ -84,6 +85,11 @@ pub(super) async fn check_portside_reactions(
                                     .icon_url(reaction_message.author.face()),
                                 )
                                 .description(reaction_message.content)
+                                .field(
+                                    "",
+                                    format!("[Jump to Message]({reaction_message_link})"),
+                                    false,
+                                )
                                 .footer(CreateEmbedFooter::new(reaction_message_id))
                                 .timestamp(reaction_message.timestamp),
                         ),
