@@ -74,11 +74,14 @@ pub(super) async fn check_portside_reactions(
                             CreateEmbed::new()
                                 .color(Color::RED)
                                 .author(
-                                    CreateEmbedAuthor::new(&reaction_message.author.name).icon_url(
-                                        reaction_message.author.avatar_url().unwrap_or(
-                                            reaction_message.author.default_avatar_url(),
-                                        ),
-                                    ),
+                                    CreateEmbedAuthor::new(
+                                        reaction_message
+                                            .author
+                                            .global_name
+                                            .as_ref()
+                                            .unwrap_or(&reaction_message.author.name),
+                                    )
+                                    .icon_url(reaction_message.author.face()),
                                 )
                                 .description(reaction_message.content)
                                 .footer(CreateEmbedFooter::new(reaction_message_id))
