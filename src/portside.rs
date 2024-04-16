@@ -66,33 +66,44 @@ pub(super) async fn check_portside_reactions(
         // if not, check if reaction count meets minimum
         if tomato_reaction_count >= MINIMUM_TOMATO_REACTIONS {
             // if it does, send new message in #portside
+
+            let mut embed_builder = CreateEmbed::new()
+                .color(Color::RED)
+                .author(
+                    CreateEmbedAuthor::new(
+                        reaction_message
+                            .author
+                            .global_name
+                            .as_ref()
+                            .unwrap_or(&reaction_message.author.name),
+                    )
+                    .icon_url(reaction_message.author.face()),
+                )
+                .description(reaction_message.content)
+                .field(
+                    "",
+                    format!("[Jump to Message]({reaction_message_link})"),
+                    false,
+                )
+                .footer(CreateEmbedFooter::new(reaction_message_id))
+                .timestamp(reaction_message.timestamp);
+
+            if !reaction_message.attachments.is_empty() {
+                for attachment in reaction_message.attachments {
+                    if let Some(content_type) = attachment.content_type {
+                        if content_type.starts_with("image") {
+                            embed_builder = embed_builder.image(attachment.url);
+                        }
+                    }
+                }
+            }
+
             portside
                 .send_message(
                     &ctx,
                     CreateMessage::new()
                         .content(portside_message_content)
-                        .embed(
-                            CreateEmbed::new()
-                                .color(Color::RED)
-                                .author(
-                                    CreateEmbedAuthor::new(
-                                        reaction_message
-                                            .author
-                                            .global_name
-                                            .as_ref()
-                                            .unwrap_or(&reaction_message.author.name),
-                                    )
-                                    .icon_url(reaction_message.author.face()),
-                                )
-                                .description(reaction_message.content)
-                                .field(
-                                    "",
-                                    format!("[Jump to Message]({reaction_message_link})"),
-                                    false,
-                                )
-                                .footer(CreateEmbedFooter::new(reaction_message_id))
-                                .timestamp(reaction_message.timestamp),
-                        ),
+                        .embed(embed_builder),
                 )
                 .await?;
         }
