@@ -2,7 +2,7 @@ use poise::serenity_prelude::{
     futures::StreamExt, CacheHttp, ChannelId, Color, CreateEmbed, CreateEmbedAuthor,
     CreateEmbedFooter, CreateMessage, EditMessage, Http, Reaction,
 };
-use tracing::warn;
+use tracing::{error, warn};
 
 use crate::Error;
 
@@ -12,27 +12,34 @@ pub(super) async fn check_portside_reactions(
     ctx: impl CacheHttp + AsRef<Http>,
     reaction: &Reaction,
 ) -> Result<(), Error> {
-    let message = reaction.message(&ctx).await?;
-    let tomato_reactions = message
-        .reactions
-        .into_iter()
-        .find(|message_rection| message_rection.reaction_type.unicode_eq("🍅"));
-
-    if let Some(tomato_reactions) = tomato_reactions {
-        let tomato_reactions_count = tomato_reactions.count;
-        let portside_channel = ChannelId::new(1229587493100327003);
-        let mut portside_messages = portside_channel.messages_iter(&ctx).boxed();
+    if reaction.emoji.unicode_eq("🍅") {
+        let reaction_message = reaction.message(&ctx).await?;
+        let reaction_message_id = reaction.message_id.to_string();
+        let tomato_reaction = reaction_message
+            .reactions
+            .into_iter()
+            .find(|message_reaction| message_reaction.reaction_type.unicode_eq("🍅"));
+        let tomato_reaction_count = match tomato_reaction {
+            Some(tomato_reaction) => tomato_reaction.count,
+            None => 0,
+        };
         let portside_message_content =
-            format!("**🍅 {tomato_reactions_count} <#{}>**", message.channel_id,);
-        let message_id_string = message.id.to_string();
+            format!("**🍅 {tomato_reaction_count} <#{}>**", reaction.channel_id);
 
-        while let Some(portside_message) = portside_messages.next().await {
-            if let Ok(mut portside_message) = portside_message {
-                match portside_message.embeds.get(0) {
-                    Some(embed) => match &embed.footer {
-                        Some(footer) => {
-                            if footer.text == message_id_string {
-                                if tomato_reactions_count >= MINIMUM_TOMATO_REACTIONS {
+        // check if message has corresponding embed in #portside
+
+        let portside = ChannelId::new(1229587493100327003);
+        let mut portside_message = portside.messages_iter(&ctx).boxed();
+
+        while let Some(portside_message) = portside_message.next().await {
+            match portside_message {
+                Ok(mut portside_message) => match portside_message.embeds.get(0) {
+                    Some(portside_message_embed) => match &portside_message_embed.footer {
+                        Some(portside_message_embed_footer) => {
+                            if portside_message_embed_footer.text == reaction_message_id {
+                                // if it does, check if reaction count meets minimum
+                                if tomato_reaction_count >= MINIMUM_TOMATO_REACTIONS {
+                                    // if it does, edit #portside message content
                                     portside_message
                                         .edit(
                                             &ctx,
@@ -40,26 +47,25 @@ pub(super) async fn check_portside_reactions(
                                         )
                                         .await?;
                                 } else {
+                                    // if not, delete #portside message
                                     portside_message.delete(&ctx).await?;
                                 }
 
                                 return Ok(());
                             }
                         }
-                        None => warn!("Embed in #portside is missing its footer"),
+                        None => warn!("Embed in #portside is missing a footer"),
                     },
-                    None => {
-                        warn!(
-                            "Message in #portside does not have embed, ID: {}",
-                            portside_message.id,
-                        );
-                    }
-                }
+                    None => warn!("Message in #portside doesn't have an embed"),
+                },
+                Err(err) => error!("Failed to get a message from #portside: {err}"),
             }
         }
 
-        if tomato_reactions_count >= MINIMUM_TOMATO_REACTIONS {
-            portside_channel
+        // if not, check if reaction count meets minimum
+        if tomato_reaction_count >= MINIMUM_TOMATO_REACTIONS {
+            // if it does, send new message in #portside
+            portside
                 .send_message(
                     &ctx,
                     CreateMessage::new()
@@ -68,20 +74,21 @@ pub(super) async fn check_portside_reactions(
                             CreateEmbed::new()
                                 .color(Color::RED)
                                 .author(
-                                    CreateEmbedAuthor::new(&message.author.name).icon_url(
-                                        message
-                                            .author
-                                            .avatar_url()
-                                            .unwrap_or(message.author.default_avatar_url()),
+                                    CreateEmbedAuthor::new(&reaction_message.author.name).icon_url(
+                                        reaction_message.author.avatar_url().unwrap_or(
+                                            reaction_message.author.default_avatar_url(),
+                                        ),
                                     ),
                                 )
-                                .description(message.content)
-                                .footer(CreateEmbedFooter::new(message_id_string))
-                                .timestamp(message.timestamp),
+                                .description(reaction_message.content)
+                                .footer(CreateEmbedFooter::new(reaction_message_id))
+                                .timestamp(reaction_message.timestamp),
                         ),
                 )
                 .await?;
         }
+
+        // if not, do nothing
     }
 
     Ok(())
