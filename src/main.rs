@@ -17,6 +17,7 @@
 mod boredom;
 mod collective;
 mod confess;
+mod portside;
 mod rp_commands;
 mod utility;
 
@@ -35,6 +36,7 @@ use crate::{
     boredom::{check_for_boredom, check_for_boredom_acknowledgment, BoredomTracker},
     collective::collective,
     confess::confess,
+    portside::check_portside_reactions,
     rp_commands::{bite, boop, gnaw, meow, murder, pat},
 };
 
@@ -142,8 +144,17 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
-                    if let FullEvent::Message { new_message } = event {
-                        check_for_boredom_acknowledgment(ctx, new_message).await?;
+                    match event {
+                        FullEvent::Message { new_message } => {
+                            check_for_boredom_acknowledgment(ctx, new_message).await?;
+                        }
+                        FullEvent::ReactionAdd { add_reaction } => {
+                            check_portside_reactions(ctx, add_reaction).await?;
+                        }
+                        FullEvent::ReactionRemove { removed_reaction } => {
+                            check_portside_reactions(ctx, removed_reaction).await?;
+                        }
+                        _ => (),
                     }
 
                     Ok(())
@@ -175,10 +186,13 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
             })
         })
         .build();
-    let client = ClientBuilder::new(discord_token, GatewayIntents::non_privileged())
-        .framework(framework)
-        .await
-        .map_err(shuttle_runtime::CustomError::new)?;
+    let client = ClientBuilder::new(
+        discord_token,
+        GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT,
+    )
+    .framework(framework)
+    .await
+    .map_err(shuttle_runtime::CustomError::new)?;
 
     info!("Constructed client");
 
