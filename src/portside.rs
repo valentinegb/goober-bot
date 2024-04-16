@@ -6,7 +6,7 @@ use tracing::{error, warn};
 
 use crate::Error;
 
-const MINIMUM_TOMATO_REACTIONS: u64 = 2;
+const MINIMUM_TOMATO_REACTIONS: u64 = 3;
 
 pub(super) async fn check_portside_reactions(
     ctx: impl CacheHttp + AsRef<Http>,
