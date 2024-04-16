@@ -6,6 +6,8 @@ use tracing::warn;
 
 use crate::Error;
 
+const MINIMUM_TOMATO_REACTIONS: u64 = 2;
+
 pub(super) async fn check_portside_reactions(
     ctx: impl CacheHttp + AsRef<Http>,
     reaction: &Reaction,
@@ -18,42 +20,45 @@ pub(super) async fn check_portside_reactions(
 
     if let Some(tomato_reactions) = tomato_reactions {
         let tomato_reactions_count = tomato_reactions.count;
+        let portside_channel = ChannelId::new(1229587493100327003);
+        let mut portside_messages = portside_channel.messages_iter(&ctx).boxed();
+        let portside_message_content =
+            format!("**🍅 {tomato_reactions_count} <#{}>**", message.channel_id,);
+        let message_id_string = message.id.to_string();
 
-        if tomato_reactions_count > 2 {
-            let portside_channel = ChannelId::new(1229587493100327003);
-            let mut portside_messages = portside_channel.messages_iter(&ctx).boxed();
-            let portside_message_content =
-                format!("**🍅 {tomato_reactions_count} <#{}>**", message.channel_id,);
-            let message_id_string = message.id.to_string();
-
-            while let Some(portside_message) = portside_messages.next().await {
-                if let Ok(mut portside_message) = portside_message {
-                    match portside_message.embeds.get(0) {
-                        Some(embed) => match &embed.footer {
-                            Some(footer) => {
-                                if footer.text == message_id_string {
+        while let Some(portside_message) = portside_messages.next().await {
+            if let Ok(mut portside_message) = portside_message {
+                match portside_message.embeds.get(0) {
+                    Some(embed) => match &embed.footer {
+                        Some(footer) => {
+                            if footer.text == message_id_string {
+                                if tomato_reactions_count >= MINIMUM_TOMATO_REACTIONS {
                                     portside_message
                                         .edit(
                                             &ctx,
                                             EditMessage::new().content(portside_message_content),
                                         )
                                         .await?;
-
-                                    return Ok(());
+                                } else {
+                                    portside_message.delete(&ctx).await?;
                                 }
+
+                                return Ok(());
                             }
-                            None => warn!("Embed in #portside is missing its footer"),
-                        },
-                        None => {
-                            warn!(
-                                "Message in #portside does not have embed, ID: {}",
-                                portside_message.id,
-                            );
                         }
+                        None => warn!("Embed in #portside is missing its footer"),
+                    },
+                    None => {
+                        warn!(
+                            "Message in #portside does not have embed, ID: {}",
+                            portside_message.id,
+                        );
                     }
                 }
             }
+        }
 
+        if tomato_reactions_count >= MINIMUM_TOMATO_REACTIONS {
             portside_channel
                 .send_message(
                     &ctx,
