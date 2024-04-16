@@ -19,7 +19,7 @@ pub(super) async fn check_portside_reactions(
     if let Some(tomato_reactions) = tomato_reactions {
         let tomato_reactions_count = tomato_reactions.count;
 
-        if tomato_reactions_count > 1 {
+        if tomato_reactions_count > 2 {
             let portside_channel = ChannelId::new(1229587493100327003);
             let mut portside_messages = portside_channel.messages_iter(&ctx).boxed();
             let portside_message_content =
