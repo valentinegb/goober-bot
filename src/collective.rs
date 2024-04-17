@@ -1,16 +1,24 @@
 use poise::serenity_prelude::{
-    Attachment, ChannelId, CreateAttachment, CreateMessage, ExecuteWebhook, Mentionable, Webhook,
+    Attachment, ChannelId, CreateAttachment, CreateMessage, ExecuteWebhook, Mentionable, UserId,
+    Webhook,
 };
 
 use crate::{utility::choose_str, Context, Error, FloofEmoji};
 
 /// The Collective grows ever stronger...
-#[poise::command(slash_command)]
+#[poise::command(slash_command, ephemeral)]
 pub(super) async fn collective(
     ctx: Context<'_>,
     #[description = "Your contribution to The Collective"] message: String,
     #[description = "An additional offering to The Collective"] attachment: Option<Attachment>,
 ) -> Result<(), Error> {
+    if ctx.author().id == UserId::new(672258199566417930) {
+        ctx.say("Your flesh is a part of The Collective, but your mind was broken...")
+            .await?;
+
+        return Ok(());
+    }
+
     ctx.defer_ephemeral().await?;
 
     let webhook = Webhook::from_url(ctx, &ctx.data().collective_webhook_url).await?;
