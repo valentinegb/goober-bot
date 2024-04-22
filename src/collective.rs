@@ -13,7 +13,7 @@ pub(super) async fn collective(
     #[description = "An additional offering to The Collective"] attachment: Option<Attachment>,
 ) -> Result<(), Error> {
     if ctx.author().id == UserId::new(672258199566417930) {
-        ctx.say("Your flesh is a part of The Collective, but your mind was broken...")
+        ctx.say("Your flesh is now a part of The Collective, but your mind was broken...")
             .await?;
 
         return Ok(());
