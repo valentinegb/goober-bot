@@ -24,12 +24,14 @@ mod utility;
 
 use std::{
     collections::HashSet,
-    fmt,
+    env, fmt,
     sync::{atomic::AtomicBool, Arc},
 };
 
 use anyhow::Context as _;
-use poise::serenity_prelude::{ClientBuilder, FullEvent, GatewayIntents, GuildId, UserId};
+use poise::serenity_prelude::{
+    ClientBuilder, ExecuteWebhook, FullEvent, GatewayIntents, GuildId, UserId, Webhook,
+};
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 use tracing::info;
@@ -132,6 +134,9 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     let collective_webhook_url = secret_store
         .get("COLLECTIVE_WEBHOOK_URL")
         .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
+    let deployment_webhook_url = secret_store
+        .get("DEPLOYMENT_WEBHOOK_URL")
+        .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
             commands: vec![
@@ -199,6 +204,22 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
     .map_err(shuttle_runtime::CustomError::new)?;
 
     info!("Constructed client");
+
+    let deployment_webhook = Webhook::from_url(&client.http, &deployment_webhook_url)
+        .await
+        .map_err(shuttle_runtime::CustomError::new)?;
+
+    deployment_webhook
+        .execute(
+            &client.http,
+            false,
+            ExecuteWebhook::new().content(format!(
+                "Commit `{}` deployed",
+                env::var("shuttle_static_rev").map_err(shuttle_runtime::CustomError::new)?,
+            )),
+        )
+        .await
+        .map_err(shuttle_runtime::CustomError::new)?;
 
     Ok(client.into())
 }
