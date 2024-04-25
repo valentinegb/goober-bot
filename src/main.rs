@@ -32,7 +32,8 @@ use anyhow::Context as _;
 use poise::serenity_prelude::{
     ClientBuilder, ExecuteWebhook, FullEvent, GatewayIntents, GuildId, UserId, Webhook,
 };
-use shuttle_runtime::SecretStore;
+use shuttle_common::deployment;
+use shuttle_runtime::{DeploymentMetadata, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use tracing::info;
 
@@ -123,7 +124,10 @@ impl fmt::Display for FloofEmoji {
 }
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+async fn main(
+    #[shuttle_runtime::Secrets] secret_store: SecretStore,
+    #[shuttle_runtime::Metadata] metadata: DeploymentMetadata,
+) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -133,9 +137,6 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
         .context("'CONFESSIONS_WEBHOOK_URL' was not found")?;
     let collective_webhook_url = secret_store
         .get("COLLECTIVE_WEBHOOK_URL")
-        .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
-    let deployment_webhook_url = secret_store
-        .get("DEPLOYMENT_WEBHOOK_URL")
         .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
@@ -205,21 +206,26 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
 
     info!("Constructed client");
 
-    let deployment_webhook = Webhook::from_url(&client.http, &deployment_webhook_url)
-        .await
-        .map_err(shuttle_runtime::CustomError::new)?;
+    if metadata.env == deployment::Environment::Deployment {
+        let deployment_webhook_url = secret_store
+            .get("DEPLOYMENT_WEBHOOK_URL")
+            .context("'COLLECTIVE_WEBHOOK_URL' was not found")?;
+        let deployment_webhook = Webhook::from_url(&client.http, &deployment_webhook_url)
+            .await
+            .map_err(shuttle_runtime::CustomError::new)?;
 
-    deployment_webhook
-        .execute(
-            &client.http,
-            false,
-            ExecuteWebhook::new().content(format!(
-                "Commit `{}` deployed",
-                env::var("shuttle_static_rev").map_err(shuttle_runtime::CustomError::new)?,
-            )),
-        )
-        .await
-        .map_err(shuttle_runtime::CustomError::new)?;
+        deployment_webhook
+            .execute(
+                &client.http,
+                false,
+                ExecuteWebhook::new().content(format!(
+                    "Commit `{}` deployed",
+                    env::var("SHUTTLE_STATIC_REV").map_err(shuttle_runtime::CustomError::new)?,
+                )),
+            )
+            .await
+            .map_err(shuttle_runtime::CustomError::new)?;
+    }
 
     Ok(client.into())
 }
