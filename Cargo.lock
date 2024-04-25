@@ -678,7 +678,6 @@ dependencies = [
  "anyhow",
  "poise",
  "rand",
- "shuttle-common",
  "shuttle-runtime",
  "shuttle-serenity",
  "tokio",
