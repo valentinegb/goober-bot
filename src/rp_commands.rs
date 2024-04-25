@@ -211,3 +211,33 @@ rp_command!(
         FloofEmoji::FloofPlead,
     ),
 );
+
+rp_command!(
+    piss,
+    "Thaaaaaat'sssss pissssssssssss",
+    "Who you will... piss",
+    [
+        (
+            "{a} pissed {b}\n(I do not know what that means) {e}",
+            FloofEmoji::AFloofLoad,
+        ),
+        (
+            "{a} whispered \"*piss yourself*\" into {b}'s ear and they listened {e}",
+            FloofEmoji::FloofOwo,
+        ),
+        (
+            "{a} activated the peeing-your-self-inducing-waves-inator machine and {b} was a bit too close {e}",
+            FloofEmoji::FloofLurk,
+        ),
+        (
+            "Run away {b}-! {a} has a piss kink {e}",
+            FloofEmoji::FloofScared,
+        ),
+        (
+            "{a} JUST *PEED **ON*** {b}?????????? {e}\nI'm quitting istg...",
+            FloofEmoji::FloofNervous,
+        ),
+    ],
+    ("WTF {a} PEED ON ME EW EW EW EWWWWW {e}", FloofEmoji::FloofScared),
+    ("Ummm, guys...? {a} pissed themselves... {e}", FloofEmoji::FloofNervous),
+);

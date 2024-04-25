@@ -39,7 +39,7 @@ use crate::{
     collective::collective,
     confess::confess,
     portside::check_portside_reactions,
-    rp_commands::{bite, boop, gnaw, meow, murder, pat},
+    rp_commands::{bite, boop, gnaw, meow, murder, pat, piss},
 };
 
 /// User data, which is stored and accessible in all command invocations
@@ -144,6 +144,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                 confess(),
                 collective(),
                 debug::embeds(),
+                piss(),
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
