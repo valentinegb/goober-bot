@@ -138,9 +138,15 @@ pub(crate) async fn check_for_boredom(ctx: serenity_prelude::Context) -> ! {
         {
             let mut data = ctx.data.write().await;
 
-            if let Some(value) = boredom_message_value {
-                debug!("I'm saving my boredom message");
-                data.insert::<BoredomMessage>(value);
+            match boredom_message_value {
+                Some(value) => {
+                    debug!("I'm inserting my boredom message");
+                    data.insert::<BoredomMessage>(value);
+                }
+                None => {
+                    debug!("I'm removing my boredom message");
+                    data.remove::<BoredomMessage>();
+                }
             }
 
             if let Some(value) = boredom_tracker_value {
