@@ -161,6 +161,8 @@ async fn history(
             "You must have the `BAN_MEMBERS` permission to view other members' strike history.",
         )
         .await?;
+
+        return Ok(());
     }
 
     ctx.defer_ephemeral().await?;
@@ -283,6 +285,8 @@ async fn total(
     {
         ctx.say("You must have the `BAN_MEMBERS` permission to view other members' strike total.")
             .await?;
+
+        return Ok(());
     }
 
     //   /\
