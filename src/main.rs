@@ -20,6 +20,7 @@ mod confess;
 mod debug;
 mod portside;
 mod rp_commands;
+mod strike;
 mod utility;
 
 use std::{
@@ -30,6 +31,7 @@ use std::{
 
 use anyhow::Context as _;
 use poise::serenity_prelude::{ClientBuilder, FullEvent, GatewayIntents, GuildId, UserId};
+use shuttle_persist::PersistInstance;
 use shuttle_runtime::SecretStore;
 use shuttle_serenity::ShuttleSerenity;
 use tracing::info;
@@ -40,12 +42,14 @@ use crate::{
     confess::confess,
     portside::check_portside_reactions,
     rp_commands::{bite, boop, gnaw, meow, murder, pat, piss},
+    strike::strike,
 };
 
 /// User data, which is stored and accessible in all command invocations
 struct UserData {
     confessions_webhook_url: String,
     collective_webhook_url: String,
+    persist: PersistInstance,
 }
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -121,7 +125,10 @@ impl fmt::Display for FloofEmoji {
 }
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
+async fn main(
+    #[shuttle_runtime::Secrets] secret_store: SecretStore,
+    #[shuttle_persist::Persist] persist: PersistInstance,
+) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -145,6 +152,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                 collective(),
                 debug::embeds(),
                 piss(),
+                strike(),
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
@@ -187,6 +195,7 @@ async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleS
                 Ok(UserData {
                     confessions_webhook_url,
                     collective_webhook_url,
+                    persist,
                 })
             })
         })

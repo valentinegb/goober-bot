@@ -15,3 +15,6 @@ shuttle-serenity = "0.44.0"
 tracing = "0.1.37"
 tokio = "1.26.0"
 rand = "0.8.5"
+shuttle-persist = "0.44.0"
+serde = { version = "1.0.200", features = ["derive"] }
+chrono = "0.4.38"
