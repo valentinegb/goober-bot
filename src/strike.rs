@@ -21,7 +21,7 @@ use poise::{
         Color, CreateEmbed, CreateEmbedAuthor, FormattedTimestamp, FormattedTimestampStyle,
         Timestamp, UserId,
     },
-    CreateReply,
+    ChoiceParameter, CreateReply,
 };
 use serde::{Deserialize, Serialize};
 
@@ -32,15 +32,20 @@ struct Strike {
     issuer_id: u64,
     issuing: Timestamp,
     expiration: Timestamp,
-    rule: Option<u8>,
+    rule: Option<Rule>,
     comment: Option<String>,
 }
 
 #[repr(u8)]
+#[derive(ChoiceParameter, Clone, Copy, Debug, Deserialize, Serialize)]
 enum Rule {
+    #[name = "NO NSFW (gore or porn)"]
     Nsfw = 1,
+    #[name = "NO hate speech or usage of slurs in a derogatory manner"]
     Hate = 2,
+    #[name = "NO discourse"]
     Discourse = 3,
+    #[name = "NO conflict"]
     Conflict = 4,
 }
 
@@ -79,7 +84,7 @@ pub(super) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
 async fn add(
     ctx: Context<'_>,
     #[description = "User to give a strike to"] user: UserId,
-    #[description = "Rule in violation"] rule: Option<u8>,
+    #[description = "Rule in violation"] rule: Option<Rule>,
     #[description = "Any additional comments"] comment: Option<String>,
     #[description = "Override the expiration time (in months)"] expiration: Option<u32>,
 ) -> Result<(), Error> {
@@ -93,7 +98,7 @@ async fn add(
     let expiration_months = match expiration {
         Some(expiration) => Months::new(expiration),
         None => match rule {
-            Some(rule) => Rule::try_from(rule)?.get_expiration(),
+            Some(rule) => rule.get_expiration(),
             None => Months::new(1),
         },
     };
@@ -191,7 +196,7 @@ async fn history(
         );
 
         if let Some(rule) = strike.rule {
-            list += &format!(" for breaking rule {rule}");
+            list += &format!(" for breaking rule {}", rule as u8);
         }
 
         if let Some(comment) = &strike.comment {
