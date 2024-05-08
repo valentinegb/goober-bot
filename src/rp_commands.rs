@@ -257,3 +257,32 @@ rp_command!(
     ("WTF {a} PEED ON ME EW EW EW EWWWWW {e}", FloofEmoji::FloofScared),
     ("Ummm, guys...? {a} pissed themselves... {e}", FloofEmoji::FloofNervous),
 );
+
+rp_command!(
+    kiss,
+    "😳",
+    "Omg who is it who is it???",
+    [
+        (
+            "AWWWWWWWWW- {a} gave {b} a kiss!!!! {e}",
+            FloofEmoji::FloofPlead,
+        ),
+        (
+            "Hehehehe, {a} gave {b} a little smooooch {e}",
+            FloofEmoji::FloofHappy,
+        ),
+        (
+            "OMG- GUYS- {a} JUST KISSED {b}!!! {e}",
+            FloofEmoji::FloofPlead,
+        ),
+        (
+            "Hehehe {a} and {b} are so cute, they just kissed each other {e}",
+            FloofEmoji::FloofHappy,
+        ),
+    ],
+    (
+        "\\*gasp* oh- oh my goodness- {a} kissed me!!! {e}",
+        FloofEmoji::FloofWoozy,
+    ),
+    ("{a} kissed theirselves? ...how? {e}", FloofEmoji::FloofWhat),
+);
