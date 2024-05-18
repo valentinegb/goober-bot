@@ -41,6 +41,7 @@ use super::{boredom::BoredomTracker, utility::choose_str, Context, Error, FloofE
 /// Example: `"{a} did something to {b} {e}"`
 macro_rules! rp_command {
     (
+        $(#[$($macro_argument:meta),+$(,)?],)?
         $name:ident,
         $description:literal,
         $user_description:literal,
@@ -49,7 +50,7 @@ macro_rules! rp_command {
         ($self_message:literal, $self_emoji:expr$(,)?)$(,)?
     ) => {
         #[doc = $description]
-        #[poise::command(slash_command)]
+        #[poise::command(slash_command $($(, $macro_argument),+)?)]
         pub(super) async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: User,
@@ -229,6 +230,7 @@ rp_command!(
 );
 
 rp_command!(
+    #[nsfw_only],
     piss,
     "Thaaaaaat'sssss pissssssssssss",
     "Who you will... piss",
