@@ -23,6 +23,7 @@ use super::{boredom::BoredomTracker, utility::choose_str, Context, Error, FloofE
 
 /// ```
 /// rp_command!(
+///     #[macro_argument..], // (optional)
 ///     name: ident,
 ///     description: literal,
 ///     user_description: literal,
@@ -281,10 +282,23 @@ rp_command!(
             "Hehehe {a} and {b} are so cute, they just kissed each other {e}",
             FloofEmoji::FloofHappy,
         ),
+        (
+            "{a} **VIOLENTLY** pulled {b} to them and **SMOOCHED** them on the **LIPS**, not letting **ANYONE ELSE** in {e}",
+            FloofEmoji::FloofMischief,
+        ),
     ],
     (
         "\\*gasp* oh- oh my goodness- {a} kissed me!!! {e}",
         FloofEmoji::FloofWoozy,
     ),
     ("{a} kissed theirselves? ...how? {e}", FloofEmoji::FloofWhat),
+);
+
+rp_command!(
+    revive,
+    "QUICK I NEED TO SAVE ZI",
+    "THE USER IS ZI",
+    [("Oh phew, {a} saved {b}! {e}", FloofEmoji::FloofTired)],
+    ("NO NO NO {a}, SAVE ZI!!! {e}", FloofEmoji::FloofOwo),
+    ("NO NO NO {a}, SAVE ZI!!! {e}", FloofEmoji::FloofOwo),
 );

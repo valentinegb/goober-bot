@@ -41,7 +41,7 @@ use crate::{
     collective::collective,
     confess::confess,
     portside::check_portside_reactions,
-    rp_commands::{bite, boop, gnaw, kiss, meow, murder, pat, piss},
+    rp_commands::{bite, boop, gnaw, kiss, meow, murder, pat, piss, revive},
     strike::strike,
 };
 
@@ -154,6 +154,7 @@ async fn main(
                 piss(),
                 strike(),
                 kiss(),
+                revive(),
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
