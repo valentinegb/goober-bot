@@ -154,7 +154,7 @@ async fn main(
                 piss(),
                 strike(),
                 kiss(),
-                revive(),
+                // revive(),
             ],
             event_handler: |ctx, event, _framework, _data| {
                 Box::pin(async move {
