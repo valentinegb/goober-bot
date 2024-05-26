@@ -299,6 +299,12 @@ rp_command!(
     "QUICK I NEED TO SAVE ZI",
     "THE USER IS ZI",
     [("Oh phew, {a} saved {b}! {e}", FloofEmoji::FloofTired)],
-    ("NO NO NO {a}, SAVE ZI!!! {e}", FloofEmoji::FloofOwo),
-    ("NO NO NO {a}, SAVE ZI!!! {e}", FloofEmoji::FloofOwo),
+    (
+        "NO NO NO {a}, SAVE <@993768189924229171>!!! {e}",
+        FloofEmoji::FloofOwo,
+    ),
+    (
+        "NO NO NO {a}, SAVE <@993768189924229171>!!! {e}",
+        FloofEmoji::FloofOwo,
+    ),
 );
