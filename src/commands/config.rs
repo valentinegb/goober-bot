@@ -3,14 +3,32 @@ use poise::{
     serenity_prelude::{Color, CreateEmbed, Timestamp},
     CreateReply,
 };
-use sqlx::{Column, Row, TypeInfo};
+use sqlx::{mysql::MySqlQueryResult, Column, Row, TypeInfo};
 
 use crate::{Context, Error};
 
-/// Subcommands related to reading and writing server configuration
+/// Returns the inner representation of the ID of the guild the context is in.
+fn get_current_guild_id(ctx: Context<'_>) -> Result<u64, Error> {
+    Ok(ctx.guild_id().context("Not in a guild")?.get())
+}
+
+/// Ensures that a config exists for the current guild.
+async fn ensure_config_exists(ctx: Context<'_>) -> Result<MySqlQueryResult, Error> {
+    let guild_id = get_current_guild_id(ctx)?;
+
+    Ok(
+        sqlx::query("INSERT INTO configs (guild_id) VALUE (?) ON DUPLICATE KEY UPDATE guild_id=?")
+            .bind(guild_id)
+            .bind(guild_id)
+            .execute(&ctx.data().pool)
+            .await?,
+    )
+}
+
+/// Subcommands related to getting and setting server configuration
 #[poise::command(
     slash_command,
-    subcommands("list"),
+    subcommands("list", "get"),
     install_context = "Guild",
     interaction_context = "Guild",
     default_member_permissions = "MANAGE_GUILD"
@@ -27,22 +45,13 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
         .description("Options and their values for this server.")
         .timestamp(Timestamp::now())
         .color(Color::ORANGE);
-    let row = match sqlx::query("SELECT * FROM configs WHERE guild_id = ?")
-        .bind(ctx.guild_id().context("Not in guild")?.get())
+
+    ensure_config_exists(ctx).await?;
+
+    let row = sqlx::query("SELECT * FROM configs WHERE guild_id = ?")
+        .bind(get_current_guild_id(ctx)?)
         .fetch_one(&ctx.data().pool)
-        .await
-    {
-        Ok(query) => query,
-        Err(err) => match err {
-            sqlx::Error::RowNotFound => {
-                sqlx::query("INSERT INTO configs (guild_id) VALUES (?) RETURNING *")
-                    .bind(ctx.guild_id().context("Not in guild")?.get())
-                    .fetch_one(&ctx.data().pool)
-                    .await?
-            }
-            other => bail!(other),
-        },
-    };
+        .await?;
 
     for column in row.columns() {
         let name = column.name();
@@ -60,6 +69,31 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
     }
 
     ctx.send(CreateReply::default().embed(embed)).await?;
+
+    Ok(())
+}
+
+/// Get a specific configuration option
+#[poise::command(slash_command, subcommands("get_strikes_enabled"))]
+async fn get(_ctx: Context<'_>) -> Result<(), Error> {
+    unreachable!()
+}
+
+/// Get the value of strikes_enabled
+#[poise::command(slash_command, rename = "strikes_enabled", ephemeral)]
+async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
+    ensure_config_exists(ctx).await?;
+
+    let query = sqlx::query("SELECT strikes_enabled FROM configs WHERE guild_id = ?")
+        .bind(get_current_guild_id(ctx)?)
+        .fetch_one(&ctx.data().pool)
+        .await?;
+    let strikes_enabled: bool = query.try_get("strikes_enabled")?;
+
+    ctx.say(format!(
+        "`strikes_enabled` is currently set to `{strikes_enabled}`."
+    ))
+    .await?;
 
     Ok(())
 }
