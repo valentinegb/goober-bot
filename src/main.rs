@@ -2,12 +2,15 @@ mod commands;
 
 use anyhow::Context as _;
 use poise::{
-    serenity_prelude::{ClientBuilder, GatewayIntents},
-    Framework, FrameworkOptions,
+    serenity_prelude::{
+        self, ClientBuilder, Color, CreateAllowedMentions, CreateEmbed, GatewayIntents,
+    },
+    CreateReply, Framework, FrameworkError, FrameworkOptions,
 };
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use sqlx::MySqlPool;
+use tracing::error;
 
 /// User data, which is stored and accessible in all command invocations
 struct Data {
@@ -17,10 +20,46 @@ struct Data {
 type Error = anyhow::Error;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-/// Responds with "world!"
-#[poise::command(slash_command)]
-async fn hello(ctx: Context<'_>) -> Result<(), Error> {
-    ctx.say("world!").await?;
+pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
+    error: FrameworkError<'_, U, E>,
+) -> Result<(), serenity_prelude::Error> {
+    match error {
+        FrameworkError::Command { error, ctx, .. } => {
+            let error = error.to_string();
+
+            error!("An error occured in a command: {}", error);
+
+            ctx.send(
+                CreateReply::default()
+                    .embed(
+                        CreateEmbed::new()
+                            .title("Error")
+                            .description(error)
+                            .color(Color::RED),
+                    )
+                    .allowed_mentions(CreateAllowedMentions::new())
+                    .ephemeral(true),
+            )
+            .await?;
+        }
+        FrameworkError::CommandPanic {
+            payload: _, ctx, ..
+        } => {
+            // Not showing the payload to the user because it may contain sensitive info
+            ctx.send(
+                CreateReply::default()
+                    .embed(
+                        CreateEmbed::new()
+                            .title("Internal Error")
+                            .description("An unexpected internal error has occurred")
+                            .color(Color::RED),
+                    )
+                    .ephemeral(true),
+            )
+            .await?;
+        }
+        other => poise::builtins::on_error(other).await?,
+    }
 
     Ok(())
 }
@@ -42,6 +81,13 @@ async fn main(
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![commands::config()],
+            on_error: |error| {
+                Box::pin(async move {
+                    if let Err(e) = on_error(error).await {
+                        error!("Error while handling error: {}", e);
+                    }
+                })
+            },
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {

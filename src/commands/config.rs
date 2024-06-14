@@ -7,9 +7,12 @@ use sqlx::{Column, Row, TypeInfo};
 
 use crate::{Context, Error};
 
+/// Subcommands related to reading and writing server configuration
 #[poise::command(
     slash_command,
     subcommands("list"),
+    install_context = "Guild",
+    interaction_context = "Guild",
     default_member_permissions = "MANAGE_GUILD"
 )]
 pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
