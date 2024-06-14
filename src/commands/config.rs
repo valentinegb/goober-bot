@@ -17,18 +17,20 @@ async fn ensure_config_exists(ctx: Context<'_>) -> Result<MySqlQueryResult, Erro
     let guild_id = get_current_guild_id(ctx)?;
 
     Ok(
-        sqlx::query("INSERT INTO configs (guild_id) VALUE (?) ON DUPLICATE KEY UPDATE guild_id=?")
-            .bind(guild_id)
-            .bind(guild_id)
-            .execute(&ctx.data().pool)
-            .await?,
+        sqlx::query(
+            "INSERT INTO configs (guild_id) VALUE (?) ON DUPLICATE KEY UPDATE guild_id = ?",
+        )
+        .bind(guild_id)
+        .bind(guild_id)
+        .execute(&ctx.data().pool)
+        .await?,
     )
 }
 
 /// Subcommands related to getting and setting server configuration
 #[poise::command(
     slash_command,
-    subcommands("list", "get"),
+    subcommands("list", "get", "set"),
     install_context = "Guild",
     interaction_context = "Guild",
     default_member_permissions = "MANAGE_GUILD"
@@ -94,6 +96,28 @@ async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
         "`strikes_enabled` is currently set to `{strikes_enabled}`."
     ))
     .await?;
+
+    Ok(())
+}
+
+/// Set a specific configuration option
+#[poise::command(slash_command, subcommands("set_strikes_enabled"))]
+async fn set(_ctx: Context<'_>) -> Result<(), Error> {
+    unreachable!()
+}
+
+/// Set the value of strikes_enabled
+#[poise::command(slash_command, rename = "strikes_enabled", ephemeral)]
+async fn set_strikes_enabled(ctx: Context<'_>, value: bool) -> Result<(), Error> {
+    ensure_config_exists(ctx).await?;
+    sqlx::query("UPDATE configs SET strikes_enabled = ? WHERE guild_id = ?")
+        .bind(value)
+        .bind(get_current_guild_id(ctx)?)
+        .execute(&ctx.data().pool)
+        .await?;
+
+    ctx.say(format!("`strikes_enabled` has been set to `{value}`."))
+        .await?;
 
     Ok(())
 }
