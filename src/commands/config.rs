@@ -1,4 +1,5 @@
 use anyhow::{bail, Context as _};
+use paste::paste;
 use poise::{
     serenity_prelude::{Color, CreateEmbed, Timestamp},
     CreateReply,
@@ -81,43 +82,57 @@ async fn get(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-/// Get the value of strikes_enabled
-#[poise::command(slash_command, rename = "strikes_enabled", ephemeral)]
-async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
-    ensure_config_exists(ctx).await?;
-
-    let query = sqlx::query("SELECT strikes_enabled FROM configs WHERE guild_id = ?")
-        .bind(get_current_guild_id(ctx)?)
-        .fetch_one(&ctx.data().pool)
-        .await?;
-    let strikes_enabled: bool = query.try_get("strikes_enabled")?;
-
-    ctx.say(format!(
-        "`strikes_enabled` is currently set to `{strikes_enabled}`."
-    ))
-    .await?;
-
-    Ok(())
-}
-
 /// Set a specific configuration option
 #[poise::command(slash_command, subcommands("set_strikes_enabled"))]
 async fn set(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-/// Set the value of strikes_enabled
-#[poise::command(slash_command, rename = "strikes_enabled", ephemeral)]
-async fn set_strikes_enabled(ctx: Context<'_>, value: bool) -> Result<(), Error> {
-    ensure_config_exists(ctx).await?;
-    sqlx::query("UPDATE configs SET strikes_enabled = ? WHERE guild_id = ?")
-        .bind(value)
-        .bind(get_current_guild_id(ctx)?)
-        .execute(&ctx.data().pool)
-        .await?;
+macro_rules! get_set {
+    ($ident:ident, $literal:literal, $ty:ty) => {
+        paste! {
+            #[doc = "Get the value of " $ident]
+            #[poise::command(slash_command, rename = $literal, ephemeral)]
+            async fn [<get_ $ident>](ctx: Context<'_>) -> Result<(), Error> {
+                ensure_config_exists(ctx).await?;
 
-    ctx.say(format!("`strikes_enabled` has been set to `{value}`."))
-        .await?;
+                let option = $literal;
+                let query = sqlx::query(
+                    &format!("SELECT {option} FROM configs WHERE guild_id = ?"),
+                )
+                .bind(get_current_guild_id(ctx)?)
+                .fetch_one(&ctx.data().pool)
+                .await?;
+                let value: bool = query.try_get($literal)?;
 
-    Ok(())
+                ctx.say(format!("`{option}` is currently set to `{value}`."))
+                    .await?;
+
+                Ok(())
+            }
+
+            #[doc = "Set the value of " $ident]
+            #[poise::command(slash_command, rename = $literal, ephemeral)]
+            async fn [<set_ $ident>](ctx: Context<'_>, value: $ty) -> Result<(), Error> {
+                ensure_config_exists(ctx).await?;
+
+                let option = $literal;
+
+                sqlx::query(&format!(
+                    "UPDATE configs SET {option} = ? WHERE guild_id = ?"
+                ))
+                .bind(value)
+                .bind(get_current_guild_id(ctx)?)
+                .execute(&ctx.data().pool)
+                .await?;
+
+                ctx.say(format!("`{option}` has been set to `{value}`."))
+                    .await?;
+
+                Ok(())
+            }
+        }
+    };
 }
+
+get_set!(strikes_enabled, "strikes_enabled", bool);

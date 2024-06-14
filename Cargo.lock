@@ -827,6 +827,7 @@ name = "goober-bot"
 version = "1.0.0"
 dependencies = [
  "anyhow",
+ "paste",
  "poise",
  "shuttle-aws-rds",
  "shuttle-runtime",
