@@ -4,6 +4,8 @@ use poise::serenity_prelude::{self, ActivityData};
 use rand::{seq::SliceRandom, thread_rng};
 use tokio::task::spawn_blocking;
 
+const SLEEP_SECS: u64 = 10 * 60;
+
 pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
     spawn_blocking(move || {
         let activities = [
@@ -32,7 +34,7 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
                     .clone(),
             ));
 
-            std::thread::sleep(Duration::from_secs(10 * 60));
+            std::thread::sleep(Duration::from_secs(SLEEP_SECS));
         }
     });
 }
