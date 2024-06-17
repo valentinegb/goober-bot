@@ -31,22 +31,32 @@ struct Config {
     strikes_enabled: bool,
 }
 
-/// Attempts to load the config for the server in `ctx`. If a configuration is
-/// not found, will attempt to save the default configuration once and try to
-/// load the configuration again.
-fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
-    let data = ctx.data();
-    let config_key = format!(
+/// Gets the config key for the server in `ctx`
+fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
+    Ok(format!(
         "config_{}",
         ctx.guild_id().context("Expected context to be in guild")?
-    );
+    ))
+}
+
+/// Saves a config for the server in `ctx`
+fn save_config(ctx: Context<'_>, config: Config) -> Result<(), Error> {
+    Ok(ctx.data().persist.save(&get_config_key(ctx)?, config)?)
+}
+
+/// Attempts to load the config for the server in `ctx`. If a configuration is
+/// not found, will attempt to save the default configuration once and try to
+/// load the configuration again
+fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
+    let data = ctx.data();
+    let config_key = get_config_key(ctx)?;
 
     Ok(match data.persist.load(&config_key) {
         Ok(config) => config,
         Err(err) => match err {
             PersistError::Open(ref io_err) => match io_err.kind() {
                 std::io::ErrorKind::NotFound => {
-                    data.persist.save(&config_key, Config::default())?;
+                    save_config(ctx, Config::default())?;
 
                     data.persist.load(&config_key)?
                 }
@@ -60,7 +70,7 @@ fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
 /// Subcommands related to getting and setting server configuration
 #[command(
     slash_command,
-    subcommands("list", "get"/*, "set"*/),
+    subcommands("list", "get", "set"),
     install_context = "Guild",
     interaction_context = "Guild",
     default_member_permissions = "MANAGE_GUILD"
@@ -113,6 +123,28 @@ async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
         ),
     )
     .await?;
+
+    Ok(())
+}
+
+/// Sets a specific configuration option
+#[command(slash_command, subcommands("set_strikes_enabled"))]
+async fn set(_ctx: Context<'_>) -> Result<(), Error> {
+    unreachable!()
+}
+
+/// Sets the Strikes Enabled configuration option
+#[command(slash_command, rename = "strikes_enabled", ephemeral)]
+async fn set_strikes_enabled(
+    ctx: Context<'_>,
+    #[description = "The value to set Strikes Enabled to"] value: bool,
+) -> Result<(), Error> {
+    let mut config = load_or_save_default_config(ctx)?;
+
+    config.strikes_enabled = value;
+    save_config(ctx, config)?;
+    ctx.say(format!("**Strikes Enabled** has been set to **{value}**"))
+        .await?;
 
     Ok(())
 }
