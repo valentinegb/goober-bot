@@ -45,7 +45,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
         FrameworkError::Command { error, ctx, .. } => {
             let error = error.to_string();
 
-            error!("An error occured in a command: {}", error);
+            error!("An error occured in a command: {error}");
 
             ctx.send(
                 CreateReply::default()
@@ -76,6 +76,45 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
             )
             .await?;
         }
+        FrameworkError::ArgumentParse {
+            error, input, ctx, ..
+        } => {
+            let for_input = match input {
+                Some(input) => format!(" for input \"{input}\""),
+                None => String::new(),
+            };
+
+            error!("An argument parsing error occured{for_input}: {error}");
+
+            ctx.send(
+                CreateReply::default()
+                    .embed(
+                        CreateEmbed::new()
+                            .title("Argument Parsing Error")
+                            .description("There's probably been an update to this command recently. Please try running it again in a few seconds.")
+                            .color(Color::RED),
+                    )
+                    .ephemeral(true),
+            )
+            .await?;
+        }
+        FrameworkError::MissingBotPermissions {
+            missing_permissions,
+            ctx,
+            ..
+        } => {
+            ctx.send(
+                CreateReply::default()
+                    .embed(
+                        CreateEmbed::new()
+                            .title("Missing Bot Permissions")
+                            .description(format!("Command cannot be executed because the bot is lacking permissions: {missing_permissions}"))
+                            .color(Color::RED),
+                    )
+                    .ephemeral(true),
+            )
+            .await?;
+        }
         other => poise::builtins::on_error(other).await?,
     }
 
@@ -97,7 +136,7 @@ async fn main(
             on_error: |error| {
                 Box::pin(async move {
                     if let Err(e) = on_error(error).await {
-                        error!("Error while handling error: {}", e);
+                        error!("Error while handling error: {e}");
                     }
                 })
             },
