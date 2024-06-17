@@ -23,7 +23,7 @@ use poise::{
     },
     CreateReply, Framework, FrameworkError, FrameworkOptions,
 };
-use shuttle_persist::PersistInstance;
+use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use tracing::error;
@@ -83,7 +83,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
 #[shuttle_runtime::main]
 async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
-    #[shuttle_persist::Persist] persist: PersistInstance,
+    #[shuttle_persist_msgpack::Persist] persist: PersistInstance,
 ) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store

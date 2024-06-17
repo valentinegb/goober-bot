@@ -21,12 +21,13 @@ use poise::{
     CreateReply,
 };
 use serde::{Deserialize, Serialize};
-use shuttle_persist::PersistError;
+use shuttle_persist_msgpack::PersistError;
 
 use crate::{Context, Error};
 
 #[derive(Deserialize, Serialize, Default)]
 #[non_exhaustive]
+#[serde(default)]
 struct Config {
     strikes_enabled: bool,
 }
