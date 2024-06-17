@@ -694,6 +694,7 @@ version = "1.0.0"
 dependencies = [
  "anyhow",
  "poise",
+ "rand",
  "serde",
  "shuttle-persist-msgpack",
  "shuttle-runtime",

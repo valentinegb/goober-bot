@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+mod activity;
 mod commands;
 
+use activity::start_activity_loop;
 use anyhow::Context as _;
 use poise::{
     serenity_prelude::{
@@ -103,6 +105,7 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
+                start_activity_loop(ctx.clone());
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
 
                 Ok(Data { persist })
