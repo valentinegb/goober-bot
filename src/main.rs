@@ -25,13 +25,10 @@ use poise::{
 };
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
-use sqlx::MySqlPool;
 use tracing::error;
 
 /// User data, which is stored and accessible in all command invocations
-struct Data {
-    pool: MySqlPool,
-}
+struct Data;
 
 type Error = anyhow::Error;
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -81,15 +78,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
 }
 
 #[shuttle_runtime::main]
-async fn main(
-    #[shuttle_runtime::Secrets] secret_store: SecretStore,
-    #[shuttle_aws_rds::MariaDB] pool: MySqlPool,
-) -> ShuttleSerenity {
-    sqlx::migrate!()
-        .run(&pool)
-        .await
-        .map_err(CustomError::new)?;
-
+async fn main(#[shuttle_runtime::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -110,7 +99,7 @@ async fn main(
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
 
-                Ok(Data { pool })
+                Ok(Data)
             })
         })
         .build();
