@@ -69,6 +69,7 @@ pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
+/// Lists all configuration options for this server
 #[command(slash_command)]
 async fn list(ctx: Context<'_>) -> Result<(), Error> {
     let config = load_or_save_default_config(ctx)?;
