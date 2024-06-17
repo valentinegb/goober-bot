@@ -17,7 +17,9 @@
 use anyhow::{bail, Context as _};
 use poise::{
     command,
-    serenity_prelude::{Color, CreateEmbed, Timestamp},
+    serenity_prelude::{
+        ChannelId, ChannelType, Color, CreateEmbed, GuildChannel, Mentionable, Timestamp,
+    },
     CreateReply,
 };
 use serde::{Deserialize, Serialize};
@@ -30,9 +32,10 @@ use crate::{Context, Error};
 #[serde(default)]
 struct Config {
     strikes_enabled: bool,
+    strikes_log_channel: Option<ChannelId>,
 }
 
-/// Gets the config key for the server in `ctx`
+/// Gets the config key for the server in `ctx`.
 fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
     Ok(format!(
         "config_{}",
@@ -40,14 +43,14 @@ fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
     ))
 }
 
-/// Saves a config for the server in `ctx`
+/// Saves a config for the server in `ctx`.
 fn save_config(ctx: Context<'_>, config: Config) -> Result<(), Error> {
     Ok(ctx.data().persist.save(&get_config_key(ctx)?, config)?)
 }
 
 /// Attempts to load the config for the server in `ctx`. If a configuration is
 /// not found, will attempt to save the default configuration once and try to
-/// load the configuration again
+/// load the configuration again.
 fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
     let data = ctx.data();
     let config_key = get_config_key(ctx)?;
@@ -68,10 +71,21 @@ fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
     })
 }
 
+/// Returns "None" as a [`String`] (if none), or applies a function to the
+/// contained value (if any).
+///
+/// See [`Option::map_or_else`].
+fn map_or_none_string<T, F>(option: Option<T>, f: F) -> String
+where
+    F: FnOnce(T) -> String,
+{
+    option.map_or_else(|| "None".to_string(), f)
+}
+
 /// Subcommands related to getting and setting server configuration
 #[command(
     slash_command,
-    subcommands("list", "get", "set"),
+    subcommands("list", "get", "set", "unset"),
     install_context = "Guild",
     interaction_context = "Guild",
     default_member_permissions = "MANAGE_GUILD"
@@ -91,6 +105,7 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
                 .title("Configuration")
                 .description("These are the configuration options for this server. Use `/config get <option>` to get more information about an option.")
                 .field("Strikes Enabled", config.strikes_enabled.to_string(), false)
+                .field("Strikes Log Channel", map_or_none_string(config.strikes_log_channel, |v| v.mention().to_string()), false)
                 .timestamp(Timestamp::now())
                 .color(Color::BLUE),
         ),
@@ -101,7 +116,10 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
 }
 
 /// Gets a specific configuration option
-#[command(slash_command, subcommands("get_strikes_enabled"))]
+#[command(
+    slash_command,
+    subcommands("get_strikes_enabled", "get_strikes_log_channel")
+)]
 async fn get(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
@@ -128,8 +146,38 @@ async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
+/// Gets the Strikes Log Channel configuration option
+#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
+async fn get_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let Config {
+        strikes_log_channel,
+        ..
+    } = load_or_save_default_config(ctx)?;
+
+    ctx.send(
+        CreateReply::default().embed(
+            CreateEmbed::new()
+                .title("Strikes Log Channel")
+                .description("Channel to log strike events in")
+                .field(
+                    "Value",
+                    map_or_none_string(strikes_log_channel, |v| v.mention().to_string()),
+                    false,
+                )
+                .timestamp(Timestamp::now())
+                .color(Color::BLUE),
+        ),
+    )
+    .await?;
+
+    Ok(())
+}
+
 /// Sets a specific configuration option
-#[command(slash_command, subcommands("set_strikes_enabled"))]
+#[command(
+    slash_command,
+    subcommands("set_strikes_enabled", "set_strikes_log_channel")
+)]
 async fn set(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
@@ -145,6 +193,49 @@ async fn set_strikes_enabled(
     config.strikes_enabled = value;
     save_config(ctx, config)?;
     ctx.say(format!("**Strikes Enabled** has been set to **{value}**"))
+        .await?;
+
+    Ok(())
+}
+
+/// Sets the Strikes Log Channel configuration option
+#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
+async fn set_strikes_log_channel(
+    ctx: Context<'_>,
+    #[description = "The value to set Strikes Log Channel to"] value: GuildChannel,
+) -> Result<(), Error> {
+    match value.kind {
+        ChannelType::Text => (),
+        _ => bail!("Value must be a text channel"),
+    }
+
+    let mut config = load_or_save_default_config(ctx)?;
+
+    config.strikes_log_channel = Some(value.id);
+    save_config(ctx, config)?;
+    ctx.say(format!(
+        "**Strikes Log Channel** has been set to **{}**",
+        value.mention(),
+    ))
+    .await?;
+
+    Ok(())
+}
+
+/// Unsets a specific configuration option
+#[command(slash_command, subcommands("unset_strikes_log_channel"))]
+async fn unset(_ctx: Context<'_>) -> Result<(), Error> {
+    unreachable!()
+}
+
+/// Unsets the Strikes Log Channel configuration option
+#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
+async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let mut config = load_or_save_default_config(ctx)?;
+
+    config.strikes_log_channel = None;
+    save_config(ctx, config)?;
+    ctx.say("**Strikes Log Channel** has been **unset**")
         .await?;
 
     Ok(())
