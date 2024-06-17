@@ -1923,7 +1923,6 @@ dependencies = [
 [[package]]
 name = "shuttle-persist-msgpack"
 version = "0.46.0"
-source = "git+https://github.com/valentinegb/shuttle-persist-msgpack.git#9c50eceb12aba0fab6f282bdb35836dc93c88108"
 dependencies = [
  "async-trait",
  "rmp-serde",
