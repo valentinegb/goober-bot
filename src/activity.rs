@@ -16,11 +16,6 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::playing("ULTRAKILL"),
             ActivityData::custom("Configuring servers"),
             ActivityData::competing("Silliness Competition"),
-            ActivityData::streaming(
-                "Goober Bot Coding",
-                "https://github.com/valentinegb/goober-bot",
-            )
-            .expect("URL should be valid"),
             ActivityData::custom("Doing your mom"),
             ActivityData::custom("Goobing"),
         ];
