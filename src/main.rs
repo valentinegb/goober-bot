@@ -16,6 +16,7 @@
 
 mod activity;
 mod commands;
+mod emoji;
 
 use activity::start_activity_loop;
 use anyhow::Context as _;
