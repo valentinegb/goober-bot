@@ -16,7 +16,9 @@
 
 mod activity;
 mod commands;
+mod config;
 mod emoji;
+mod persist;
 
 use activity::start_activity_loop;
 use anyhow::Context as _;
@@ -134,7 +136,7 @@ async fn main(
         .context("'DISCORD_TOKEN' was not found")?;
     let framework = Framework::builder()
         .options(FrameworkOptions {
-            commands: vec![commands::config()],
+            commands: vec![commands::config(), commands::strike()],
             on_error: |error| {
                 Box::pin(async move {
                     if let Err(e) = on_error(error).await {

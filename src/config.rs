@@ -14,8 +14,24 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-mod config;
-mod strike;
+use anyhow::Context as _;
+use poise::serenity_prelude::ChannelId;
+use serde::{Deserialize, Serialize};
 
-pub(super) use config::*;
-pub(super) use strike::*;
+use crate::{Context, Error};
+
+#[derive(Deserialize, Serialize, Default)]
+#[non_exhaustive]
+#[serde(default)]
+pub(crate) struct Config {
+    pub(crate) strikes_enabled: bool,
+    pub(crate) strikes_log_channel: Option<ChannelId>,
+}
+
+/// Gets the config key for the server in `ctx`.
+pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
+    Ok(format!(
+        "config_{}",
+        ctx.guild_id().context("Expected context to be in guild")?
+    ))
+}

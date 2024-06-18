@@ -14,62 +14,19 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{bail, Context as _};
+use anyhow::bail;
 use poise::{
     command,
-    serenity_prelude::{
-        ChannelId, ChannelType, Color, CreateEmbed, GuildChannel, Mentionable, Timestamp,
-    },
+    serenity_prelude::{ChannelType, Color, CreateEmbed, GuildChannel, Mentionable, Timestamp},
     CreateReply,
 };
-use serde::{Deserialize, Serialize};
-use shuttle_persist_msgpack::PersistError;
 
-use crate::{emoji::*, Context, Error};
-
-#[derive(Deserialize, Serialize, Default)]
-#[non_exhaustive]
-#[serde(default)]
-struct Config {
-    strikes_enabled: bool,
-    strikes_log_channel: Option<ChannelId>,
-}
-
-/// Gets the config key for the server in `ctx`.
-fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
-    Ok(format!(
-        "config_{}",
-        ctx.guild_id().context("Expected context to be in guild")?
-    ))
-}
-
-/// Saves a config for the server in `ctx`.
-fn save_config(ctx: Context<'_>, config: Config) -> Result<(), Error> {
-    Ok(ctx.data().persist.save(&get_config_key(ctx)?, config)?)
-}
-
-/// Attempts to load the config for the server in `ctx`. If a configuration is
-/// not found, will attempt to save the default configuration once and try to
-/// load the configuration again.
-fn load_or_save_default_config(ctx: Context<'_>) -> Result<Config, Error> {
-    let data = ctx.data();
-    let config_key = get_config_key(ctx)?;
-
-    Ok(match data.persist.load(&config_key) {
-        Ok(config) => config,
-        Err(err) => match err {
-            PersistError::Open(ref io_err) => match io_err.kind() {
-                std::io::ErrorKind::NotFound => {
-                    save_config(ctx, Config::default())?;
-
-                    data.persist.load(&config_key)?
-                }
-                _ => bail!(err),
-            },
-            _ => bail!(err),
-        },
-    })
-}
+use crate::{
+    config::{get_config_key, Config},
+    emoji::*,
+    persist::load_or_save_default,
+    Context, Error,
+};
 
 /// Returns "None" as a [`String`] (if none), or applies a function to the
 /// contained value (if any).
@@ -97,7 +54,7 @@ pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
 /// Lists all configuration options for this server
 #[command(slash_command, ephemeral)]
 async fn list(ctx: Context<'_>) -> Result<(), Error> {
-    let config = load_or_save_default_config(ctx)?;
+    let config: Config = load_or_save_default(ctx, &get_config_key(ctx)?)?;
 
     ctx.send(
         CreateReply::default().embed(
@@ -129,7 +86,7 @@ async fn get(_ctx: Context<'_>) -> Result<(), Error> {
 async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
     let Config {
         strikes_enabled, ..
-    } = load_or_save_default_config(ctx)?;
+    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
 
     ctx.send(
         CreateReply::default().embed(
@@ -152,7 +109,7 @@ async fn get_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
     let Config {
         strikes_log_channel,
         ..
-    } = load_or_save_default_config(ctx)?;
+    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
 
     ctx.send(
         CreateReply::default().embed(
@@ -188,10 +145,11 @@ async fn set_strikes_enabled(
     ctx: Context<'_>,
     #[description = "The value to set Strikes Enabled to"] value: bool,
 ) -> Result<(), Error> {
-    let mut config = load_or_save_default_config(ctx)?;
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
 
     config.strikes_enabled = value;
-    save_config(ctx, config)?;
+    ctx.data().persist.save(&config_key, config)?;
     ctx.say(format!(
         "**Strikes Enabled** has been set to **{value}** {FLOOF_HAPPY}"
     ))
@@ -211,10 +169,11 @@ async fn set_strikes_log_channel(
         _ => bail!("Value must be a text channel"),
     }
 
-    let mut config = load_or_save_default_config(ctx)?;
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
 
     config.strikes_log_channel = Some(value.id);
-    save_config(ctx, config)?;
+    ctx.data().persist.save(&config_key, config)?;
     ctx.say(format!(
         "**Strikes Log Channel** has been set to **{}** {FLOOF_HAPPY}",
         value.mention(),
@@ -233,10 +192,11 @@ async fn unset(_ctx: Context<'_>) -> Result<(), Error> {
 /// Unsets the Strikes Log Channel configuration option
 #[command(slash_command, rename = "strikes_log_channel", ephemeral)]
 async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let mut config = load_or_save_default_config(ctx)?;
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
 
     config.strikes_log_channel = None;
-    save_config(ctx, config)?;
+    ctx.data().persist.save(&config_key, config)?;
     ctx.say("**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}")
         .await?;
 
