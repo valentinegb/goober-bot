@@ -25,7 +25,7 @@ use poise::{
 use serde::{Deserialize, Serialize};
 use shuttle_persist_msgpack::PersistError;
 
-use crate::{Context, Error};
+use crate::{emoji::*, Context, Error};
 
 #[derive(Deserialize, Serialize, Default)]
 #[non_exhaustive]
@@ -192,8 +192,10 @@ async fn set_strikes_enabled(
 
     config.strikes_enabled = value;
     save_config(ctx, config)?;
-    ctx.say(format!("**Strikes Enabled** has been set to **{value}**"))
-        .await?;
+    ctx.say(format!(
+        "**Strikes Enabled** has been set to **{value}** {FLOOF_HAPPY}"
+    ))
+    .await?;
 
     Ok(())
 }
@@ -214,7 +216,7 @@ async fn set_strikes_log_channel(
     config.strikes_log_channel = Some(value.id);
     save_config(ctx, config)?;
     ctx.say(format!(
-        "**Strikes Log Channel** has been set to **{}**",
+        "**Strikes Log Channel** has been set to **{}** {FLOOF_HAPPY}",
         value.mention(),
     ))
     .await?;
@@ -235,7 +237,7 @@ async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
 
     config.strikes_log_channel = None;
     save_config(ctx, config)?;
-    ctx.say("**Strikes Log Channel** has been **unset**")
+    ctx.say("**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}")
         .await?;
 
     Ok(())

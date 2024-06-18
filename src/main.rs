@@ -20,6 +20,7 @@ mod emoji;
 
 use activity::start_activity_loop;
 use anyhow::Context as _;
+use emoji::*;
 use poise::{
     serenity_prelude::{
         self, ClientBuilder, Color, CreateAllowedMentions, CreateEmbed, GatewayIntents,
@@ -52,7 +53,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title("Error")
+                            .title(format!("Error {A_FLOOF_LOAD}"))
                             .description(error)
                             .color(Color::RED),
                     )
@@ -69,7 +70,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title("Internal Error")
+                            .title(format!("Internal Error {FLOOF_NERVOUS}"))
                             .description("An unexpected internal error has occurred")
                             .color(Color::RED),
                     )
@@ -91,7 +92,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title("Argument Parsing Error")
+                            .title(format!("Argument Parsing Error {A_FLOOF_LOAD}"))
                             .description("There's probably been an update to this command recently. Please try running it again in a few seconds.")
                             .color(Color::RED),
                     )
@@ -108,7 +109,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title("Missing Bot Permissions")
+                            .title(format!("Missing Bot Permissions {FLOOF_NERVOUS}"))
                             .description(format!("Command cannot be executed because the bot is lacking permissions: {missing_permissions}"))
                             .color(Color::RED),
                     )
