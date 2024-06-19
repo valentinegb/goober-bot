@@ -73,7 +73,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                     .embed(
                         CreateEmbed::new()
                             .title(format!("Internal Error {FLOOF_NERVOUS}"))
-                            .description("An unexpected internal error has occurred")
+                            .description("Something went *seriously* wrong- if this happens a lot please join the support server and let a developer know!")
                             .color(Color::RED),
                     )
                     .ephemeral(true),
@@ -112,7 +112,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                     .embed(
                         CreateEmbed::new()
                             .title(format!("Missing Bot Permissions {FLOOF_NERVOUS}"))
-                            .description(format!("Command cannot be executed because the bot is lacking permissions: {missing_permissions}"))
+                            .description(format!("I can't execute this command because I don't have these permissions: {missing_permissions}"))
                             .color(Color::RED),
                     )
                     .ephemeral(true),
@@ -130,7 +130,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                         CreateEmbed::new()
                             .title(format!("Missing User Permissions {FLOOF_NERVOUS}"))
                             .description(match missing_permissions {
-                                Some(missing_permissions) => format!("You need the following permissions to use this command: {missing_permissions}"),
+                                Some(missing_permissions) => format!("You need these permissions to use this command: {missing_permissions}"),
                                 None => "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string(),
                             }),
                     )

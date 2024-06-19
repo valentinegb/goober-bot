@@ -111,6 +111,6 @@ pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
     required_bot_permissions = "BAN_MEMBERS",
     ephemeral
 )]
-async fn give(ctx: Context<'_>) -> Result<(), Error> {
+async fn give(ctx: Context<'_>, user: UserId) -> Result<(), Error> {
     todo!()
 }
