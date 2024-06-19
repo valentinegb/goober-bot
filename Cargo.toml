@@ -15,6 +15,7 @@ tokio = "1.26.0"
 serde = { version = "1.0.203", features = ["derive"] }
 shuttle-persist-msgpack = { version = "0.46.0", path = "shuttle-persist-msgpack" }
 rand = "0.8.5"
+chrono = "0.4.38"
 
 [workspace]
 members = ["shuttle-persist-msgpack"]
