@@ -14,9 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use anyhow::Context as _;
 use poise::{
     command,
-    serenity_prelude::{Color, CreateEmbed, CreateMessage, Timestamp, UserId},
+    serenity_prelude::{
+        Color, CreateAllowedMentions, CreateEmbed, CreateMessage, Timestamp, UserId,
+    },
 };
 use serde::{Deserialize, Serialize};
 
@@ -43,6 +46,16 @@ enum StrikeEvent {
     Give(UserId, Strike),
 }
 
+/// Gets the strikes key for `user` for the server in `ctx`.
+pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, Error> {
+    Ok(format!(
+        "strikes_{}_{user}",
+        ctx.guild_id().context("Expected context to be in guild")?
+    ))
+}
+
+/// Logs a strike event to the strikes log channel if one is set for the current
+/// server.
 async fn log_strike_event(ctx: Context<'_>, event: StrikeEvent) -> Result<(), Error> {
     let Config {
         strikes_log_channel,
@@ -77,7 +90,7 @@ async fn log_strike_event(ctx: Context<'_>, event: StrikeEvent) -> Result<(), Er
                                 ))
                                 .timestamp(strike.issued)
                                 .color(Color::RED),
-                        ),
+                        ).allowed_mentions(CreateAllowedMentions::new()),
                     )
                     .await?;
             }
@@ -92,7 +105,12 @@ pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-#[command(slash_command)]
+#[command(
+    slash_command,
+    required_permissions = "BAN_MEMBERS",
+    required_bot_permissions = "BAN_MEMBERS",
+    ephemeral
+)]
 async fn give(ctx: Context<'_>) -> Result<(), Error> {
     todo!()
 }
