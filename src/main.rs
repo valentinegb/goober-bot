@@ -131,7 +131,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                             .title(format!("Missing User Permissions {FLOOF_NERVOUS}"))
                             .description(match missing_permissions {
                                 Some(missing_permissions) => format!("You need the following permissions to use this command: {missing_permissions}"),
-                                None => "I'm not sure what exactly you're missing, but you're missing something you need for this command, so I can't let you continue. Sorry!".to_string(),
+                                None => "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string(),
                             }),
                     )
                     .ephemeral(true),
