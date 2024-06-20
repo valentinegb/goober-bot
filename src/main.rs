@@ -132,7 +132,8 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                             .description(match missing_permissions {
                                 Some(missing_permissions) => format!("You need these permissions to use this command: {missing_permissions}"),
                                 None => "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string(),
-                            }),
+                            })
+                            .color(Color::RED),
                     )
                     .ephemeral(true),
             )
