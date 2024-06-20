@@ -14,10 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::bail;
 use poise::{
     command,
-    serenity_prelude::{ChannelType, Color, CreateEmbed, GuildChannel, Mentionable, Timestamp},
+    serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
     CreateReply,
 };
 
@@ -162,17 +161,14 @@ async fn set_strikes_enabled(
 #[command(slash_command, rename = "strikes_log_channel", ephemeral)]
 async fn set_strikes_log_channel(
     ctx: Context<'_>,
-    #[description = "The value to set Strikes Log Channel to"] value: GuildChannel,
+    #[description = "The value to set Strikes Log Channel to"]
+    #[channel_types("Text")]
+    value: ChannelId,
 ) -> Result<(), Error> {
-    match value.kind {
-        ChannelType::Text => (),
-        _ => bail!("Value must be a text channel"),
-    }
-
     let config_key = get_config_key(ctx)?;
     let mut config: Config = load_or_save_default(ctx, &config_key)?;
 
-    config.strikes_log_channel = Some(value.id);
+    config.strikes_log_channel = Some(value);
     ctx.data().persist.save(&config_key, config)?;
     ctx.say(format!(
         "**Strikes Log Channel** has been set to **{}** {FLOOF_HAPPY}",
