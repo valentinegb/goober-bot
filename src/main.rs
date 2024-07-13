@@ -156,7 +156,12 @@ async fn main(
         .context("'DISCORD_TOKEN' was not found")?;
     let framework = Framework::builder()
         .options(FrameworkOptions {
-            commands: vec![commands::config(), commands::boop(), commands::strike()],
+            commands: vec![
+                commands::boop(),
+                commands::config(),
+                commands::gnaw(),
+                commands::strike(),
+            ],
             on_error: |error| {
                 Box::pin(async move {
                     if let Err(e) = on_error(error).await {

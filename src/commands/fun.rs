@@ -84,3 +84,17 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// Embrace the bobin within us all and gnaw on one's bones
+    fn gnaw("The subject of today's gnawing") {
+        bot_message = "GRAAAHH {author} STOP GNAWING MY BONES GET OFF HELP {FLOOF_SCARED}";
+        author_message = "{author}'s gnawing on... their own bones? Are they good...? {A_FLOOF_LOAD}";
+        messages = [
+            "{author} is gnawing on {user}'s bones {FLOOF_NOM}",
+            "{author} craves the bones of {user} {FLOOF_NOM}",
+            "{author} hungers for the bones of a {user} {FLOOF_NOM}",
+            "Hey uh, {user}, did you know there's a {author} gnawing on your bones? {FLOOF_LURK}",
+        ];
+    }
+);
