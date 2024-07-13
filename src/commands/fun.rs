@@ -130,3 +130,19 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// MURRRRRDEERRRRRRRRRRR
+    fn murder("KILL THEM KILL THEM KILL THEM >:D") {
+        bot_message = "GAH {author} HAS A KNIFE AND IS RUNNING AT ME WAAAA {FLOOF_SCARED}";
+        author_message = "BAH- {author} JUST K-KILLED THEMSELVES??? NOOOOOOOOOO {FLOOF_SCARED}";
+        messages = [
+            "{author} crept up behind {user} and murdered them!!! {FLOOF_OWO}",
+            "{author} just pulled out a bazooka and blew {user} up!?!? {FLOOF_OWO}",
+            "{author} stared directly into {user}'s eyes and shouted \"POMEGRANATE\", triggering the cognitohazard previously planted in {user}'s brain, killing them instantly {FLOOF_NERVOUS}",
+            "{author} just went \"BOO\", giving {user} a fatal heart attack {FLOOF_OWO}",
+            "{author} just went \"OOGA BOOGA\", giving {user} a fatal heart attack {FLOOF_OWO}",
+            "{author} killed {user} when the lights went out so no one would know it was them... {FLOOF_SMUG}",
+        ];
+    }
+);
