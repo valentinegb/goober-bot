@@ -46,6 +46,8 @@ struct Strike {
     comment: Option<String>,
     #[serde(default)]
     expiration: Option<Timestamp>,
+    #[serde(default)]
+    repealer: Option<UserId>,
 }
 
 impl Strike {
@@ -70,10 +72,14 @@ impl Strike {
             "ave {} a strike{for_breaking_rule}{with_comment}{which_expires}{on}",
             user.mention(),
         );
-
-        match with_issuer {
+        let message = match with_issuer {
             true => format!("{} g{ave}", self.issuer.mention()),
             false => format!("G{ave}",),
+        };
+
+        match self.repealer {
+            Some(repealer) => format!("~~{message}~~ **repealed** by {}", repealer.mention()),
+            None => message,
         }
     }
 
@@ -108,7 +114,7 @@ fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
 }
 
 /// Subcommands related to the strikes moderation system
-#[command(slash_command, subcommands("give", "history"))]
+#[command(slash_command, subcommands("give", "history", "repeal"))]
 pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
@@ -146,6 +152,7 @@ async fn give(
             ),
             None => None,
         },
+        repealer: None,
     };
 
     strikes.push(strike.clone());
@@ -155,7 +162,10 @@ async fn give(
 
     ctx.send(
         CreateReply::default()
-            .content(strike.to_string(user, false, false))
+            .content(format!(
+                "{} {FLOOF_SAD}",
+                strike.to_string(user, false, false)
+            ))
             .allowed_mentions(allowed_mentions.clone()),
     )
     .await?;
@@ -214,7 +224,7 @@ async fn history(
     }
 
     for (i, strike) in strikes.iter().enumerate() {
-        if strike.is_expired() && !all {
+        if strike.is_expired() || strike.repealer.is_some() && !all {
             continue;
         }
 
@@ -222,7 +232,11 @@ async fn history(
             description += "\n";
         }
 
-        description += &format!("- {}", strike.to_string(user.clone(), true, true));
+        description += &format!(
+            "- #{}: {}",
+            i + 1,
+            strike.to_string(user.clone(), true, true)
+        );
     }
 
     ctx.send(
@@ -247,6 +261,78 @@ async fn history(
             .allowed_mentions(CreateAllowedMentions::new()),
     )
     .await?;
+
+    Ok(())
+}
+
+/// Repeal a strike that was previously given
+#[command(
+    slash_command,
+    required_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
+    ephemeral
+)]
+async fn repeal(
+    ctx: Context<'_>,
+    #[description = "User to repeal a strike from"] user: UserId,
+    #[description = "Strike to repeal (most recent by default)"]
+    #[rename = "strike"]
+    strike_i: Option<usize>,
+) -> Result<(), Error> {
+    if user == ctx.author().id {
+        bail!("You cannot repeal one of your own strikes");
+    }
+
+    let log_channel = pre_strike_command(ctx)?;
+    let strikes_key = &get_strikes_key(ctx, user)?;
+    let mut strikes: Strikes = load_or_save_default(ctx, strikes_key)?;
+    let strike_i = strike_i.unwrap_or(strikes.len());
+    let repealer = &mut strikes
+        .get_mut(strike_i - 1)
+        .context(format!("User does not have a strike #{strike_i}"))?
+        .repealer;
+
+    if repealer.is_some() {
+        bail!(
+            "{}'s strike #{strike_i} has already been repealed",
+            user.mention(),
+        );
+    }
+
+    *repealer = Some(ctx.author().id);
+    ctx.data().persist.save(strikes_key, strikes)?;
+
+    let allowed_mentions = CreateAllowedMentions::new();
+
+    ctx.send(
+        CreateReply::default()
+            .content(format!(
+                "{}'s strike #{strike_i} has been repealed {FLOOF_HAPPY}",
+                user.mention(),
+            ))
+            .allowed_mentions(allowed_mentions.clone()),
+    )
+    .await?;
+
+    if let Some(log_channel) = log_channel {
+        log_channel
+            .send_message(
+                ctx,
+                CreateMessage::new()
+                    .embed(
+                        CreateEmbed::new()
+                            .title("Strike Repealed")
+                            .description(format!(
+                                "{}'s strike #{strike_i} was repealed by {}",
+                                user.mention(),
+                                ctx.author().mention(),
+                            ))
+                            .timestamp(Timestamp::now())
+                            .color(Color::FOOYOO),
+                    )
+                    .allowed_mentions(allowed_mentions),
+            )
+            .await?;
+    }
 
     Ok(())
 }
