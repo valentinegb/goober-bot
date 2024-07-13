@@ -114,7 +114,12 @@ fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
 }
 
 /// Subcommands related to the strikes moderation system
-#[command(slash_command, subcommands("give", "history", "repeal"))]
+#[command(
+    slash_command,
+    subcommands("give", "history", "repeal"),
+    install_context = "Guild",
+    interaction_context = "Guild"
+)]
 pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
