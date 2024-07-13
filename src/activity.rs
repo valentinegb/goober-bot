@@ -36,6 +36,7 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::custom("Goobing"),
             ActivityData::playing("with a rhombicosidodecahedron"),
             ActivityData::custom("Reading The Rust Book"),
+            ActivityData::watching("cat videos"),
         ];
         let mut rng = thread_rng();
 
