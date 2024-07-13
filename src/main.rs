@@ -161,6 +161,7 @@ async fn main(
                 commands::boop(),
                 commands::config(),
                 commands::gnaw(),
+                commands::meow(),
                 commands::strike(),
             ],
             on_error: |error| {

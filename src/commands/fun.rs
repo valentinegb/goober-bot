@@ -112,3 +112,21 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// You know what you are
+    fn meow("Get their attention") {
+        bot_message = "Hm? What's that {author}? Oh I see... mhm... okay, okay, I understand {FLOOF_CAT}";
+        author_message = "{author} is meowing at themselves lol, schizophrenic cat {FLOOF_CAT}";
+        messages = [
+            "Uhh, {author} just meowed at {user} {FLOOF_WHAT}",
+            "{author} is a furry and they want {user} to know it {FLOOF_MISCHIEF}",
+            "{author} is so silly, they think {user} can understand their meowing {FLOOF_LOL}",
+            "{user}, be afraid... {author} is meowing at you {FLOOF_PEEK}",
+            "{user}, {author} is meowing at you, won't you give them what they want? {FLOOF_PLEAD}",
+            "{user}, I have a message for you: \"meow meow meow meow meow meow meow meow\"\n{author} gave it to me {FLOOF_HAPPY}",
+            "{author} just *nya*-ed all over the place- {user}, clean this up! {FLOOF_WHAT}",
+            "{user}... sire... I have a message for you, from {author}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me {FLOOF_NERVOUS}"
+        ];
+    }
+);
