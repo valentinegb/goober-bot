@@ -146,3 +146,17 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// Let them know that they're a good being :>
+    fn pat("Good being in question") {
+        bot_message = "Awawawawa {author} gave me a pat pat on the head {FLOOF_PAT}";
+        author_message = "Aw, {author} pat themselves on the head, won't someone else give them a little pat? {FLOOF_PLEAD}";
+        messages = [
+            "{author} gave {user} a little pat on the head {FLOOF_PAT}",
+            "{author} wants {user} to know they are a good being by giving them a pat on the head {FLOOF_PAT}",
+            "{user} got pat on the head by {author} {FLOOF_PAT}",
+            "{user} has been selected to receive a soothing pat on the head from {author} {FLOOF_PAT}",
+        ];
+    }
+);

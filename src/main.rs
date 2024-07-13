@@ -163,6 +163,7 @@ async fn main(
                 commands::gnaw(),
                 commands::meow(),
                 commands::murder(),
+                commands::pat(),
                 commands::strike(),
             ],
             on_error: |error| {
