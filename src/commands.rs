@@ -15,7 +15,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod config;
+mod fun;
 mod strike;
 
 pub(super) use config::*;
+pub(super) use fun::*;
 pub(super) use strike::*;
