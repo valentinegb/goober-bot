@@ -160,3 +160,18 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// 😳
+    fn kiss("Omg who is it who is it???") {
+        bot_message = "\\*gasp* oh- oh my goodness- {author} kissed me!!! {FLOOF_WOOZY}";
+        author_message = "{author} kissed theirselves? ...how? {FLOOF_WHAT}";
+        messages = [
+            "AWWWWWWWWW- {author} gave {user} a kiss!!!! {FLOOF_PLEAD}",
+            "Hehehehe, {author} gave {user} a little smooooch {FLOOF_HAPPY}",
+            "OMG- GUYS- {author} JUST KISSED {user}!!! {FLOOF_PLEAD}",
+            "Hehehe {author} and {user} are so cute, they just kissed each other {FLOOF_HAPPY}",
+            "{author} **VIOLENTLY** pulled {user} to them and **SMOOCHED** them on the **LIPS**, not letting **ANYONE ELSE** in {FLOOF_MISCHIEF}",
+        ];
+    }
+);

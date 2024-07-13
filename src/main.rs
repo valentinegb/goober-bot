@@ -161,6 +161,7 @@ async fn main(
                 commands::boop(),
                 commands::config(),
                 commands::gnaw(),
+                commands::kiss(),
                 commands::meow(),
                 commands::murder(),
                 commands::pat(),
