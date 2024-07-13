@@ -59,7 +59,7 @@ impl Strike {
             None => String::new(),
         };
         let which_expires = match self.expiration {
-            Some(expiration) => format!(" which expires <t:{}:d>", expiration.unix_timestamp()),
+            Some(expiration) => format!(" which expires <t:{}:R>", expiration.unix_timestamp()),
             None => String::new(),
         };
         let on = match with_issued {
