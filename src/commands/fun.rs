@@ -98,3 +98,17 @@ fun_command!(
         ];
     }
 );
+
+fun_command!(
+    /// Express a wide range of emotions via- your teeth in somebody's skin
+    fn bite("The skin-haver in question") {
+        bot_message = "Help please {author}'s biting me {FLOOF_OWO}";
+        author_message = "{author} bit themselves... why'd they do that? {A_FLOOF_LOAD}";
+        messages = [
+            "D- did {author} just bite {user}?? {FLOOF_OWO}",
+            "Awww, {author} gave {user} a love bite... I think- actually, it's hard to say {FLOOF_TIRED}",
+            "The intrusive thoughts won and now {author}'s biting {user} {FLOOF_MISCHIEF}",
+            "\\*CHOMP\\*\n{author} bit {user} {FLOOF_NOM}",
+        ];
+    }
+);
