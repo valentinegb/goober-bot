@@ -62,6 +62,9 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
                 .description("These are the configuration options for this server. Use `/config get <option>` to get more information about an option.")
                 .field("Strikes Enabled", config.strikes_enabled.to_string(), false)
                 .field("Strikes Log Channel", map_or_none_string(config.strikes_log_channel, |v| v.mention().to_string()), false)
+                .field("Anon Enabled", config.anon_enabled.to_string(), false)
+                .field("Anon Channel", map_or_none_string(config.anon_channel, |v| v.mention().to_string()), false)
+                .field("Anon Log Channel", map_or_none_string(config.anon_log_channel, |v| v.mention().to_string()), false)
                 .timestamp(Timestamp::now())
                 .color(Color::BLUE),
         ),
@@ -74,7 +77,13 @@ async fn list(ctx: Context<'_>) -> Result<(), Error> {
 /// Gets a specific configuration option
 #[command(
     slash_command,
-    subcommands("get_strikes_enabled", "get_strikes_log_channel")
+    subcommands(
+        "get_strikes_enabled",
+        "get_strikes_log_channel",
+        "get_anon_enabled",
+        "get_anon_channel",
+        "get_anon_log_channel",
+    )
 )]
 async fn get(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
@@ -129,10 +138,86 @@ async fn get_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
+/// Gets the Anon Enabled configuration option
+#[command(slash_command, rename = "anon_enabled", ephemeral)]
+async fn get_anon_enabled(ctx: Context<'_>) -> Result<(), Error> {
+    let Config { anon_enabled, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+    ctx.send(
+        CreateReply::default().embed(
+            CreateEmbed::new()
+                .title("Anon Enabled")
+                .description("Whether to enable the `/anon` command, which allows members to send messages anonymously")
+                .field("Value", anon_enabled.to_string(), false)
+                .timestamp(Timestamp::now())
+                .color(Color::BLUE),
+        ),
+    )
+    .await?;
+
+    Ok(())
+}
+
+/// Gets the Anon Channel configuration option
+#[command(slash_command, rename = "anon_channel", ephemeral)]
+async fn get_anon_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let Config { anon_channel, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+    ctx.send(
+        CreateReply::default().embed(
+            CreateEmbed::new()
+                .title("Anon Channel")
+                .description("Channel to restrict `/anon` to, if anon is enabled")
+                .field(
+                    "Value",
+                    map_or_none_string(anon_channel, |v| v.mention().to_string()),
+                    false,
+                )
+                .timestamp(Timestamp::now())
+                .color(Color::BLUE),
+        ),
+    )
+    .await?;
+
+    Ok(())
+}
+
+/// Gets the Anon Log Channel configuration option
+#[command(slash_command, rename = "anon_log_channel", ephemeral)]
+async fn get_anon_log_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let Config {
+        anon_log_channel, ..
+    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+    ctx.send(
+        CreateReply::default().embed(
+            CreateEmbed::new()
+                .title("Anon Log Channel")
+                .description("Channel to log `/anon` uses to, if anon is enabled")
+                .field(
+                    "Value",
+                    map_or_none_string(anon_log_channel, |v| v.mention().to_string()),
+                    false,
+                )
+                .timestamp(Timestamp::now())
+                .color(Color::BLUE),
+        ),
+    )
+    .await?;
+
+    Ok(())
+}
+
 /// Sets a specific configuration option
 #[command(
     slash_command,
-    subcommands("set_strikes_enabled", "set_strikes_log_channel")
+    subcommands(
+        "set_strikes_enabled",
+        "set_strikes_log_channel",
+        "set_anon_enabled",
+        "set_anon_channel",
+        "set_anon_log_channel",
+    )
 )]
 async fn set(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
@@ -179,8 +264,78 @@ async fn set_strikes_log_channel(
     Ok(())
 }
 
+/// Sets the Anon Enabled configuration option
+#[command(slash_command, rename = "anon_enabled", ephemeral)]
+async fn set_anon_enabled(
+    ctx: Context<'_>,
+    #[description = "The value to set Anon Enabled to"] value: bool,
+) -> Result<(), Error> {
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+    config.anon_enabled = value;
+    ctx.data().persist.save(&config_key, config)?;
+    ctx.say(format!(
+        "**Anon Enabled** has been set to **{value}** {FLOOF_HAPPY}"
+    ))
+    .await?;
+
+    Ok(())
+}
+
+/// Sets the Anon Channel configuration option
+#[command(slash_command, rename = "anon_channel", ephemeral)]
+async fn set_anon_channel(
+    ctx: Context<'_>,
+    #[description = "The value to set Anon Channel to"]
+    #[channel_types("Text")]
+    value: ChannelId,
+) -> Result<(), Error> {
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+    config.anon_channel = Some(value);
+    ctx.data().persist.save(&config_key, config)?;
+    ctx.say(format!(
+        "**Anon Channel** has been set to **{}** {FLOOF_HAPPY}",
+        value.mention(),
+    ))
+    .await?;
+
+    Ok(())
+}
+
+/// Sets the Anon Log Channel configuration option
+#[command(slash_command, rename = "anon_log_channel", ephemeral)]
+async fn set_anon_log_channel(
+    ctx: Context<'_>,
+    #[description = "The value to set Anon Log Channel to"]
+    #[channel_types("Text")]
+    value: ChannelId,
+) -> Result<(), Error> {
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+    config.anon_log_channel = Some(value);
+    ctx.data().persist.save(&config_key, config)?;
+    ctx.say(format!(
+        "**Anon Log Channel** has been set to **{}** {FLOOF_HAPPY}",
+        value.mention(),
+    ))
+    .await?;
+
+    Ok(())
+}
+
 /// Unsets a specific configuration option
-#[command(slash_command, subcommands("unset_strikes_log_channel"))]
+#[command(
+    slash_command,
+    subcommands(
+        "unset_strikes_log_channel",
+        "unset_anon_channel",
+        "unset_anon_log_channel",
+    )
+)]
 async fn unset(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
@@ -194,6 +349,34 @@ async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
     config.strikes_log_channel = None;
     ctx.data().persist.save(&config_key, config)?;
     ctx.say("**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}")
+        .await?;
+
+    Ok(())
+}
+
+/// Unsets the Anon Channel configuration option
+#[command(slash_command, rename = "anon_channel", ephemeral)]
+async fn unset_anon_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+    config.anon_channel = None;
+    ctx.data().persist.save(&config_key, config)?;
+    ctx.say("**Anon Channel** has been **unset** {FLOOF_HAPPY}")
+        .await?;
+
+    Ok(())
+}
+
+/// Unsets the Anon Log Channel configuration option
+#[command(slash_command, rename = "anon_log_channel", ephemeral)]
+async fn unset_anon_log_channel(ctx: Context<'_>) -> Result<(), Error> {
+    let config_key = get_config_key(ctx)?;
+    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+    config.anon_log_channel = None;
+    ctx.data().persist.save(&config_key, config)?;
+    ctx.say("**Anon Log Channel** has been **unset** {FLOOF_HAPPY}")
         .await?;
 
     Ok(())

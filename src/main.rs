@@ -157,6 +157,7 @@ async fn main(
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
+                commands::anon(),
                 commands::bite(),
                 commands::boop(),
                 commands::config(),

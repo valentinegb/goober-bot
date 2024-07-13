@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+mod anon;
 mod config;
 mod fun;
 mod strike;
 
+pub(super) use anon::*;
 pub(super) use config::*;
 pub(super) use fun::*;
 pub(super) use strike::*;

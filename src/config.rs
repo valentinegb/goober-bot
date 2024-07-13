@@ -26,6 +26,9 @@ use crate::{Context, Error};
 pub(crate) struct Config {
     pub(crate) strikes_enabled: bool,
     pub(crate) strikes_log_channel: Option<ChannelId>,
+    pub(crate) anon_enabled: bool,
+    pub(crate) anon_channel: Option<ChannelId>,
+    pub(crate) anon_log_channel: Option<ChannelId>,
 }
 
 /// Gets the config key for the server in `ctx`.
