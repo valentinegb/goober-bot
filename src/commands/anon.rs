@@ -35,7 +35,7 @@ use crate::{
     slash_command,
     install_context = "Guild",
     interaction_context = "Guild",
-    required_bot_permissions = "MANAGE_WEBHOOKS",
+    required_bot_permissions = "MANAGE_WEBHOOKS|SEND_MESSAGES",
     ephemeral
 )]
 pub async fn anon(

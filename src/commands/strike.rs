@@ -123,7 +123,7 @@ pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
 #[command(
     slash_command,
     required_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
-    required_bot_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
+    required_bot_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS|SEND_MESSAGES",
     ephemeral
 )]
 async fn give(
@@ -269,6 +269,7 @@ async fn history(
 #[command(
     slash_command,
     required_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
+    required_bot_permissions = "SEND_MESSAGES",
     ephemeral
 )]
 async fn repeal(
