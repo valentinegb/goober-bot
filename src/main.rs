@@ -47,8 +47,6 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
 ) -> Result<(), serenity_prelude::Error> {
     match error {
         FrameworkError::Command { error, ctx, .. } => {
-            let error = error.to_string();
-
             error!("An error occured in a command: {error:#}");
 
             ctx.send(
@@ -88,7 +86,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 None => String::new(),
             };
 
-            error!("An argument parsing error occured{for_input}: {error:#}");
+            error!("An argument parsing error occured{for_input}: {error}");
 
             ctx.send(
                 CreateReply::default()
@@ -161,6 +159,7 @@ async fn main(
                 commands::bite(),
                 commands::boop(),
                 commands::config(),
+                commands::debug(),
                 commands::gnaw(),
                 commands::kiss(),
                 commands::meow(),

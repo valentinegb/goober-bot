@@ -16,10 +16,12 @@
 
 mod anon;
 mod config;
+mod debug;
 mod fun;
 mod strike;
 
 pub(super) use anon::*;
 pub(super) use config::*;
+pub(super) use debug::*;
 pub(super) use fun::*;
 pub(super) use strike::*;
