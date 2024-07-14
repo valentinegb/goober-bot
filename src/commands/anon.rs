@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::bail;
+use anyhow::{bail, Context as _};
 use poise::{
     command,
     serenity_prelude::{
@@ -108,7 +108,8 @@ pub async fn anon(
                     )
                     .allowed_mentions(CreateAllowedMentions::new()),
             )
-            .await?;
+            .await
+            .context("Failed to log anonymous message")?;
     }
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
