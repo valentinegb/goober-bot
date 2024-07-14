@@ -51,7 +51,8 @@ macro_rules! fun_command {
         #[command(
             slash_command,
             install_context = "Guild|User",
-            interaction_context = "Guild|BotDm|PrivateChannel"
+            interaction_context = "Guild|BotDm|PrivateChannel",
+            required_bot_permissions = "USE_EXTERNAL_EMOJIS"
         )]
         pub async fn $name(
             ctx: Context<'_>,

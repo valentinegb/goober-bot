@@ -118,7 +118,8 @@ fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
     slash_command,
     subcommands("give", "history", "repeal"),
     install_context = "Guild",
-    interaction_context = "Guild"
+    interaction_context = "Guild",
+    required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
 pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()

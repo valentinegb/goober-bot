@@ -44,6 +44,7 @@ where
     subcommands("list", "get", "set", "unset"),
     install_context = "Guild",
     interaction_context = "Guild",
+    required_bot_permissions = "USE_EXTERNAL_EMOJIS",
     default_member_permissions = "MANAGE_GUILD"
 )]
 pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
