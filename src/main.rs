@@ -49,14 +49,14 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
         FrameworkError::Command { error, ctx, .. } => {
             let error = error.to_string();
 
-            error!("An error occured in a command: {error}");
+            error!("An error occured in a command: {error:#}");
 
             ctx.send(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
                             .title(format!("Error {A_FLOOF_LOAD}"))
-                            .description(error)
+                            .description(format!("{error:#}"))
                             .color(Color::RED),
                     )
                     .allowed_mentions(CreateAllowedMentions::new())
@@ -88,7 +88,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 None => String::new(),
             };
 
-            error!("An argument parsing error occured{for_input}: {error}");
+            error!("An argument parsing error occured{for_input}: {error:#}");
 
             ctx.send(
                 CreateReply::default()

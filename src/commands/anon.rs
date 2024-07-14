@@ -63,27 +63,26 @@ pub async fn anon(
     }
 
     let channel = ctx.channel_id();
-    let webhook = match channel.webhooks(ctx).await?.into_iter().find(|webhook| {
-        webhook
-            .application_id
-            .map_or(false, |id| id.get() == ctx.framework().bot_id.get())
-    }) {
+    let webhook = match channel
+        .webhooks(ctx)
+        .await
+        .context("Could not get channel webhooks")?
+        .into_iter()
+        .find(|webhook| {
+            webhook
+                .application_id
+                .map_or(false, |id| id.get() == ctx.framework().bot_id.get())
+        }) {
         Some(webhook) => webhook,
-        None => {
-            channel
-                .create_webhook(
-                    ctx,
-                    CreateWebhook::new("Anonymous").audit_log_reason(
-                        "`/anon` used in channel without existing Anonymous webhook",
-                    ),
-                )
-                .await?
-        }
+        None => channel
+            .create_webhook(
+                ctx,
+                CreateWebhook::new("Anonymous")
+                    .audit_log_reason("`/anon` used in channel without existing Anonymous webhook"),
+            )
+            .await
+            .context("Could not create webhook")?,
     };
-
-    webhook
-        .execute(ctx, false, ExecuteWebhook::new().content(&message))
-        .await?;
 
     let author = ctx.author();
 
@@ -102,7 +101,7 @@ pub async fn anon(
                                 ),
                             )
                             .title("Anonymous Message Sent")
-                            .description(message)
+                            .description(&message)
                             .timestamp(Timestamp::now())
                             .color(Color::BLURPLE),
                     )
@@ -111,6 +110,10 @@ pub async fn anon(
             .await
             .context("Failed to log anonymous message")?;
     }
+
+    webhook
+        .execute(ctx, false, ExecuteWebhook::new().content(message))
+        .await?;
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
         .await?;
