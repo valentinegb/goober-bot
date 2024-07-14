@@ -47,14 +47,14 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
 ) -> Result<(), serenity_prelude::Error> {
     match error {
         FrameworkError::Command { error, ctx, .. } => {
-            error!("An error occured in a command: {error:#}");
+            error!("An error occured in a command: {error:#?}");
 
             ctx.send(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title(format!("Error {A_FLOOF_LOAD}"))
-                            .description(format!("{error:#}"))
+                            .title(format!("Command Error {A_FLOOF_LOAD}"))
+                            .description(format!("{error:?}"))
                             .color(Color::RED),
                     )
                     .allowed_mentions(CreateAllowedMentions::new())
