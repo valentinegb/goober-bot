@@ -20,6 +20,8 @@ mod config;
 mod emoji;
 mod persist;
 
+use std::fmt::Debug;
+
 use activity::start_activity_loop;
 use anyhow::Context as _;
 use emoji::*;
@@ -43,7 +45,7 @@ struct Data {
 type Error = anyhow::Error;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
+pub async fn on_error<U: Debug, E: std::fmt::Display + std::fmt::Debug>(
     error: FrameworkError<'_, U, E>,
 ) -> Result<(), serenity_prelude::Error> {
     match error {
@@ -87,7 +89,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                 None => String::new(),
             };
 
-            error!("An argument parsing error occured{for_input}: {error}");
+            error!("An argument parsing error occured{for_input}: {error}: {ctx:#?}");
 
             ctx.send(
                 CreateReply::default()
@@ -106,7 +108,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
             ctx,
             ..
         } => {
-            warn!("Missing bot permissions: {missing_permissions}");
+            warn!("Missing bot permissions: {missing_permissions}: {ctx:#?}");
 
             ctx.send(
                 CreateReply::default()
@@ -132,12 +134,12 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                             .title(format!("Missing User Permissions {FLOOF_NERVOUS}"))
                             .description(match missing_permissions {
                                 Some(missing_permissions) => {
-                                    warn!("Missing user permissions: {missing_permissions}");
+                                    warn!("Missing user permissions: {missing_permissions}: {ctx:#?}");
 
                                     format!("You need these permissions to use this command: {missing_permissions}")
                                 },
                                 None => {
-                                    warn!("Missing user permissions");
+                                    warn!("Missing user permissions: {ctx:#?}");
 
                                     "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string()
                                 },
