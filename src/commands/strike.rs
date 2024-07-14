@@ -127,8 +127,8 @@ pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
 /// Give a strike to a server member
 #[command(
     slash_command,
-    required_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
-    required_bot_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS|SEND_MESSAGES",
+    required_permissions = "MODERATE_MEMBERS",
+    required_bot_permissions = "SEND_MESSAGES",
     ephemeral
 )]
 async fn give(
@@ -273,7 +273,7 @@ async fn history(
 /// Repeal a strike that was previously given
 #[command(
     slash_command,
-    required_permissions = "KICK_MEMBERS|BAN_MEMBERS|MODERATE_MEMBERS",
+    required_permissions = "MODERATE_MEMBERS",
     required_bot_permissions = "SEND_MESSAGES",
     ephemeral
 )]
