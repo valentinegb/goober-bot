@@ -113,7 +113,8 @@ pub async fn anon(
 
     webhook
         .execute(ctx, false, ExecuteWebhook::new().content(message))
-        .await?;
+        .await
+        .context("Failed to send anonymous message")?;
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
         .await?;

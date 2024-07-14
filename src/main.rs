@@ -32,9 +32,10 @@ use poise::{
 use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
-use tracing::error;
+use tracing::{error, info, warn};
 
 /// User data, which is stored and accessible in all command invocations
+#[derive(Debug)]
 struct Data {
     persist: PersistInstance,
 }
@@ -71,7 +72,7 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                     .embed(
                         CreateEmbed::new()
                             .title(format!("Internal Error {FLOOF_NERVOUS}"))
-                            .description("Something went *seriously* wrong- if this happens a lot please join the support server and let a developer know!")
+                            .description("Something went *seriously* wrong- please join the support server and let a developer know!")
                             .color(Color::RED),
                     )
                     .ephemeral(true),
@@ -105,6 +106,8 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
             ctx,
             ..
         } => {
+            warn!("Missing bot permissions: {missing_permissions}");
+
             ctx.send(
                 CreateReply::default()
                     .embed(
@@ -128,8 +131,16 @@ pub async fn on_error<U, E: std::fmt::Display + std::fmt::Debug>(
                         CreateEmbed::new()
                             .title(format!("Missing User Permissions {FLOOF_NERVOUS}"))
                             .description(match missing_permissions {
-                                Some(missing_permissions) => format!("You need these permissions to use this command: {missing_permissions}"),
-                                None => "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string(),
+                                Some(missing_permissions) => {
+                                    warn!("Missing user permissions: {missing_permissions}");
+
+                                    format!("You need these permissions to use this command: {missing_permissions}")
+                                },
+                                None => {
+                                    warn!("Missing user permissions");
+
+                                    "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string()
+                                },
                             })
                             .color(Color::RED),
                     )
@@ -174,12 +185,24 @@ async fn main(
                     }
                 })
             },
+            pre_command: |ctx| {
+                Box::pin(async move {
+                    info!("Command initiated: {ctx:#?}");
+                })
+            },
+            post_command: |ctx| {
+                Box::pin(async move {
+                    info!("Command finished successfully: {ctx:#?}");
+                })
+            },
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 start_activity_loop(ctx.clone());
+                info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
+                info!("Commands registered");
 
                 Ok(Data { persist })
             })

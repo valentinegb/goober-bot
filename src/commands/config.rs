@@ -349,8 +349,10 @@ async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
 
     config.strikes_log_channel = None;
     ctx.data().persist.save(&config_key, config)?;
-    ctx.say("**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}")
-        .await?;
+    ctx.say(format!(
+        "**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}"
+    ))
+    .await?;
 
     Ok(())
 }
@@ -363,7 +365,7 @@ async fn unset_anon_channel(ctx: Context<'_>) -> Result<(), Error> {
 
     config.anon_channel = None;
     ctx.data().persist.save(&config_key, config)?;
-    ctx.say("**Anon Channel** has been **unset** {FLOOF_HAPPY}")
+    ctx.say(format!("**Anon Channel** has been **unset** {FLOOF_HAPPY}"))
         .await?;
 
     Ok(())
@@ -377,8 +379,10 @@ async fn unset_anon_log_channel(ctx: Context<'_>) -> Result<(), Error> {
 
     config.anon_log_channel = None;
     ctx.data().persist.save(&config_key, config)?;
-    ctx.say("**Anon Log Channel** has been **unset** {FLOOF_HAPPY}")
-        .await?;
+    ctx.say(format!(
+        "**Anon Log Channel** has been **unset** {FLOOF_HAPPY}"
+    ))
+    .await?;
 
     Ok(())
 }
