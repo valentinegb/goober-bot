@@ -17,10 +17,10 @@
 use anyhow::anyhow;
 use poise::command;
 
-use crate::{Context, Error};
+use crate::{config::get_config_key, emoji::*, Context, Error};
 
 /// Commands to aid in development of the bot
-#[command(slash_command, subcommands("error"))]
+#[command(slash_command, subcommands("error", "delete_config"))]
 pub async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!();
 }
@@ -29,4 +29,19 @@ pub async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
 #[command(slash_command)]
 async fn error(_ctx: Context<'_>) -> Result<(), Error> {
     Err(anyhow!("This is a test error").context("This is a wrapper test error"))
+}
+
+/// Deletes the config file for the current server
+#[command(
+    slash_command,
+    required_permissions = "MANAGE_GUILD",
+    required_bot_permissions = "USE_EXTERNAL_EMOJIS",
+    ephemeral
+)]
+async fn delete_config(ctx: Context<'_>) -> Result<(), Error> {
+    ctx.data().persist.remove(&get_config_key(ctx)?)?;
+    ctx.say(format!("Server config file deleted {FLOOF_MUG}"))
+        .await?;
+
+    Ok(())
 }
