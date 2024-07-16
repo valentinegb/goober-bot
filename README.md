@@ -15,3 +15,4 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - silly commands (ex. `/boop`, `/bite`, `/gnaw`)
 - guild and user installable
 - (configurable) `/anon` command
+- rock paper scissors
