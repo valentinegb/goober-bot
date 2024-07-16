@@ -19,8 +19,8 @@ use poise::{
     command,
     serenity_prelude::{
         futures::StreamExt, ButtonStyle, CreateActionRow, CreateAllowedMentions, CreateButton,
-        CreateInteractionResponse, CreateInteractionResponseMessage, EditMessage, Mentionable,
-        ReactionType, UserId,
+        CreateInteractionResponse, CreateInteractionResponseMessage, EditInteractionResponse,
+        Mentionable, ReactionType, UserId,
     },
     CreateReply,
 };
@@ -198,7 +198,7 @@ pub async fn rock_paper_scissors(
         .await_component_interactions(ctx)
         .stream();
 
-    while let Some(mut accept_interaction) = accept_interaction_stream.next().await {
+    while let Some(accept_interaction) = accept_interaction_stream.next().await {
         if accept_interaction.user.id != user {
             accept_interaction
                 .create_response(
@@ -216,11 +216,10 @@ pub async fn rock_paper_scissors(
             continue;
         }
 
-        accept_interaction
-            .message
+        reply
             .edit(
                 ctx,
-                EditMessage::new()
+                CreateReply::default()
                     .components(vec![CreateActionRow::Buttons(disabled_accept_buttons)]),
             )
             .await?;
@@ -244,7 +243,7 @@ pub async fn rock_paper_scissors(
                     .await_component_interactions(ctx)
                     .stream();
 
-                while let Some(mut user_choose_interaction) = user_choose_interaction_stream.next().await {
+                while let Some(user_choose_interaction) = user_choose_interaction_stream.next().await {
                     if user_choose_interaction.user.id == author.id {
                         user_choose_interaction
                             .create_response(
@@ -279,13 +278,14 @@ pub async fn rock_paper_scissors(
                         continue;
                     }
 
-                    user_choose_interaction
-                        .message
-                        .edit(
-                            ctx,
-                            EditMessage::new().components(vec![CreateActionRow::Buttons(disabled_choose_buttons.clone())]),
-                        )
-                        .await?;
+                    accept_interaction.edit_response(
+                        ctx,
+                        EditInteractionResponse::new().components(vec![
+                            CreateActionRow::Buttons(
+                                disabled_choose_buttons.clone(),
+                            ),
+                        ]),
+                    ).await?;
                     user_choose_interaction.create_response(
                         ctx,
                         CreateInteractionResponse::Message(
@@ -304,7 +304,7 @@ pub async fn rock_paper_scissors(
                         .await_component_interactions(ctx)
                         .stream();
 
-                    while let Some(mut author_choose_interaction) = author_choose_interaction_stream.next().await {
+                    while let Some(author_choose_interaction) = author_choose_interaction_stream.next().await {
                         if author_choose_interaction.user.id == user {
                             author_choose_interaction
                                 .create_response(
@@ -339,11 +339,13 @@ pub async fn rock_paper_scissors(
                             continue;
                         }
 
-                        author_choose_interaction
-                            .message
-                            .edit(
+                        user_choose_interaction.edit_response(
                                 ctx,
-                                EditMessage::new().components(vec![CreateActionRow::Buttons(disabled_choose_buttons)]),
+                                EditInteractionResponse::new().components(vec![
+                                    CreateActionRow::Buttons(
+                                        disabled_choose_buttons,
+                                    ),
+                                ]),
                             )
                             .await?;
 
