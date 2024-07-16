@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use paste::paste;
 use poise::{
     command,
     serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
@@ -26,6 +27,137 @@ use crate::{
     persist::load_or_save_default,
     Context, Error,
 };
+
+// TODO: replace `$name_str` with `stringify!($name)` when it works
+
+/// Remember to add the subcommands to `get` and `set` and add config option to
+/// `list`
+macro_rules! config_bool {
+    (
+        #[doc = $desc:literal]
+        let $name:ident = ($name_str:literal, $title:literal);
+    ) => {
+        paste! {
+            #[doc = "Gets the " $title " configuration option"]
+            #[command(slash_command, rename = $name_str, ephemeral)]
+            async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), Error> {
+                let Config { $name, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+                ctx.send(
+                    CreateReply::default().embed(
+                        CreateEmbed::new()
+                            .title($title)
+                            .description($desc)
+                            .field("Value", $name.to_string(), false)
+                            .timestamp(Timestamp::now())
+                            .color(Color::BLUE),
+                    ),
+                )
+                .await?;
+
+                Ok(())
+            }
+
+            #[doc = "Sets the " $title " configuration option"]
+            #[command(slash_command, rename = $name_str, ephemeral)]
+            async fn [<set_ $name>](
+                ctx: Context<'_>,
+                #[description = "The value to set " $title " to"] value: bool,
+            ) -> Result<(), Error> {
+                let config_key = get_config_key(ctx)?;
+                let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+                config.$name = value;
+                ctx.data().persist.save(&config_key, config)?;
+                ctx.say(format!(
+                    "**{}** has been set to **{value}** {FLOOF_HAPPY}",
+                    $title,
+                ))
+                .await?;
+
+                Ok(())
+            }
+        }
+    };
+}
+
+/// Remember to add the subcommands to `get`, `set`, and `unset` and add config
+/// option to `list`
+macro_rules! config_channel {
+    (
+        #[doc = $desc:literal]
+        let $name:ident = ($name_str:literal, $title:literal);
+    ) => {
+        paste! {
+            #[doc = "Gets the " $title " configuration option"]
+            #[command(slash_command, rename = $name_str, ephemeral)]
+            async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), Error> {
+                let Config {
+                    $name,
+                    ..
+                } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+                ctx.send(
+                    CreateReply::default().embed(
+                        CreateEmbed::new()
+                            .title($title)
+                            .description($desc)
+                            .field(
+                                "Value",
+                                map_or_none_string($name, |v| v.mention().to_string()),
+                                false,
+                            )
+                            .timestamp(Timestamp::now())
+                            .color(Color::BLUE),
+                    ),
+                )
+                .await?;
+
+                Ok(())
+            }
+
+            #[doc = "Sets the " $title " configuration option"]
+            #[command(slash_command, rename = $name_str, ephemeral)]
+            async fn [<set_ $name>](
+                ctx: Context<'_>,
+                #[description = "The value to set " $title " to"]
+                #[channel_types("Text")]
+                value: ChannelId,
+            ) -> Result<(), Error> {
+                let config_key = get_config_key(ctx)?;
+                let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+                config.$name = Some(value);
+                ctx.data().persist.save(&config_key, config)?;
+                ctx.say(format!(
+                    "**{}** has been set to **{}** {FLOOF_HAPPY}",
+                    $title,
+                    value.mention(),
+                ))
+                .await?;
+
+                Ok(())
+            }
+
+            #[doc = "Unsets the " $title " configuration option"]
+            #[command(slash_command, rename = $name_str, ephemeral)]
+            async fn [<unset_ $name>](ctx: Context<'_>) -> Result<(), Error> {
+                let config_key = get_config_key(ctx)?;
+                let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+                config.$name = None;
+                ctx.data().persist.save(&config_key, config)?;
+                ctx.say(format!(
+                    "**{}** has been **unset** {FLOOF_HAPPY}",
+                    $title,
+                ))
+                .await?;
+
+                Ok(())
+            }
+        }
+    };
+}
 
 /// Returns "None" as a [`String`] (if none), or applies a function to the
 /// contained value (if any).
@@ -55,22 +187,35 @@ pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
 #[command(slash_command, ephemeral)]
 async fn list(ctx: Context<'_>) -> Result<(), Error> {
     let config: Config = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+    let mut embed = CreateEmbed::new()
+        .title("Configuration")
+        .description("These are the configuration options for this server. Use `/config get <option>` to get more information about an option.")
+        .timestamp(Timestamp::now())
+        .color(Color::BLUE);
 
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Configuration")
-                .description("These are the configuration options for this server. Use `/config get <option>` to get more information about an option.")
-                .field("Strikes Enabled", config.strikes_enabled.to_string(), false)
-                .field("Strikes Log Channel", map_or_none_string(config.strikes_log_channel, |v| v.mention().to_string()), false)
-                .field("Anon Enabled", config.anon_enabled.to_string(), false)
-                .field("Anon Channel", map_or_none_string(config.anon_channel, |v| v.mention().to_string()), false)
-                .field("Anon Log Channel", map_or_none_string(config.anon_log_channel, |v| v.mention().to_string()), false)
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
+    macro_rules! list_bool {
+        ($title:literal, $name:ident) => {
+            embed = embed.field($title, config.$name.to_string(), false);
+        };
+    }
+
+    macro_rules! list_channel {
+        ($title:literal, $name:ident) => {
+            embed = embed.field(
+                $title,
+                map_or_none_string(config.$name, |v| v.mention().to_string()),
+                false,
+            );
+        };
+    }
+
+    list_bool!("Strikes Enabled", strikes_enabled);
+    list_channel!("Strikes Log Channel", strikes_log_channel);
+    list_bool!("Anon Enabled", anon_enabled);
+    list_channel!("Anon Channel", anon_channel);
+    list_channel!("Anon Log Channel", anon_log_channel);
+
+    ctx.send(CreateReply::default().embed(embed)).await?;
 
     Ok(())
 }
@@ -90,125 +235,6 @@ async fn get(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-/// Gets the Strikes Enabled configuration option
-#[command(slash_command, rename = "strikes_enabled", ephemeral)]
-async fn get_strikes_enabled(ctx: Context<'_>) -> Result<(), Error> {
-    let Config {
-        strikes_enabled, ..
-    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
-
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Strikes Enabled")
-                .description("Whether to enable the strikes moderation system, `/strike`, and its subcommands")
-                .field("Value", strikes_enabled.to_string(), false)
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
-
-    Ok(())
-}
-
-/// Gets the Strikes Log Channel configuration option
-#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
-async fn get_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let Config {
-        strikes_log_channel,
-        ..
-    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
-
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Strikes Log Channel")
-                .description("Channel to log strike events in")
-                .field(
-                    "Value",
-                    map_or_none_string(strikes_log_channel, |v| v.mention().to_string()),
-                    false,
-                )
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
-
-    Ok(())
-}
-
-/// Gets the Anon Enabled configuration option
-#[command(slash_command, rename = "anon_enabled", ephemeral)]
-async fn get_anon_enabled(ctx: Context<'_>) -> Result<(), Error> {
-    let Config { anon_enabled, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
-
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Anon Enabled")
-                .description("Whether to enable the `/anon` command, which allows members to send messages anonymously")
-                .field("Value", anon_enabled.to_string(), false)
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
-
-    Ok(())
-}
-
-/// Gets the Anon Channel configuration option
-#[command(slash_command, rename = "anon_channel", ephemeral)]
-async fn get_anon_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let Config { anon_channel, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
-
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Anon Channel")
-                .description("Channel to restrict `/anon` to, if anon is enabled")
-                .field(
-                    "Value",
-                    map_or_none_string(anon_channel, |v| v.mention().to_string()),
-                    false,
-                )
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
-
-    Ok(())
-}
-
-/// Gets the Anon Log Channel configuration option
-#[command(slash_command, rename = "anon_log_channel", ephemeral)]
-async fn get_anon_log_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let Config {
-        anon_log_channel, ..
-    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
-
-    ctx.send(
-        CreateReply::default().embed(
-            CreateEmbed::new()
-                .title("Anon Log Channel")
-                .description("Channel to log `/anon` uses to, if anon is enabled")
-                .field(
-                    "Value",
-                    map_or_none_string(anon_log_channel, |v| v.mention().to_string()),
-                    false,
-                )
-                .timestamp(Timestamp::now())
-                .color(Color::BLUE),
-        ),
-    )
-    .await?;
-
-    Ok(())
-}
-
 /// Sets a specific configuration option
 #[command(
     slash_command,
@@ -224,110 +250,6 @@ async fn set(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-/// Sets the Strikes Enabled configuration option
-#[command(slash_command, rename = "strikes_enabled", ephemeral)]
-async fn set_strikes_enabled(
-    ctx: Context<'_>,
-    #[description = "The value to set Strikes Enabled to"] value: bool,
-) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.strikes_enabled = value;
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Strikes Enabled** has been set to **{value}** {FLOOF_HAPPY}"
-    ))
-    .await?;
-
-    Ok(())
-}
-
-/// Sets the Strikes Log Channel configuration option
-#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
-async fn set_strikes_log_channel(
-    ctx: Context<'_>,
-    #[description = "The value to set Strikes Log Channel to"]
-    #[channel_types("Text")]
-    value: ChannelId,
-) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.strikes_log_channel = Some(value);
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Strikes Log Channel** has been set to **{}** {FLOOF_HAPPY}",
-        value.mention(),
-    ))
-    .await?;
-
-    Ok(())
-}
-
-/// Sets the Anon Enabled configuration option
-#[command(slash_command, rename = "anon_enabled", ephemeral)]
-async fn set_anon_enabled(
-    ctx: Context<'_>,
-    #[description = "The value to set Anon Enabled to"] value: bool,
-) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.anon_enabled = value;
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Anon Enabled** has been set to **{value}** {FLOOF_HAPPY}"
-    ))
-    .await?;
-
-    Ok(())
-}
-
-/// Sets the Anon Channel configuration option
-#[command(slash_command, rename = "anon_channel", ephemeral)]
-async fn set_anon_channel(
-    ctx: Context<'_>,
-    #[description = "The value to set Anon Channel to"]
-    #[channel_types("Text")]
-    value: ChannelId,
-) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.anon_channel = Some(value);
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Anon Channel** has been set to **{}** {FLOOF_HAPPY}",
-        value.mention(),
-    ))
-    .await?;
-
-    Ok(())
-}
-
-/// Sets the Anon Log Channel configuration option
-#[command(slash_command, rename = "anon_log_channel", ephemeral)]
-async fn set_anon_log_channel(
-    ctx: Context<'_>,
-    #[description = "The value to set Anon Log Channel to"]
-    #[channel_types("Text")]
-    value: ChannelId,
-) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.anon_log_channel = Some(value);
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Anon Log Channel** has been set to **{}** {FLOOF_HAPPY}",
-        value.mention(),
-    ))
-    .await?;
-
-    Ok(())
-}
-
 /// Unsets a specific configuration option
 #[command(
     slash_command,
@@ -341,48 +263,27 @@ async fn unset(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!()
 }
 
-/// Unsets the Strikes Log Channel configuration option
-#[command(slash_command, rename = "strikes_log_channel", ephemeral)]
-async fn unset_strikes_log_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.strikes_log_channel = None;
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Strikes Log Channel** has been **unset** {FLOOF_HAPPY}"
-    ))
-    .await?;
-
-    Ok(())
+config_bool! {
+    /// Whether to enable the strikes moderation system, `/strike`, and its subcommands
+    let strikes_enabled = ("strikes_enabled", "Strikes Enabled");
 }
 
-/// Unsets the Anon Channel configuration option
-#[command(slash_command, rename = "anon_channel", ephemeral)]
-async fn unset_anon_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
-
-    config.anon_channel = None;
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!("**Anon Channel** has been **unset** {FLOOF_HAPPY}"))
-        .await?;
-
-    Ok(())
+config_channel! {
+    /// Channel to log strike events in
+    let strikes_log_channel = ("strikes_log_channel", "Strikes Log Channel");
 }
 
-/// Unsets the Anon Log Channel configuration option
-#[command(slash_command, rename = "anon_log_channel", ephemeral)]
-async fn unset_anon_log_channel(ctx: Context<'_>) -> Result<(), Error> {
-    let config_key = get_config_key(ctx)?;
-    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+config_bool! {
+    /// Whether to enable the `/anon` command, which allows members to send messages anonymously
+    let anon_enabled = ("anon_enabled", "Anon Enabled");
+}
 
-    config.anon_log_channel = None;
-    ctx.data().persist.save(&config_key, config)?;
-    ctx.say(format!(
-        "**Anon Log Channel** has been **unset** {FLOOF_HAPPY}"
-    ))
-    .await?;
+config_channel! {
+    /// Channel to restrict `/anon` to, if anon is enabled
+    let anon_channel = ("anon_channel", "Anon Channel");
+}
 
-    Ok(())
+config_channel! {
+    /// Channel to log `/anon` uses to, if anon is enabled
+    let anon_log_channel = ("anon_log_channel", "Anon Log Channel");
 }

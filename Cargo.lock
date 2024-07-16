@@ -685,6 +685,7 @@ version = "1.0.0"
 dependencies = [
  "anyhow",
  "chrono",
+ "paste",
  "poise",
  "rand",
  "serde",
