@@ -2,7 +2,7 @@
 
 <!--- [![Rust](https://github.com/valentinegb/goober-bot/actions/workflows/rust.yml/badge.svg)](https://github.com/valentinegb/goober-bot/actions/workflows/rust.yml) --->
 
-Bot that is also a goober for ~~the [Gooberland Discord server](https://discord.gg/NCd88hxUFc)~~ every server!
+Bot that is also a goober for ~~the [Gooberland Discord server](https://discord.gg/NCd88hxUFc)~~ any server, DM, or group chat!
 
 Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try the bot or [install it](https://discord.com/oauth2/authorize?client_id=1226752321971687537) to a guild or your user now!
 
