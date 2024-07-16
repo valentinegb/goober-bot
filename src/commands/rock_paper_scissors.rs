@@ -19,8 +19,8 @@ use poise::{
     command,
     serenity_prelude::{
         futures::StreamExt, ButtonStyle, CreateActionRow, CreateAllowedMentions, CreateButton,
-        CreateInteractionResponse, CreateInteractionResponseMessage, EditInteractionResponse,
-        Mentionable, ReactionType, UserId,
+        CreateInteractionResponse, CreateInteractionResponseFollowup,
+        CreateInteractionResponseMessage, Mentionable, ReactionType, UserId,
     },
     CreateReply,
 };
@@ -278,29 +278,18 @@ pub async fn rock_paper_scissors(
                         continue;
                     }
 
-                    accept_interaction.edit_response(
-                        ctx,
-                        EditInteractionResponse::new().components(vec![
-                            CreateActionRow::Buttons(
-                                disabled_choose_buttons.clone(),
-                            ),
-                        ]),
-                    ).await?;
-                    user_choose_interaction.create_response(
-                        ctx,
-                        CreateInteractionResponse::Message(
-                            CreateInteractionResponseMessage::new()
-                                .content(format!(
-                                    "{user_mention} has chosen! Now {author_mention}, what would *you* like to choose?",
-                                ))
-                                .components(vec![CreateActionRow::Buttons(choose_buttons)])
-                                .allowed_mentions(CreateAllowedMentions::new().users([author]))
-                        )
-                    ).await?;
+                    accept_interaction.delete_response(ctx).await?;
 
-                    let mut author_choose_interaction_stream = user_choose_interaction
-                        .get_response(ctx)
-                        .await?
+                    let author_choose_followup = accept_interaction.create_followup(
+                        ctx,
+                        CreateInteractionResponseFollowup::new()
+                            .content(format!(
+                                "{user_mention} has chosen! Now {author_mention}, what would *you* like to choose?",
+                            ))
+                            .components(vec![CreateActionRow::Buttons(choose_buttons)])
+                            .allowed_mentions(CreateAllowedMentions::new().users([author]))
+                    ).await?;
+                    let mut author_choose_interaction_stream = author_choose_followup
                         .await_component_interactions(ctx)
                         .stream();
 
@@ -339,15 +328,7 @@ pub async fn rock_paper_scissors(
                             continue;
                         }
 
-                        user_choose_interaction.edit_response(
-                                ctx,
-                                EditInteractionResponse::new().components(vec![
-                                    CreateActionRow::Buttons(
-                                        disabled_choose_buttons,
-                                    ),
-                                ]),
-                            )
-                            .await?;
+                        accept_interaction.delete_followup(ctx, author_choose_followup).await?;
 
                         let outcome_message = if user_choose_interaction.data.custom_id == author_choose_interaction.data.custom_id {
                             format!(
@@ -399,12 +380,10 @@ pub async fn rock_paper_scissors(
                             }
                         };
 
-                        author_choose_interaction.create_response(
+                        accept_interaction.create_followup(
                             ctx,
-                            CreateInteractionResponse::Message(
-                                CreateInteractionResponseMessage::new()
-                                    .content(outcome_message),
-                            ),
+                            CreateInteractionResponseFollowup::new()
+                                .content(outcome_message),
                         ).await?;
 
                         break;
