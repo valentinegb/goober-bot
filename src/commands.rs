@@ -18,10 +18,12 @@ mod anon;
 mod config;
 mod debug;
 mod fun;
+mod rock_paper_scissors;
 mod strike;
 
 pub(super) use anon::*;
 pub(super) use config::*;
 pub(super) use debug::*;
 pub(super) use fun::*;
+pub(super) use rock_paper_scissors::*;
 pub(super) use strike::*;

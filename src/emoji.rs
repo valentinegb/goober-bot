@@ -16,6 +16,10 @@
 
 #![allow(dead_code)]
 
+// Hey,
+// https://cdn.discordapp.com/emojis/<id>.webp?size=48&quality=lossless
+// ;)
+
 pub(crate) const FLOOF: &str = "<:floof:1252427038032134155>";
 pub(crate) const FLOOF_ANGRY: &str = "<:floofAngry:1252427039420452946>";
 pub(crate) const FLOOF_BLEP: &str = "<:floofBlep:1252427040528011355>";

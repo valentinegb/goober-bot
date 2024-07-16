@@ -178,6 +178,7 @@ async fn main(
                 commands::meow(),
                 commands::murder(),
                 commands::pat(),
+                commands::rock_paper_scissors(),
                 commands::strike(),
             ],
             on_error: |error| {
