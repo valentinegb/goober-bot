@@ -10,9 +10,42 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Features
 
+- silly commands (eg. `/boop`, `/bite`, `/gnaw`)
 - per-server configuration
 - (configurable) robust strike system
-- silly commands (ex. `/boop`, `/bite`, `/gnaw`)
-- guild and user installable
 - (configurable) `/anon` command
 - rock paper scissors
+- guild and user installable
+
+## Commands
+
+*Last updated Jul 17, 2024*
+
+### Silly
+
+- `/bite <user>`
+- `/boop <user>`
+- `/gnaw <user>`
+- `/kiss <user>`
+- `/meow <user>`
+- `/murder <user>`
+- `/pat <user>`
+
+### Configuration
+
+- `/config list`
+- `/config get <option>`
+- `/config set <option> <value>`
+- `/config unset <option>`
+
+### Strikes
+
+- `/strike give <user> [rule] [comment] [expiration]`
+- `/strike history [user] [all]`
+- `/strike repeal <user> [strike]`
+
+### Other
+
+- `/anon <message>`
+- `/debug <error|delete_config>`
+- `/rock_paper_scissors [user]`
