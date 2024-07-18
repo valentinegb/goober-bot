@@ -184,6 +184,7 @@ async fn main(
                 commands::meow(),
                 commands::murder(),
                 commands::pat(),
+                commands::revive(),
                 commands::rock_paper_scissors(),
                 commands::sponsors(),
                 commands::strike(),

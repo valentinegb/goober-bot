@@ -91,7 +91,7 @@ macro_rules! silly_command {
     };
 }
 
-silly_command!(
+silly_command! {
     /// Boops a being :3c
     fn boop("Your victim >:3") {
         bot_message = "I have been booped by {author} {FLOOF_OWO}";
@@ -104,9 +104,9 @@ silly_command!(
             "{author} booped {user}, I think they're trying to pick a fight {FLOOF_NERVOUS}",
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// Embrace the bobin within us all and gnaw on one's bones
     fn gnaw("The subject of today's gnawing") {
         bot_message = "GRAAAHH {author} STOP GNAWING MY BONES GET OFF HELP {FLOOF_SCARED}";
@@ -118,9 +118,9 @@ silly_command!(
             "Hey uh, {user}, did you know there's a {author} gnawing on your bones? {FLOOF_LURK}",
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// Express a wide range of emotions via- your teeth in somebody's skin
     fn bite("The skin-haver in question") {
         bot_message = "Help please {author}'s biting me {FLOOF_OWO}";
@@ -132,9 +132,9 @@ silly_command!(
             "\\*CHOMP\\*\n{author} bit {user} {FLOOF_NOM}",
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// You know what you are
     fn meow("Get their attention") {
         bot_message = "Hm? What's that {author}? Oh I see... mhm... okay, okay, I understand {FLOOF_CAT}";
@@ -150,9 +150,9 @@ silly_command!(
             "{user}... sire... I have a message for you, from {author}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me {FLOOF_NERVOUS}"
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// MURRRRRDEERRRRRRRRRRR
     fn murder("KILL THEM KILL THEM KILL THEM >:D") {
         bot_message = "GAH {author} HAS A KNIFE AND IS RUNNING AT ME WAAAA {FLOOF_SCARED}";
@@ -166,9 +166,9 @@ silly_command!(
             "{author} killed {user} when the lights went out so no one would know it was them... {FLOOF_SMUG}",
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// Let them know that they're a good being :>
     fn pat("Good being in question") {
         bot_message = "Awawawawa {author} gave me a pat pat on the head {FLOOF_PAT}";
@@ -180,9 +180,9 @@ silly_command!(
             "{user} has been selected to receive a soothing pat on the head from {author} {FLOOF_PAT}",
         ];
     }
-);
+}
 
-silly_command!(
+silly_command! {
     /// 😳
     fn kiss("Omg who is it who is it???") {
         bot_message = "\\*gasp* oh- oh my goodness- {author} kissed me!!! {FLOOF_WOOZY}";
@@ -195,4 +195,19 @@ silly_command!(
             "{author} **VIOLENTLY** pulled {user} to them and **SMOOCHED** them on the **LIPS**, not letting **ANYONE ELSE** in {FLOOF_MISCHIEF}",
         ];
     }
-);
+}
+
+silly_command! {
+    /// Doesn't this count as necromancy?
+    fn revive("The deceased") {
+        bot_message = "What- I- {author}, I'm not dead- {FLOOF_WHAT}";
+        author_message = "... Oh my god *{author}'S **IMMORTAL**-* {FLOOF_SCARED}";
+        messages = [
+            "{author} performed necromancy on {user}, now they're a *zOoOmBiIeE oOoOo* {FLOOF_SMUG}",
+            "{author} crouched by {user} and held `E` for a few seconds {FLOOF}",
+            "{author} graciously donated a health pack to {user} {FLOOF_HAPPY}",
+            "{author} performed a ritual and sacrificed a lamb to bring {user} back to life {FLOOF_OWO}",
+            "In a flash of light, {author} descended upon {user} and gave them the gift of another life {FLOOF_INNOCENT}",
+        ];
+    }
+}
