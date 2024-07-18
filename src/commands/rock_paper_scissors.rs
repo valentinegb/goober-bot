@@ -35,7 +35,7 @@ use crate::{emoji::*, Context, Error};
     interaction_context = "Guild|BotDm|PrivateChannel",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
-pub async fn rock_paper_scissors(
+pub(crate) async fn rock_paper_scissors(
     ctx: Context<'_>,
     #[description = "Person you want to play with"] user: UserId,
 ) -> Result<(), Error> {

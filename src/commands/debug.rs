@@ -21,7 +21,7 @@ use crate::{config::get_config_key, emoji::*, Context, Error};
 
 /// Commands to aid in development of the bot
 #[command(slash_command, subcommands("error", "delete_config"))]
-pub async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
+pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
     unreachable!();
 }
 

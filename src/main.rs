@@ -49,7 +49,7 @@ struct Data {
 type Error = anyhow::Error;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-pub async fn on_error<U: Debug, E: std::fmt::Display + std::fmt::Debug>(
+async fn on_error<U: Debug, E: std::fmt::Display + std::fmt::Debug>(
     error: FrameworkError<'_, U, E>,
 ) -> Result<(), serenity_prelude::Error> {
     match error {

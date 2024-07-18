@@ -54,7 +54,7 @@ macro_rules! silly_command {
             interaction_context = "Guild|BotDm|PrivateChannel",
             required_bot_permissions = "USE_EXTERNAL_EMOJIS"
         )]
-        pub async fn $name(
+        pub(crate) async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
         ) -> Result<(), Error> {

@@ -38,7 +38,7 @@ use crate::{
     required_bot_permissions = "MANAGE_WEBHOOKS|SEND_MESSAGES|USE_EXTERNAL_EMOJIS",
     ephemeral
 )]
-pub async fn anon(
+pub(crate) async fn anon(
     ctx: Context<'_>,
     #[description = "Message to send anonymously"] message: String,
 ) -> Result<(), Error> {
