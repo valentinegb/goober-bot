@@ -24,7 +24,7 @@ use rand::{seq::IteratorRandom, thread_rng};
 use crate::{emoji::*, Context, Error};
 
 /// ```
-/// fun_command!(
+/// silly_command!(
 ///     /// Command description
 ///     fn command_name("User description") {
 ///         bot_message = "Message when used on bot, must include {author}";
@@ -36,7 +36,7 @@ use crate::{emoji::*, Context, Error};
 ///     }
 /// );
 /// ```
-macro_rules! fun_command {
+macro_rules! silly_command {
     (
         #[$doc:meta]
         fn $name:ident($user_description:literal) {
@@ -91,7 +91,7 @@ macro_rules! fun_command {
     };
 }
 
-fun_command!(
+silly_command!(
     /// Boops a being :3c
     fn boop("Your victim >:3") {
         bot_message = "I have been booped by {author} {FLOOF_OWO}";
@@ -106,7 +106,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// Embrace the bobin within us all and gnaw on one's bones
     fn gnaw("The subject of today's gnawing") {
         bot_message = "GRAAAHH {author} STOP GNAWING MY BONES GET OFF HELP {FLOOF_SCARED}";
@@ -120,7 +120,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// Express a wide range of emotions via- your teeth in somebody's skin
     fn bite("The skin-haver in question") {
         bot_message = "Help please {author}'s biting me {FLOOF_OWO}";
@@ -134,7 +134,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// You know what you are
     fn meow("Get their attention") {
         bot_message = "Hm? What's that {author}? Oh I see... mhm... okay, okay, I understand {FLOOF_CAT}";
@@ -152,7 +152,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// MURRRRRDEERRRRRRRRRRR
     fn murder("KILL THEM KILL THEM KILL THEM >:D") {
         bot_message = "GAH {author} HAS A KNIFE AND IS RUNNING AT ME WAAAA {FLOOF_SCARED}";
@@ -168,7 +168,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// Let them know that they're a good being :>
     fn pat("Good being in question") {
         bot_message = "Awawawawa {author} gave me a pat pat on the head {FLOOF_PAT}";
@@ -182,7 +182,7 @@ fun_command!(
     }
 );
 
-fun_command!(
+silly_command!(
     /// 😳
     fn kiss("Omg who is it who is it???") {
         bot_message = "\\*gasp* oh- oh my goodness- {author} kissed me!!! {FLOOF_WOOZY}";
