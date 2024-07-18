@@ -8,6 +8,8 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 <img width="674" alt="Screenshot 2024-04-09 at 9 52 04 AM" src="https://github.com/valentinegb/goober-bot/assets/35977727/57d110bf-97da-4c2e-a78a-fee1eb5e0307">
 
+*Adorable [floof emojis](https://volpeon.ink/emojis/floof/) courtesy of [Volpeon](https://volpeon.ink)!*
+
 ## Features
 
 - silly commands (eg. `/boop`, `/bite`, `/gnaw`)
