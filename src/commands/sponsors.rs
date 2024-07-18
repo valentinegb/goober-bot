@@ -16,7 +16,7 @@ pub(crate) async fn sponsors(ctx: Context<'_>) -> Result<(), Error> {
     let response: serde_json::Value = octocrab::instance()
         .graphql(
             &serde_json::json!({
-                "query": format!("{{ viewer {{ sponsors(first: 100, tierId: \"{tier}\") {{ nodes {{ ... on User {{ login }} ... on Organization {{ login }} }} }} }} }}"),
+                "query": format!("{{ viewer {{ sponsors(first: 100, tierId: \"{tier}\") {{ nodes {{ ... on User {{ login name }} ... on Organization {{ login name }} }} }} }} }}"),
             }),
         )
         .await?;
@@ -45,11 +45,21 @@ pub(crate) async fn sponsors(ctx: Context<'_>) -> Result<(), Error> {
             "This project is made possible by these absolutely *lovely* sponsors {FLOOF_HEART}\n"
         );
 
-        for username in nodes {
-            if let serde_json::Value::String(username) = username {
-                message += &format!("\n- {username}");
+        for object in nodes {
+            if let serde_json::Value::Object(object) = object {
+                if let serde_json::Value::String(login) = object
+                    .get("login")
+                    .context("Expected `login` field to be `Value::String`")?
+                {
+                    if let serde_json::Value::String(name) = object
+                        .get("name")
+                        .context("Expected `name` field to be `Value::String`")?
+                    {
+                        message += &format!("\n- {name} ([{login}](https://github.com/{login}))");
+                    }
+                }
             } else {
-                bail!("Expected `username` to be `Value::String`")
+                bail!("Expected `object` to be `Value::Object`");
             }
         }
 
