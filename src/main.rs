@@ -168,6 +168,9 @@ async fn main(
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
         .context("`DISCORD_TOKEN` was not found")?;
+    let github_pat = secret_store
+        .get("GITHUB_PAT")
+        .context("`GITHUB_PAT` was not found")?;
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -210,11 +213,6 @@ async fn main(
                 info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
-
-                let github_pat = secret_store
-                    .get("GITHUB_PAT")
-                    .context("`GITHUB_PAT` was not found")?;
-
                 octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);
                 info!("GitHub authenticated");
 
