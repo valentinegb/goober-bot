@@ -19,6 +19,7 @@ mod config;
 mod debug;
 mod rock_paper_scissors;
 mod silly;
+mod sponsors;
 mod strike;
 
 pub(super) use anon::*;
@@ -26,4 +27,5 @@ pub(super) use config::*;
 pub(super) use debug::*;
 pub(super) use rock_paper_scissors::*;
 pub(super) use silly::*;
+pub(super) use sponsors::*;
 pub(super) use strike::*;

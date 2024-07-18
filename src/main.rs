@@ -28,6 +28,7 @@ use std::fmt::Debug;
 use activity::start_activity_loop;
 use anyhow::Context as _;
 use emoji::*;
+use octocrab::Octocrab;
 use poise::{
     serenity_prelude::{
         self, ClientBuilder, Color, CreateAllowedMentions, CreateEmbed, GatewayIntents,
@@ -164,10 +165,9 @@ async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
     #[shuttle_persist_msgpack::Persist] persist: PersistInstance,
 ) -> ShuttleSerenity {
-    // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
-        .context("'DISCORD_TOKEN' was not found")?;
+        .context("`DISCORD_TOKEN` was not found")?;
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -182,6 +182,7 @@ async fn main(
                 commands::murder(),
                 commands::pat(),
                 commands::rock_paper_scissors(),
+                commands::sponsors(),
                 commands::strike(),
             ],
             on_error: |error| {
@@ -209,6 +210,13 @@ async fn main(
                 info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
+
+                let github_pat = secret_store
+                    .get("GITHUB_PAT")
+                    .context("`GITHUB_PAT` was not found")?;
+
+                octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);
+                info!("GitHub authenticated");
 
                 Ok(Data { persist })
             })

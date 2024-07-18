@@ -33,8 +33,8 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ### Configuration
 
-- `/config list`
 - `/config get <option>`
+- `/config list`
 - `/config set <option> <value>`
 - `/config unset <option>`
 
@@ -49,3 +49,4 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/anon <message>`
 - `/debug <error|delete_config>`
 - `/rock_paper_scissors [user]`
+- `/sponsors` 💖
