@@ -9,7 +9,8 @@ use crate::{emoji::*, Context, Error};
     slash_command,
     install_context = "Guild|User",
     interaction_context = "Guild|BotDm|PrivateChannel",
-    required_bot_permissions = "USE_EXTERNAL_EMOJIS"
+    required_bot_permissions = "USE_EXTERNAL_EMOJIS",
+    ephemeral
 )]
 pub(crate) async fn sponsors(ctx: Context<'_>) -> Result<(), Error> {
     let tier = "ST_kwDOAiT5_84ABlqV";
