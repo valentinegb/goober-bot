@@ -211,3 +211,18 @@ silly_command! {
         ];
     }
 }
+
+silly_command! {
+    /// Does somebody want a huuuug :3
+    fn hug("No seriously, who wants a hug? I need to know-") {
+        bot_message = "Awawawa, thanks for the hug {author} {FLOOF_HEART}";
+        author_message = "{author} gave themselves a hug {FLOOF_PLEAD}";
+        messages = [
+            "{author} gave {user} a much needed hug {FLOOF_HEART}",
+            "{author} wrapped their arms around {user} for a hug {FLOOF_HEART}",
+            "Awww, {author} and {user} are hugging, so wholesome {FLOOF_PLEAD}",
+            "{author} and {user} are hugging and uhh, me too, I'm also a part of the hug {FLOOF_PLEAD}",
+            "Before {user} could say anything, {author} had them trapped in an embrace {FLOOF_HEART}",
+        ];
+    }
+}

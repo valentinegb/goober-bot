@@ -21,13 +21,14 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Jul 18, 2024*
+*Last updated Jul 19, 2024*
 
 ### Silly
 
 - `/bite <user>`
 - `/boop <user>`
 - `/gnaw <user>`
+- `/hug <user>`
 - `/kiss <user>`
 - `/meow <user>`
 - `/murder <user>`

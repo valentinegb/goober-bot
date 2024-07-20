@@ -180,6 +180,7 @@ async fn main(
                 commands::config(),
                 commands::debug(),
                 commands::gnaw(),
+                commands::hug(),
                 commands::kiss(),
                 commands::meow(),
                 commands::murder(),
