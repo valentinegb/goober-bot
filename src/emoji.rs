@@ -28,7 +28,7 @@
 pub(crate) const A_FLOOF_LOAD: &str = "<a:afloofLoad:1263605189995266058>";
 /// ![](https://cdn.discordapp.com/emojis/1263609041179906059.gif?&quality=lossless)
 #[cfg(not(debug_assertions))]
-pub(crate) const A_FLOOF_LOAD: &str = "<:afloofLoad:1263609041179906059>";
+pub(crate) const A_FLOOF_LOAD: &str = "<a:afloofLoad:1263609041179906059>";
 /// ![](https://cdn.discordapp.com/emojis/1263605435785810104.webp?&quality=lossless)
 #[cfg(debug_assertions)]
 pub(crate) const FLOOF: &str = "<:floof:1263605435785810104>";
