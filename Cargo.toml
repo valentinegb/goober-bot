@@ -7,13 +7,13 @@ publish = false
 [dependencies]
 anyhow = "1.0.68"
 poise = { git = "https://github.com/fgardt/poise.git", branch = "feat/user_apps", version = "0.6.1", features = ["unstable"] }
-shuttle-runtime = "0.46.0"
+shuttle-runtime = "0.47.0"
 # Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
-shuttle-serenity = "0.46.0"
+shuttle-serenity = "0.47.0"
 tracing = "0.1.37"
 tokio = "1.26.0"
 serde = { version = "1.0.203", features = ["derive"] }
-shuttle-persist-msgpack = { version = "0.46.0", path = "shuttle-persist-msgpack" }
+shuttle-persist-msgpack = { version = "0.47.0", path = "shuttle-persist-msgpack" }
 rand = "0.8.5"
 chrono = "0.4.38"
 paste = "1.0.15"
