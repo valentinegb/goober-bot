@@ -15,6 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 // TODO: make general refinements to existing codebase
+// TODO: add `/lick` silly command
 // TODO: add birthday announcements system
 
 mod activity;
