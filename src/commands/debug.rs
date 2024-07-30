@@ -14,10 +14,17 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::anyhow;
-use poise::command;
+use anyhow::{anyhow, bail};
+use poise::{command, ChoiceParameter};
 
-use crate::{config::get_config_key, emoji::*, Context, Error};
+use crate::{config::get_config_key, emoji::*, error::UserError, Context, Error};
+
+#[derive(ChoiceParameter)]
+enum ErrorKind {
+    User,
+    Command,
+    Internal,
+}
 
 /// Commands to aid in development of the bot
 #[command(slash_command, subcommands("error", "delete_config"))]
@@ -27,8 +34,19 @@ pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
 
 /// Fails intentionally
 #[command(slash_command)]
-async fn error(_ctx: Context<'_>) -> Result<(), Error> {
-    Err(anyhow!("This is a test error").context("This is a wrapper test error"))
+async fn error(
+    _ctx: Context<'_>,
+    #[description = "Kind of error to return"] kind: ErrorKind,
+) -> Result<(), Error> {
+    match kind {
+        ErrorKind::User => bail!(UserError(
+            anyhow!("This is an example of a user error")
+                .context("This is an example of extra context")
+        )),
+        ErrorKind::Command => Err(anyhow!("This is an example of a command error")
+            .context("This is an example of extra context")),
+        ErrorKind::Internal => panic!("This is an example of an internal error"),
+    }
 }
 
 /// Deletes the config file for the current server

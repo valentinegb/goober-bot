@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{bail, Context as _};
+use anyhow::{anyhow, bail, Context as _};
 use chrono::Months;
 use poise::{
     command,
@@ -29,6 +29,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     config::{get_config_key, Config},
     emoji::*,
+    error::UserError,
     persist::load_or_save_default,
     Context, Error,
 };
@@ -107,7 +108,9 @@ fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
     } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
 
     if !strikes_enabled {
-        bail!("Strikes are not enabled, see `/config get strikes_enabled`");
+        bail!(UserError(anyhow!(
+            "Strikes are not enabled, see `/config get strikes_enabled`",
+        )));
     }
 
     Ok(strikes_log_channel)
@@ -215,9 +218,9 @@ async fn history(
             .permissions
             .map_or(false, |permissions| permissions.view_audit_log())
     {
-        bail!(
-            "You must have the View Audit Log permission to see the strike history of other users"
-        );
+        bail!(UserError(anyhow!(
+            "You must have the View Audit Log permission to see the strike history of other users",
+        )));
     }
 
     let strikes_key = &get_strikes_key(ctx, user.id)?;
@@ -286,7 +289,9 @@ async fn repeal(
     strike_i: Option<usize>,
 ) -> Result<(), Error> {
     if user == ctx.author().id {
-        bail!("You cannot repeal one of your own strikes");
+        bail!(UserError(anyhow!(
+            "You cannot repeal one of your own strikes",
+        )));
     }
 
     let log_channel = pre_strike_command(ctx)?;
@@ -295,14 +300,16 @@ async fn repeal(
     let strike_i = strike_i.unwrap_or(strikes.len());
     let repealer = &mut strikes
         .get_mut(strike_i - 1)
-        .context(format!("User does not have a strike #{strike_i}"))?
+        .context(UserError(anyhow!(
+            "User does not have a strike #{strike_i}",
+        )))?
         .repealer;
 
     if repealer.is_some() {
-        bail!(
+        bail!(UserError(anyhow!(
             "{}'s strike #{strike_i} has already been repealed",
             user.mention(),
-        );
+        )));
     }
 
     *repealer = Some(ctx.author().id);

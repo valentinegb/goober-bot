@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{bail, Context as _};
+use anyhow::{anyhow, bail, Context as _};
 use poise::{
     command,
     serenity_prelude::{
@@ -26,6 +26,7 @@ use poise::{
 use crate::{
     config::{get_config_key, Config},
     emoji::*,
+    error::UserError,
     persist::load_or_save_default,
     Context, Error,
 };
@@ -50,15 +51,17 @@ pub(crate) async fn anon(
     } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
 
     if !anon_enabled {
-        bail!("`/anon` is not enabled, the `anon_enabled` config option is `false`");
+        bail!(UserError(anyhow!(
+            "`/anon` is not enabled, the `anon_enabled` config option is `false`",
+        )));
     }
 
     if let Some(anon_channel) = anon_channel {
         if anon_channel != ctx.channel_id() {
-            bail!(
+            bail!(UserError(anyhow!(
                 "`/anon` is only allowed in {} due to the `anon_channel` config option being set",
                 anon_channel.mention(),
-            );
+            )));
         }
     }
 
