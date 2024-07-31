@@ -50,6 +50,8 @@ use crate::activity::start_activity_loop;
 #[derive(Debug)]
 struct Data {
     persist: PersistInstance,
+    #[cfg(not(debug_assertions))]
+    topgg_client: topgg::Client,
 }
 
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -91,6 +93,8 @@ async fn main(
                 commands::rock_paper_scissors(),
                 commands::sponsors(),
                 commands::strike(),
+                #[cfg(not(debug_assertions))]
+                commands::vote(),
             ],
             on_error: |error| {
                 Box::pin(async move {
@@ -120,7 +124,11 @@ async fn main(
                 octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);
                 info!("GitHub authenticated");
 
-                Ok(Data { persist })
+                Ok(Data {
+                    persist,
+                    #[cfg(not(debug_assertions))]
+                    topgg_client,
+                })
             })
         })
         .build();
