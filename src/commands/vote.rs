@@ -1,3 +1,4 @@
+use anyhow::Context as _;
 use poise::command;
 
 use crate::{emoji::*, Context, Error};
@@ -10,7 +11,12 @@ use crate::{emoji::*, Context, Error};
     ephemeral
 )]
 pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), Error> {
-    let has_voted = ctx.data().topgg_client.has_voted(ctx.author().id).await?;
+    let has_voted = ctx
+        .data()
+        .topgg_client
+        .has_voted(ctx.author().id)
+        .await
+        .context("Could not check if user has voted")?;
     let message = if has_voted {
         format!("You've already voted today, thank you so much! ily {FLOOF_HEART}")
     } else {
