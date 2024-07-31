@@ -93,8 +93,9 @@ async fn main(
                 commands::rock_paper_scissors(),
                 commands::sponsors(),
                 commands::strike(),
-                #[cfg(not(debug_assertions))]
-                commands::vote(),
+                // Uncomment when https://github.com/Top-gg-Community/rust-sdk/pull/22 is merged
+                // #[cfg(not(debug_assertions))]
+                // commands::vote(),
             ],
             on_error: |error| {
                 Box::pin(async move {
