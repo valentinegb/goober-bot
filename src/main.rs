@@ -28,6 +28,8 @@ mod persist;
 pub(crate) use crate::error::Error;
 
 use std::fmt::Debug;
+#[cfg(not(debug_assertions))]
+use std::time::Duration;
 
 use anyhow::Context as _;
 use octocrab::Octocrab;
@@ -38,6 +40,8 @@ use poise::{
 use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
+#[cfg(not(debug_assertions))]
+use topgg::Autoposter;
 use tracing::{error, info};
 
 use crate::activity::start_activity_loop;
@@ -61,6 +65,14 @@ async fn main(
     let github_pat = secret_store
         .get("GITHUB_PAT")
         .context("`GITHUB_PAT` was not found")?;
+    #[cfg(not(debug_assertions))]
+    let topgg_token = secret_store
+        .get("TOPGG_TOKEN")
+        .context("`TOPGG_TOKEN` was not found")?;
+    #[cfg(not(debug_assertions))]
+    let topgg_client = topgg::Client::new(topgg_token);
+    #[cfg(not(debug_assertions))]
+    let autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -112,10 +124,17 @@ async fn main(
             })
         })
         .build();
-    let client = ClientBuilder::new(discord_token, GatewayIntents::non_privileged())
-        .framework(framework)
-        .await
-        .map_err(CustomError::new)?;
+    #[allow(unused_mut)]
+    let mut client_builder =
+        ClientBuilder::new(discord_token, GatewayIntents::GUILDS).framework(framework);
+
+    #[cfg(not(debug_assertions))]
+    {
+        client_builder = client_builder.event_handler_arc(autoposter.handler());
+        info!("Top.gg autoposter handler passed to client builder");
+    }
+
+    let client = client_builder.await.map_err(CustomError::new)?;
 
     Ok(client.into())
 }
