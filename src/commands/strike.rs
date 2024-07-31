@@ -34,6 +34,8 @@ use crate::{
     Context, Error,
 };
 
+const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "Failed to send message in strike log channel";
+
 type Strikes = Vec<Strike>;
 
 #[derive(Deserialize, Serialize, Clone)]
@@ -193,7 +195,8 @@ async fn give(
                     )
                     .allowed_mentions(allowed_mentions),
             )
-            .await?;
+            .await
+            .context(SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR)?;
     }
 
     Ok(())
@@ -345,7 +348,8 @@ async fn repeal(
                     )
                     .allowed_mentions(allowed_mentions),
             )
-            .await?;
+            .await
+            .context(SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR)?;
     }
 
     Ok(())

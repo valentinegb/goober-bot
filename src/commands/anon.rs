@@ -117,7 +117,7 @@ pub(crate) async fn anon(
     webhook
         .execute(ctx, false, ExecuteWebhook::new().content(message))
         .await
-        .context("Failed to send anonymous message")?;
+        .context("Failed to send message in anon log channel")?;
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
         .await?;
