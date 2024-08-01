@@ -106,7 +106,7 @@ pub(super) async fn on_error(
                 None => String::new(),
             };
 
-            error!("An argument parsing error occured{for_input}: {error}: {ctx:#?}");
+            error!("An argument parsing error occured{for_input}: {error}");
 
             ctx.send(
                 CreateReply::default()
@@ -125,7 +125,11 @@ pub(super) async fn on_error(
             ctx,
             ..
         } => {
-            warn!("Missing bot permissions: {missing_permissions}: {ctx:#?}");
+            warn!(
+                "{} invoked `{}` but the bot is missing permissions: {missing_permissions}",
+                ctx.author().name,
+                ctx.invocation_string(),
+            );
 
             ctx.send(
                 CreateReply::default()
@@ -151,12 +155,20 @@ pub(super) async fn on_error(
                             .title(format!("Missing User Permissions {FLOOF_NERVOUS}"))
                             .description(match missing_permissions {
                                 Some(missing_permissions) => {
-                                    warn!("Missing user permissions: {missing_permissions}: {ctx:#?}");
+                                    warn!(
+                                        "{} invoked `{}` but the user is missing permissions: {missing_permissions}",
+                                        ctx.author().name,
+                                        ctx.invocation_string(),
+                                    );
 
                                     format!("You need these permissions to use this command: {missing_permissions}")
                                 },
                                 None => {
-                                    warn!("Missing user permissions: {ctx:#?}");
+                                    warn!(
+                                        "{} invoked `{}` but the user is missing permissions",
+                                        ctx.author().name,
+                                        ctx.invocation_string(),
+                                    );
 
                                     "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string()
                                 },

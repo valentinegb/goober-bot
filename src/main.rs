@@ -107,12 +107,20 @@ async fn main(
             },
             pre_command: |ctx| {
                 Box::pin(async move {
-                    info!("Command initiated: {ctx:#?}");
+                    info!(
+                        "{} invoked `{}`",
+                        ctx.author().name,
+                        ctx.invocation_string(),
+                    );
                 })
             },
             post_command: |ctx| {
                 Box::pin(async move {
-                    info!("Command finished successfully: {ctx:#?}");
+                    info!(
+                        "{}'s `{}` invocation finished successfully",
+                        ctx.author().name,
+                        ctx.invocation_string(),
+                    );
                 })
             },
             ..Default::default()
