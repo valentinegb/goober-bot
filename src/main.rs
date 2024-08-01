@@ -41,6 +41,8 @@ use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 #[cfg(not(debug_assertions))]
+use tokio::spawn;
+#[cfg(not(debug_assertions))]
 use topgg::Autoposter;
 use tracing::{error, info};
 
@@ -74,7 +76,7 @@ async fn main(
     #[cfg(not(debug_assertions))]
     let topgg_client = topgg::Client::new(topgg_token);
     #[cfg(not(debug_assertions))]
-    let autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
+    let mut autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -93,9 +95,8 @@ async fn main(
                 commands::rock_paper_scissors(),
                 commands::sponsors(),
                 commands::strike(),
-                // Uncomment when https://github.com/Top-gg-Community/rust-sdk/pull/22 is merged
-                // #[cfg(not(debug_assertions))]
-                // commands::vote(),
+                #[cfg(not(debug_assertions))]
+                commands::vote(),
             ],
             on_error: |error| {
                 Box::pin(async move {
@@ -140,7 +141,19 @@ async fn main(
     #[cfg(not(debug_assertions))]
     {
         client_builder = client_builder.event_handler_arc(autoposter.handler());
+
         info!("Top.gg autoposter handler passed to client builder");
+        spawn(async move {
+            loop {
+                if let Some(result) = autoposter.recv().await {
+                    match result {
+                        Ok(_) => info!("Autoposter posted stats successfully"),
+                        Err(err) => error!("Autoposter returned an error: {err:#?}"),
+                    }
+                }
+            }
+        });
+        info!("Began awaiting Top.gg autoposter responses");
     }
 
     let client = client_builder.await.map_err(CustomError::new)?;

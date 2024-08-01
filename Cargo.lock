@@ -2820,8 +2820,8 @@ dependencies = [
 
 [[package]]
 name = "topgg"
-version = "1.4.1"
-source = "git+https://github.com/valentinegb/topgg-rs.git?branch=client-debug-impl#ec5b9c1934a086cd479463436f7abdcecb64ae12"
+version = "1.4.2"
+source = "git+https://github.com/Top-gg-Community/rust-sdk.git#a584c014bed07e4307731aaa49bc4c22c8c9e3d2"
 dependencies = [
  "cfg-if",
  "chrono",
