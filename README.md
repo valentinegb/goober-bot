@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Jul 19, 2024*
+*Last updated Aug 1, 2024*
 
 ### Silly
 
@@ -54,3 +54,4 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/debug <error|delete_config>`
 - `/rock_paper_scissors [user]`
 - `/sponsors` 💖
+- `/vote` ❤️
