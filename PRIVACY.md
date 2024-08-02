@@ -1,6 +1,6 @@
 # Privacy Policy for Goober Bot
 
-**Effective Date: September 1st, 2024**
+**Effective Date: September 2nd, 2024**
 
 ## 1. Data Collection
 
@@ -37,7 +37,7 @@ All collected data is crucial for the bot's functionalities and is collected as 
 ## 7. Changes to the Privacy Policy
 
 - **Notification of Changes:** Users will be notified of any changes to this privacy policy through an announcement in the official bot Discord server.
-- **No Specific Date:** This privacy policy is effective immediately and does not have a specific expiration date.
+- **1 Month Advance:** This privacy policy is effective 1 month after any change and does not have a specific expiration date.
 
 ## 8. Contact Information
 
