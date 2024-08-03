@@ -27,6 +27,7 @@ mod config;
 mod emoji;
 mod error;
 mod persist;
+mod sponsors;
 
 pub(crate) use crate::error::Error;
 
