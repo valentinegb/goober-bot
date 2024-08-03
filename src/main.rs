@@ -97,6 +97,7 @@ async fn main(
                 commands::pat(),
                 commands::revive(),
                 commands::rock_paper_scissors(),
+                commands::slap(),
                 commands::sponsors(),
                 commands::strike(),
                 #[cfg(not(debug_assertions))]

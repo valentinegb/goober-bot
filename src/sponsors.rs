@@ -15,7 +15,10 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use anyhow::Result;
+use poise::{serenity_prelude::UserId, CreateReply};
 use serde::Deserialize;
+
+use crate::{emoji::*, Context};
 
 #[derive(Deserialize)]
 struct Response {
@@ -43,6 +46,7 @@ pub(super) struct Sponsor {
     pub(super) name: String,
 }
 
+// TODO: make this work with more than 100 sponsors
 pub(super) async fn get() -> Result<Vec<Sponsor>> {
     let tier = "ST_kwDOAiT5_84ABlqV";
     let response: Response = octocrab::instance()
@@ -54,4 +58,23 @@ pub(super) async fn get() -> Result<Vec<Sponsor>> {
         .await?;
 
     Ok(response.data.viewer.sponsors.nodes)
+}
+
+pub(super) async fn has_early_access(ctx: Context<'_>) -> Result<bool> {
+    if ctx.author().id == UserId::new(1016154932354744330 /* valentinegb */)
+        || ctx.author().id == UserId::new(993768189924229171 /* queerzi */)
+    {
+        Ok(true)
+    } else {
+        ctx.send(
+            CreateReply::default()
+                .content(format!(
+                    "This command is in **early access**, only users with early access can use it. Currently, that's... one person, because they did a favor for me and asked to be part of early access before I've finished implementing it {FLOOF_MUG}\n\nDon't worry, all early access commands fall out of early access eventually! But if you are interested in joining early access yourself, stay tuned! {FLOOF_HAPPY}",
+                ))
+                .ephemeral(true),
+        )
+        .await?;
+
+        Ok(false)
+    }
 }

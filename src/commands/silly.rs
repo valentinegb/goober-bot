@@ -21,11 +21,12 @@ use poise::{
 };
 use rand::{seq::IteratorRandom, thread_rng};
 
-use crate::{emoji::*, Context, Error};
+use crate::{emoji::*, sponsors::has_early_access, Context, Error};
 
 /// ```
 /// silly_command!(
 ///     /// Command description
+///     #[early_access] // Optional line
 ///     fn command_name("User description") {
 ///         bot_message = "Message when used on bot, must include {author}";
 ///         author_message = "Message when used on author, must include {author}";
@@ -39,6 +40,7 @@ use crate::{emoji::*, Context, Error};
 macro_rules! silly_command {
     (
         #[$doc:meta]
+        $(#[$early_access:ident])?
         fn $name:ident($user_description:literal) {
             bot_message = $bot_message:literal;
             author_message = $author_message:literal;
@@ -58,6 +60,14 @@ macro_rules! silly_command {
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
         ) -> Result<(), Error> {
+            $(
+                if stringify!($early_access) == "early_access" {
+                    if !has_early_access(ctx).await? {
+                        return Ok(())
+                    }
+                }
+            )?
+
             let content;
 
             if user == ctx.framework().bot_id {
@@ -223,6 +233,23 @@ silly_command! {
             "Awww, {author} and {user} are hugging, so wholesome {FLOOF_PLEAD}",
             "{author} and {user} are hugging and uhh, me too, I'm also a part of the hug {FLOOF_PLEAD}",
             "Before {user} could say anything, {author} had them trapped in an embrace {FLOOF_HEART}",
+        ];
+    }
+}
+
+silly_command! {
+    /// Knock some sense into somebody
+    #[early_access]
+    fn slap("Senseless somebody in question") {
+        bot_message = "OW- HEY- {author} just *slapped* me, what the heck!? {FLOOF_SCARED}";
+        author_message = "{author} must think they're dreaming or something, they just slapped themselves {FLOOF_OWO}";
+        messages = [
+            "{author} slapped {user} and shouted \"SNAP OUT OF IT\" {FLOOF_LOL}",
+            "{author} tried to knock some sense into {user} by slapping them {FLOOF_LOL}",
+            "{author} decided to slap {user} across the face {FLOOF_OWO}",
+            "{author} slapped {user}, just cuz they felt like it {FLOOF_BLEP}",
+            "{user} find themeselves facing the opposite direction after {author}'s slap turned them around {FLOOF_OWO}",
+            "In slapstick fashion, {author} slapped {user} causing them to comically spin in circles {FLOOF_LOL}",
         ];
     }
 }
