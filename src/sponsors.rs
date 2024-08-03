@@ -60,6 +60,8 @@ pub(super) async fn get() -> Result<Vec<Sponsor>> {
     Ok(response.data.viewer.sponsors.nodes)
 }
 
+// TODO: when Serenity allows it, get auth from user to check GitHub connection
+//       for sponsorship status
 pub(super) async fn has_early_access(ctx: Context<'_>) -> Result<bool> {
     if ctx.author().id == UserId::new(1016154932354744330 /* valentinegb */)
         || ctx.author().id == UserId::new(993768189924229171 /* queerzi */)

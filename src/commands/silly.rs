@@ -253,3 +253,8 @@ silly_command! {
         ];
     }
 }
+
+// TODO: add `/lick` silly command
+// TODO: add `/punch` silly command?
+// TODO: add `/stab` silly command?
+// TODO: add `/throw` silly command
