@@ -91,7 +91,7 @@ pub(super) async fn on_error(
                     .embed(
                         CreateEmbed::new()
                             .title(format!("Internal Error {FLOOF_NERVOUS}"))
-                            .description("Something went *seriously* wrong- please join the support server and let a developer know!")
+                            .description("Something went *seriously* wrong- please [join the support server](https://discord.gg/7v2aY2YzJU) and let a developer know!")
                             .color(Color::DARK_RED),
                     )
                     .ephemeral(true),
