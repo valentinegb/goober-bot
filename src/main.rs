@@ -16,6 +16,9 @@
 
 // TODO: make general refinements to existing codebase
 // TODO: add `/lick` silly command
+// TODO: add `/punch` silly command?
+// TODO: add `/stab` silly command?
+// TODO: add `/throw` silly command
 // TODO: add birthday announcements system
 // TODO: replace mentions of specific commands with actual formatted command
 //       mentions when https://github.com/serenity-rs/poise/issues/235 is
