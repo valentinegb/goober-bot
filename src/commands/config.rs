@@ -48,7 +48,7 @@ macro_rules! config_bool {
                         CreateEmbed::new()
                             .title($title)
                             .description($desc)
-                            .field("Value", $name.to_string(), false)
+                            .field("Current Value", $name.to_string(), false)
                             .timestamp(Timestamp::now())
                             .color(Color::BLUE),
                     ),
@@ -103,7 +103,7 @@ macro_rules! config_channel {
                             .title($title)
                             .description($desc)
                             .field(
-                                "Value",
+                                "Current Value",
                                 map_or_none_string($name, |v| v.mention().to_string()),
                                 false,
                             )
