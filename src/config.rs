@@ -15,20 +15,39 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use anyhow::Context as _;
-use poise::serenity_prelude::ChannelId;
+use paste::paste;
+use poise::{
+    command,
+    serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
+    CreateReply, FrameworkError,
+};
 use serde::{Deserialize, Serialize};
 
-use crate::{Context, Error};
+use crate::{emoji::*, persist::load_or_save_default, Context, Data, Error};
 
-#[derive(Deserialize, Serialize, Default)]
-#[non_exhaustive]
-#[serde(default)]
-pub(crate) struct Config {
-    pub(crate) strikes_enabled: bool,
-    pub(crate) strikes_log_channel: Option<ChannelId>,
-    pub(crate) anon_enabled: bool,
-    pub(crate) anon_channel: Option<ChannelId>,
-    pub(crate) anon_log_channel: Option<ChannelId>,
+trait ToConfigString {
+    fn to_config_string(&self) -> String;
+}
+
+impl ToConfigString for bool {
+    fn to_config_string(&self) -> String {
+        self.to_string()
+    }
+}
+
+impl<T: ToConfigString> ToConfigString for Option<T> {
+    fn to_config_string(&self) -> String {
+        match self {
+            Some(t) => t.to_config_string(),
+            None => "none".to_string(),
+        }
+    }
+}
+
+impl ToConfigString for ChannelId {
+    fn to_config_string(&self) -> String {
+        self.mention().to_string()
+    }
 }
 
 /// Gets the config key for the server in `ctx`.
@@ -37,4 +56,145 @@ pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
         "config_{}",
         ctx.guild_id().context("Expected context to be in guild")?
     ))
+}
+
+macro_rules! config {
+    ($(
+        #[doc = $desc:literal]
+        let $name:ident: $type:ty = ($name_str:literal, $title:literal);
+    )+) => {
+        paste! {
+            #[derive(Deserialize, Serialize, Default)]
+            #[non_exhaustive]
+            #[serde(default)]
+            pub(crate) struct Config {
+                $(pub(crate) $name: $type),+
+            }
+
+            /// Subcommands related to getting and setting server configuration
+            #[command(
+                slash_command,
+                subcommands("list", "get", "set"),
+                install_context = "Guild",
+                interaction_context = "Guild",
+                required_bot_permissions = "USE_EXTERNAL_EMOJIS",
+                default_member_permissions = "MANAGE_GUILD"
+            )]
+            pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
+                unreachable!()
+            }
+
+            /// Lists all configuration options for this server
+            #[command(slash_command, ephemeral)]
+            async fn list(ctx: Context<'_>) -> Result<(), Error> {
+                let config: Config = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+                ctx.send(CreateReply::default().embed(
+                    CreateEmbed::new()
+                        .title("Configuration")
+                        .description("These are the configuration options for this server. Use `/config get <option>` to get more information about an option.")
+                        $(.field($title, config.$name.to_config_string(), false))+
+                        .timestamp(Timestamp::now())
+                        .color(Color::BLUE)
+                )).await?;
+
+                Ok(())
+            }
+
+            fn get() -> poise::Command<Data, Error> {
+                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, Error>> {
+                    unreachable!();
+                }
+
+                poise::Command {
+                    slash_action: Some(|ctx| Box::pin(async move {
+                        inner(ctx.into()).await
+                    })),
+                    subcommands: vec![$([<get_ $name>]()),+],
+                    name: "get".to_string(),
+                    description: Some("Gets a specific configuration option".to_string()),
+                    ..Default::default()
+                }
+            }
+
+            $(
+                #[doc = "Gets the " $title " configuration option"]
+                #[command(slash_command, rename = $name_str, ephemeral)]
+                async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), Error> {
+                    let Config { $name, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+
+                    ctx.send(
+                        CreateReply::default().embed(
+                            CreateEmbed::new()
+                                .title($title)
+                                .description($desc)
+                                .field("Current Value", $name.to_config_string(), false)
+                                .timestamp(Timestamp::now())
+                                .color(Color::BLUE),
+                        ),
+                    )
+                    .await?;
+
+                    Ok(())
+                }
+            )+
+
+            fn set() -> poise::Command<Data, Error> {
+                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, Error>> {
+                    unreachable!();
+                }
+
+                poise::Command {
+                    slash_action: Some(|ctx| Box::pin(async move {
+                        inner(ctx.into()).await
+                    })),
+                    subcommands: vec![$([<set_ $name>]()),+],
+                    name: "set".to_string(),
+                    description: Some("Sets a specific configuration option".to_string()),
+                    ..Default::default()
+                }
+            }
+
+            $(
+
+                #[doc = "Sets the " $title " configuration option"]
+                #[command(slash_command, rename = $name_str, ephemeral)]
+                async fn [<set_ $name>](
+                    ctx: Context<'_>,
+                    #[description = "The value to set " $title " to"] value: $type,
+                ) -> Result<(), Error> {
+                    let config_key = get_config_key(ctx)?;
+                    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+
+                    config.$name = value;
+                    ctx.data().persist.save(&config_key, config)?;
+                    ctx.say(format!(
+                        "**{}** has been set to **{}** {FLOOF_HAPPY}",
+                        $title,
+                        value.to_config_string(),
+                    ))
+                    .await?;
+
+                    Ok(())
+                }
+            )+
+        }
+    };
+}
+
+config! {
+    /// Whether to enable the strikes moderation system, `/strike`, and its subcommands
+    let strikes_enabled: bool = ("strikes_enabled", "Strikes Enabled");
+
+    /// Channel to log strike events in
+    let strikes_log_channel: Option<ChannelId> = ("strikes_log_channel", "Strikes Log Channel");
+
+    /// Whether to enable the `/anon` command, which allows members to send messages anonymously
+    let anon_enabled: bool = ("anon_enabled", "Anon Enabled");
+
+    /// Channel to restrict `/anon` to, if anon is enabled
+    let anon_channel: Option<ChannelId> = ("anon_channel", "Anon Channel");
+
+    /// Channel to log `/anon` uses to, if anon is enabled
+    let anon_log_channel: Option<ChannelId> = ("anon_log_channel", "Anon Log Channel");
 }

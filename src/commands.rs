@@ -15,7 +15,6 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 mod anon;
-mod config;
 mod debug;
 mod rock_paper_scissors;
 mod silly;
@@ -25,7 +24,6 @@ mod strike;
 mod vote;
 
 pub(super) use anon::*;
-pub(super) use config::*;
 pub(super) use debug::*;
 pub(super) use rock_paper_scissors::*;
 pub(super) use silly::*;

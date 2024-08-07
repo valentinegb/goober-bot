@@ -35,6 +35,7 @@ use std::time::Duration;
 use std::{collections::HashSet, fmt::Debug};
 
 use anyhow::Context as _;
+use config::config;
 use octocrab::Octocrab;
 use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
@@ -86,7 +87,6 @@ async fn main(
                 commands::anon(),
                 commands::bite(),
                 commands::boop(),
-                commands::config(),
                 commands::debug(),
                 commands::gnaw(),
                 commands::hug(),
@@ -101,6 +101,7 @@ async fn main(
                 commands::strike(),
                 #[cfg(not(debug_assertions))]
                 commands::vote(),
+                config(),
             ],
             on_error: |error| {
                 Box::pin(async move {
