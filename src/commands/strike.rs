@@ -230,15 +230,14 @@ async fn history(
     let strikes: Strikes = load_or_save_default(ctx, strikes_key)?;
     let all = all.unwrap_or(false);
     let mut description = String::new();
-
-    if strikes.is_empty() {
-        description = format!("All clean! {FLOOF_INNOCENT}");
-    }
+    let mut clean = true;
 
     for (i, strike) in strikes.iter().enumerate() {
         if strike.is_expired() || strike.repealer.is_some() && !all {
             continue;
         }
+
+        clean = false;
 
         if i != 0 {
             description += "\n";
@@ -249,6 +248,10 @@ async fn history(
             i + 1,
             strike.to_string(user.clone(), true, true)
         );
+    }
+
+    if clean {
+        description = format!("All clean! {FLOOF_INNOCENT}");
     }
 
     ctx.send(
@@ -264,11 +267,7 @@ async fn history(
                     .title("Strike History")
                     .description(description)
                     .timestamp(Timestamp::now())
-                    .color(if strikes.is_empty() {
-                        Color::FOOYOO
-                    } else {
-                        Color::RED
-                    }),
+                    .color(if clean { Color::FOOYOO } else { Color::RED }),
             )
             .allowed_mentions(CreateAllowedMentions::new()),
     )
