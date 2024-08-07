@@ -58,6 +58,19 @@ pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
     ))
 }
 
+/// Subcommands related to getting and setting server configuration
+#[command(
+    slash_command,
+    subcommands("list", "get", "set"),
+    install_context = "Guild",
+    interaction_context = "Guild",
+    required_bot_permissions = "USE_EXTERNAL_EMOJIS",
+    default_member_permissions = "MANAGE_GUILD"
+)]
+pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
+    unreachable!()
+}
+
 macro_rules! config {
     ($(
         #[doc = $desc:literal]
@@ -69,19 +82,6 @@ macro_rules! config {
             #[serde(default)]
             pub(crate) struct Config {
                 $(pub(crate) $name: $type),+
-            }
-
-            /// Subcommands related to getting and setting server configuration
-            #[command(
-                slash_command,
-                subcommands("list", "get", "set"),
-                install_context = "Guild",
-                interaction_context = "Guild",
-                required_bot_permissions = "USE_EXTERNAL_EMOJIS",
-                default_member_permissions = "MANAGE_GUILD"
-            )]
-            pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), Error> {
-                unreachable!()
             }
 
             /// Lists all configuration options for this server
