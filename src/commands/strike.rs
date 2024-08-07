@@ -55,6 +55,10 @@ struct Strike {
 
 impl Strike {
     fn to_string(&self, user: impl Mentionable, with_issuer: bool, with_issued: bool) -> String {
+        let on = match with_issued {
+            true => format!(" on <t:{}:d>", self.issued.unix_timestamp()),
+            false => String::new(),
+        };
         let for_breaking_rule = match self.rule {
             Some(rule) => format!(" for breaking **rule {rule}**"),
             None => String::new(),
@@ -67,12 +71,8 @@ impl Strike {
             Some(expiration) => format!(" which expires <t:{}:R>", expiration.unix_timestamp()),
             None => String::new(),
         };
-        let on = match with_issued {
-            true => format!(" on <t:{}:d>", self.issued.unix_timestamp()),
-            false => String::new(),
-        };
         let ave = format!(
-            "ave {} a strike{for_breaking_rule}{with_comment}{which_expires}{on}",
+            "ave {} a strike{on}{for_breaking_rule}{with_comment}{which_expires}",
             user.mention(),
         );
         let message = match with_issuer {
