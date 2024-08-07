@@ -30,14 +30,14 @@ mod sponsors;
 
 pub(crate) use crate::error::Error;
 
-use std::fmt::Debug;
 #[cfg(not(debug_assertions))]
 use std::time::Duration;
+use std::{collections::HashSet, fmt::Debug};
 
 use anyhow::Context as _;
 use octocrab::Octocrab;
 use poise::{
-    serenity_prelude::{ClientBuilder, GatewayIntents},
+    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
     Framework, FrameworkOptions,
 };
 use shuttle_persist_msgpack::PersistInstance;
@@ -127,6 +127,7 @@ async fn main(
                     );
                 })
             },
+            owners: HashSet::from([UserId::new(1016154932354744330)]),
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
