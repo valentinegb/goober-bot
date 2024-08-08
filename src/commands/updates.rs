@@ -8,7 +8,12 @@ use poise::{
 use crate::{Context, Error};
 
 /// Lists the 10 most recent Goober Bot changes
-#[command(slash_command, ephemeral)]
+#[command(
+    slash_command,
+    install_context = "Guild|User",
+    interaction_context = "Guild|BotDm|PrivateChannel",
+    ephemeral
+)]
 pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), Error> {
     ctx.send(
         CreateReply::default().embed(
