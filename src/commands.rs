@@ -20,6 +20,7 @@ mod rock_paper_scissors;
 mod silly;
 mod sponsors;
 mod strike;
+mod updates;
 #[cfg(not(debug_assertions))]
 mod vote;
 
@@ -29,5 +30,6 @@ pub(super) use rock_paper_scissors::*;
 pub(super) use silly::*;
 pub(super) use sponsors::*;
 pub(super) use strike::*;
+pub(super) use updates::*;
 #[cfg(not(debug_assertions))]
 pub(super) use vote::*;

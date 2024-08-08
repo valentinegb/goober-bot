@@ -20,6 +20,7 @@ paste = "1.0.15"
 octocrab = "0.38.0"
 serde_json = "1.0.120"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
+commit-history = { version = "0.1.0", path = "commit-history" }
 
 [workspace]
-members = ["shuttle-persist-msgpack"]
+members = [ "commit-history","shuttle-persist-msgpack"]

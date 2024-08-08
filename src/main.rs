@@ -99,6 +99,7 @@ async fn main(
                 commands::slap(),
                 commands::sponsors(),
                 commands::strike(),
+                commands::updates(),
                 #[cfg(not(debug_assertions))]
                 commands::vote(),
                 config(),
