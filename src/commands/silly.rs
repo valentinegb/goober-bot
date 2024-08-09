@@ -270,6 +270,24 @@ silly_command! {
     }
 }
 
+silly_command! {
+    /// FNAF style
+    fn jumpscare("Night guard") {
+        bot_message = "# *AAAAAAAA-*\n*{author}... \\*gasp* **jumpscared** me... jeez...* {FLOOF_SCARED}";
+        author_message = "{author} looked in a mirror and went \"raaahhhh!\"\nVery scary {FLOOF_SMUG}";
+        messages = [
+            "{author} did the bite of '87 on {user} {FLOOF_NOM}",
+            "{user} almost got to 6 AM but {author} got to them first {FLOOF_PEEK}",
+            "{author} ran down the hall and before {user} could shut the door, it was game over {FLOOF_PEEK}",
+            "{user} didn't catch {author} in time and they leapt from the shadows {FLOOF_LURK}",
+            "{user} forgot to wind the music box and {author} went straight to them {FLOOF_MISCHIEF}",
+            "{user} just realized that {author} had snuck up to them, but by then it was already too late {FLOOF_PEEK}",
+            "***RAAAHHHH!!!***\n{author} jumpscared {user} {FLOOF_MISCHIEF}",
+        ];
+    }
+}
+
+// TODO: add `/kick`
 // TODO: add `/lick`
 // TODO: add `/punch`?
 // TODO: add `/stab`?

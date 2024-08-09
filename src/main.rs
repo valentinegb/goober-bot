@@ -91,6 +91,7 @@ async fn main(
                 commands::debug(),
                 commands::gnaw(),
                 commands::hug(),
+                commands::jumpscare(),
                 commands::kiss(),
                 commands::meow(),
                 commands::murder(),

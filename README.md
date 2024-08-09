@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Aug 8, 2024*
+*Last updated Aug 9, 2024*
 
 ### Silly
 
@@ -30,6 +30,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/boop <user>`
 - `/gnaw <user>`
 - `/hug <user>`
+- `/jumpscare <user>`
 - `/kiss <user>`
 - `/meow <user>`
 - `/murder <user>`
