@@ -85,6 +85,7 @@ async fn main(
         .options(FrameworkOptions {
             commands: vec![
                 commands::anon(),
+                commands::bap(),
                 commands::bite(),
                 commands::boop(),
                 commands::debug(),

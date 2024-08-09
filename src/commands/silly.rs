@@ -254,7 +254,23 @@ silly_command! {
     }
 }
 
-// TODO: add `/lick` silly command
-// TODO: add `/punch` silly command?
-// TODO: add `/stab` silly command?
-// TODO: add `/throw` silly command
+silly_command! {
+    /// *bap* *bap*
+    fn bap("Bap receiver") {
+        bot_message = "WHAT- oh, {author} just bapped me. What do you want buddy? {FLOOF_TIRED}";
+        author_message = "{author}'s bapping themselves, they seem a little confused... {FLOOF_TIRED}";
+        messages = [
+            "{author} bapped {user} and {user} jumped {FLOOF_LOL}",
+            "{user} was startled for a moment when {author} snuck up and bapped them {FLOOF_LOL}",
+            "{author} sloooowly reached out... and then bapped {user} {FLOOF_LURK}",
+            "{author} swat at and bapped {user} like a cat {FLOOF_CAT}",
+            "LOOK OUT {user}, {author}'S GONNA- oh, they only bapped you {FLOOF_TIRED}",
+            "{author} bapped {user} before retreating into the shadows... {FLOOF_PEEK}",
+        ];
+    }
+}
+
+// TODO: add `/lick`
+// TODO: add `/punch`?
+// TODO: add `/stab`?
+// TODO: add `/throw`
