@@ -287,6 +287,23 @@ silly_command! {
     }
 }
 
+silly_command! {
+    /// Yeah you know, just, carry a person
+    fn carry("Who are you carrying away?") {
+        bot_message = "Oh- {author} picked me up- okay, where're we going? {FLOOF_HAPPY}";
+        author_message = "{author} discovered a physics glitch and carried themselves into the sky... {FLOOF_WHAT}";
+        messages = [
+            "{author} just, grabbed {user} and started carrying them over their shoulder {FLOOF_OWO}",
+            "Oh my- {author} is now carrying {user}! {FLOOF_OWO}",
+            "{author} must be strong- they just picked {user} right up! {FLOOF_OWO}",
+            "Woah! {author} picked up {user}- I wonder where {author}'s gonna take them? {FLOOF_HAPPY}",
+            "Hey! {author} just stole something and took off! They stole... {user}!! {FLOOF_OWO}",
+            "Awww {author}'s giving {user} a piggy back ride {FLOOF_HAPPY}",
+            "Pfft, {author} just started carrying {user} under {author}'s arm as if they were luggage {FLOOF_LOL}",
+        ];
+    }
+}
+
 // TODO: add `/kick`
 // TODO: add `/lick`
 // TODO: add `/punch`?
