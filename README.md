@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Aug 10, 2024*
+*Last updated Aug 11, 2024*
 
 ### Silly
 
@@ -42,8 +42,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 - `/config get <option>`
 - `/config list`
-- `/config set <option> <value>`
-- `/config unset <option>`
+- `/config set <option> [value]`
 
 ### Strikes
 
