@@ -102,6 +102,7 @@ async fn main(
                 commands::slap(),
                 commands::sponsors(),
                 commands::strike(),
+                commands::timestamp(),
                 commands::updates(),
                 #[cfg(not(debug_assertions))]
                 commands::vote(),
