@@ -21,6 +21,7 @@
 //       resolved
 
 mod activity;
+mod analytics;
 mod commands;
 mod config;
 mod emoji;
@@ -34,6 +35,7 @@ pub(crate) use crate::error::Error;
 use std::time::Duration;
 use std::{collections::HashSet, fmt::Debug};
 
+use analytics::analytics;
 use anyhow::Context as _;
 use config::config;
 use octocrab::Octocrab;
@@ -84,6 +86,7 @@ async fn main(
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
+                analytics(),
                 commands::anon(),
                 commands::bap(),
                 commands::bite(),
@@ -117,6 +120,10 @@ async fn main(
             },
             pre_command: |ctx| {
                 Box::pin(async move {
+                    if let Err(err) = analytics::increment(ctx) {
+                        error!("An error occured whilst performing analytics: {err:#?}");
+                    }
+
                     info!(
                         "{} invoked `{}`",
                         ctx.author().name,

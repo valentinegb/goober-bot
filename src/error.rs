@@ -17,7 +17,7 @@
 use std::fmt::{self, Debug};
 
 use poise::{
-    serenity_prelude::{self, Color, CreateAllowedMentions, CreateEmbed},
+    serenity_prelude::{self, Color, CreateAllowedMentions, CreateEmbed, Mentionable},
     CreateReply, FrameworkError,
 };
 use tracing::{error, warn};
@@ -173,6 +173,28 @@ pub(super) async fn on_error(
                                     "I'm not sure what exactly you're missing, but you're missing some permission you need for this command, so I can't let you continue. Sorry!".to_string()
                                 },
                             })
+                            .color(Color::GOLD),
+                    )
+                    .ephemeral(true),
+            )
+            .await?;
+        }
+        FrameworkError::NotAnOwner { ctx, .. } => {
+            warn!(
+                "{} invoked `{}` but the user is not an owner",
+                ctx.author().name,
+                ctx.invocation_string(),
+            );
+
+            ctx.send(
+                CreateReply::default()
+                    .embed(
+                        CreateEmbed::new()
+                            .title(format!("Not an Owner {FLOOF_PAT}"))
+                            .description(format!(
+                                "You must be a developer of {} to use this command.",
+                                ctx.framework().bot_id.mention(),
+                            ))
                             .color(Color::GOLD),
                     )
                     .ephemeral(true),

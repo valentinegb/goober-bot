@@ -21,6 +21,7 @@ octocrab = "0.39.0"
 serde_json = "1.0.125"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
 commit-history = { version = "0.1.0", path = "commit-history" }
+charts-rs = { version = "0.3.17", features = ["image-encoder"] }
 
 [workspace]
 members = [ "commit-history","shuttle-persist-msgpack"]
