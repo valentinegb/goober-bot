@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use std::collections::BTreeMap;
+use std::collections::HashMap;
 
 use charts_rs::{HorizontalBarChart, THEME_DARK};
 use chrono::{DateTime, TimeDelta, Utc};
@@ -24,7 +24,7 @@ use crate::{persist::load_or_save_default, Context, Error};
 
 const KEY: &str = "analytics";
 
-type Analytics = BTreeMap<String, Vec<DateTime<Utc>>>;
+type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 
 fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
     let mut analytics: Analytics = load_or_save_default(ctx, KEY)?;
@@ -62,12 +62,17 @@ pub(super) fn increment(ctx: Context<'_>) -> Result<(), Error> {
 pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), Error> {
     ctx.defer_ephemeral().await?;
 
-    let analytics = load(ctx)?;
+    let mut analytics: Vec<(_, _)> = load(ctx)?.into_iter().collect();
+
+    analytics.sort_by(|(_, invocations_a), (_, invocations_b)| {
+        invocations_b.len().cmp(&invocations_a.len())
+    });
+
     let mut series_data = Vec::new();
     let mut x_axis_data = Vec::new();
 
-    for (command, command_analytics) in analytics {
-        series_data.push(command_analytics.len() as f32);
+    for (command, invocations) in analytics {
+        series_data.push(invocations.len() as f32);
         x_axis_data.push(format!("/{command}"));
     }
 
