@@ -90,6 +90,11 @@ pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), Error> {
         right: 25.0,
         bottom: 10.0,
     };
+    chart.title_text = "Command Invocations in the Last 24 Hours".to_string();
+    chart.legend_margin = Some(charts_rs::Box {
+        top: 25.0,
+        ..Default::default()
+    });
     ctx.send(CreateReply::default().attachment(CreateAttachment::bytes(
         charts_rs::svg_to_png(&chart.svg()?)?,
         "analytics.png",
