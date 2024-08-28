@@ -29,9 +29,9 @@ type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
     let mut analytics: Analytics = load_or_save_default(ctx, KEY)?;
 
-    for command_analytics in analytics.values_mut() {
-        command_analytics
-            .retain(|date_time| date_time.signed_duration_since(Utc::now()) <= TimeDelta::days(1));
+    for invocations in analytics.values_mut() {
+        invocations
+            .retain(|date_time| Utc::now().signed_duration_since(date_time) <= TimeDelta::days(1));
     }
 
     ctx.data().persist.save(KEY, &analytics)?;
@@ -41,11 +41,11 @@ fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
 
 pub(super) fn increment(ctx: Context<'_>) -> Result<(), Error> {
     let mut analytics = load(ctx)?;
-    let command_analytics = analytics
+    let invocations = analytics
         .entry(ctx.invoked_command_name().to_string())
         .or_default();
 
-    command_analytics.push(Utc::now());
+    invocations.push(Utc::now());
     ctx.data().persist.save(KEY, analytics)?;
 
     Ok(())
