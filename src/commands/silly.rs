@@ -239,7 +239,6 @@ silly_command! {
 
 silly_command! {
     /// Knock some sense into somebody
-    #[early_access]
     fn slap("Senseless somebody in question") {
         bot_message = "OW- HEY- {author} just *slapped* me, what the heck!? {FLOOF_SCARED}";
         author_message = "{author} must think they're dreaming or something, they just slapped themselves {FLOOF_OWO}";
@@ -304,8 +303,8 @@ silly_command! {
     }
 }
 
-// TODO: add `/kick`
-// TODO: add `/lick`
+// TODO: add `/kick`?
+// TODO: add `/lick`?
 // TODO: add `/punch`?
 // TODO: add `/stab`?
-// TODO: add `/throw`
+// TODO: add `/throw`?

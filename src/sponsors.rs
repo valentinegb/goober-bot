@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+// TODO: replace "sponsors" idea with Discord monetization when eligible
+
 use anyhow::Result;
 use poise::{serenity_prelude::UserId, CreateReply};
 use serde::Deserialize;
@@ -46,7 +48,6 @@ pub(super) struct Sponsor {
     pub(super) name: String,
 }
 
-// TODO: make this work with more than 100 sponsors
 pub(super) async fn get() -> Result<Vec<Sponsor>> {
     let tier = "ST_kwDOAiT5_84ABlqV";
     let response: Response = octocrab::instance()
@@ -60,8 +61,6 @@ pub(super) async fn get() -> Result<Vec<Sponsor>> {
     Ok(response.data.viewer.sponsors.nodes)
 }
 
-// TODO: when Serenity allows it, get auth from user to check GitHub connection
-//       for sponsorship status
 pub(super) async fn has_early_access(ctx: Context<'_>) -> Result<bool> {
     if ctx.framework().options().owners.contains(&ctx.author().id)
         || ctx.author().id == UserId::new(993768189924229171 /* queerzi */)
