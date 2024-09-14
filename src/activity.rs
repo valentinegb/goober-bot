@@ -37,7 +37,7 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::playing("with a rhombicosidodecahedron"),
             ActivityData::custom("Reading The Rust Book"),
             ActivityData::watching("cat videos"),
-            ActivityData::playing("myPOPGOES"), // maybe remove after a while? it is a short game after all
+            ActivityData::watching("Gravity Falls"),
         ];
         let mut rng = thread_rng();
 
