@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Aug 15, 2024*
+*Last updated Sep 18, 2024*
 
 ### Silly
 
@@ -37,6 +37,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/murder <user>`
 - `/pat <user>`
 - `/revive <user>`
+- `/slap <user>`
 
 ### Configuration
 
