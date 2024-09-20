@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Sep 18, 2024*
+*Last updated Sep 20, 2024*
 
 ### Silly
 
@@ -39,24 +39,30 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/revive <user>`
 - `/slap <user>`
 
-### Configuration
-
-- `/config get <option>`
-- `/config list`
-- `/config set <option> [value]`
-
 ### Strikes
 
 - `/strike give <user> [rule] [comment] [expiration]`
 - `/strike history [user] [all]`
 - `/strike repeal <user> [strike]`
 
+### Config
+
+- `/config list`
+- `/config get anon_channel`
+- `/config get anon_enabled`
+- `/config get anon_log_channel`
+- `/config get strikes_enabled`
+- `/config get strikes_log_channel`
+- `/config set anon_channel [value]`
+- `/config set anon_enabled <value>`
+- `/config set anon_log_channel [value]`
+- `/config set strikes_enabled <value>`
+- `/config set strikes_log_channel [value]`
+
 ### Other
 
 - `/anon <message>`
-- `/debug delete_config`
-- `/debug error <kind>`
-- `/rock_paper_scissors [user]`
+- `/rock_paper_scissors <user>`
 - `/sponsors` 💖
 - `/timestamp [year] [month] [day] [hour] [minute] [second] [timezone] [style]`
 - `/updates`
