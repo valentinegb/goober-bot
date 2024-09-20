@@ -73,7 +73,7 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     fn command_string<U, E>(command: &poise::Command<U, E>) -> String {
         let mut string = String::new();
 
-        string += &format!("- /{}", command.qualified_name);
+        string += &format!("- `/{}", command.qualified_name);
 
         for parameter in &command.parameters {
             string += " ";
@@ -99,7 +99,7 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
             string += " ❤️";
         }
 
-        string += "\n";
+        string += "`\n";
 
         string
     }
