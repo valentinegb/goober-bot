@@ -69,36 +69,42 @@ struct Data {
 type Context<'a> = poise::Context<'a, Data, Error>;
 
 fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
-    fn print_command<U, E>(command: &poise::Command<U, E>) {
-        print!("- /{}", command.qualified_name);
+    #[must_use]
+    fn command_string<U, E>(command: &poise::Command<U, E>) -> String {
+        let mut string = String::new();
+
+        string += &format!("- /{}", command.qualified_name);
 
         for parameter in &command.parameters {
-            print!(" ");
+            string += " ";
 
             if parameter.required {
-                print!("<");
+                string += "<";
             } else {
-                print!("[");
+                string += "[";
             }
 
-            print!("{}", parameter.name);
+            string += &format!("{}", parameter.name);
 
             if parameter.required {
-                print!(">");
+                string += ">";
             } else {
-                print!("]");
+                string += "]";
             }
         }
 
         if command.name == "sponsors" {
-            print!(" 💖");
+            string += " 💖";
         } else if command.name == "vote" {
-            print!(" ❤️");
+            string += " ❤️";
         }
 
-        println!();
+        string += "\n";
+
+        string
     }
 
+    let mut string = String::new();
     let mut category_keys = Vec::new();
     let mut categories: BTreeMap<&String, Vec<&poise::Command<U, E>>> = BTreeMap::new();
 
@@ -122,24 +128,29 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     let other_category_key = category_keys.remove(other_category_key_index);
 
     category_keys.push(other_category_key);
-    println!("## Commands\n");
-    println!("*Last updated {}*", Utc::now().format("%b %e, %Y"));
+
+    string += &format!(
+        "## Commands\n\n*Last updated {}*\n",
+        Utc::now().format("%b %e, %Y")
+    );
 
     for category in category_keys {
         let category_commands = &categories[category];
 
-        println!("\n### {category}\n");
+        string += &format!("\n### {category}\n\n");
 
         for command in category_commands {
             for subcommand in &command.subcommands {
-                print_command(subcommand);
+                string += &command_string(subcommand);
             }
 
             if command.subcommands.is_empty() {
-                print_command(command);
+                string += &command_string(command);
             }
         }
     }
+
+    println!("{}", string.trim_end());
 }
 
 #[shuttle_runtime::main]
