@@ -22,6 +22,7 @@ use crate::{emoji::*, Context, Error};
 /// Vote for Goober Bot on Top.gg!
 #[command(
     slash_command,
+    category = "Other",
     install_context = "Guild|User",
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral

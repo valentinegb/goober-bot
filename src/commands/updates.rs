@@ -26,6 +26,7 @@ use crate::{Context, Error};
 /// Lists the 10 most recent Goober Bot changes
 #[command(
     slash_command,
+    category = "Other",
     install_context = "Guild|User",
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral

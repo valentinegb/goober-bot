@@ -33,10 +33,14 @@ pub(crate) use crate::error::Error;
 
 #[cfg(not(debug_assertions))]
 use std::time::Duration;
-use std::{collections::HashSet, fmt::Debug};
+use std::{
+    collections::{BTreeMap, HashSet},
+    fmt::Debug,
+};
 
 use analytics::analytics;
 use anyhow::Context as _;
+use chrono::Utc;
 use config::config;
 use octocrab::Octocrab;
 use poise::{
@@ -63,6 +67,80 @@ struct Data {
 }
 
 type Context<'a> = poise::Context<'a, Data, Error>;
+
+fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
+    fn print_command<U, E>(command: &poise::Command<U, E>) {
+        print!("- /{}", command.qualified_name);
+
+        for parameter in &command.parameters {
+            print!(" ");
+
+            if parameter.required {
+                print!("<");
+            } else {
+                print!("[");
+            }
+
+            print!("{}", parameter.name);
+
+            if parameter.required {
+                print!(">");
+            } else {
+                print!("]");
+            }
+        }
+
+        if command.name == "sponsors" {
+            print!(" 💖");
+        } else if command.name == "vote" {
+            print!(" ❤️");
+        }
+
+        println!();
+    }
+
+    let mut category_keys = Vec::new();
+    let mut categories: BTreeMap<&String, Vec<&poise::Command<U, E>>> = BTreeMap::new();
+
+    for command in commands {
+        if let Some(category) = &command.category {
+            if !category_keys.contains(&category) {
+                category_keys.push(category);
+            }
+
+            let category_commands = categories.entry(category).or_default();
+
+            category_commands.push(command);
+        }
+    }
+
+    category_keys.sort_by(|a, b| categories[b].len().cmp(&categories[a].len()));
+
+    let other_category_key_index = category_keys
+        .binary_search(&&String::from("Other"))
+        .expect("there should be a command category called \"Other\"");
+    let other_category_key = category_keys.remove(other_category_key_index);
+
+    category_keys.push(other_category_key);
+    println!("## Commands\n");
+    println!("*Last updated {}*", Utc::now().format("%b %e, %Y"));
+
+    for category in category_keys {
+        let category_commands = &categories[category];
+
+        println!("\n### {category}\n");
+
+        for command in category_commands {
+            for subcommand in &command.subcommands {
+                print_command(subcommand);
+            }
+
+            if command.subcommands.is_empty() {
+                print_command(command);
+            }
+        }
+    }
+}
 
 #[shuttle_runtime::main]
 async fn main(
@@ -147,6 +225,8 @@ async fn main(
             Box::pin(async move {
                 start_activity_loop(ctx.clone());
                 info!("Activity loop started");
+                // Omit `category` argument on a command to hide from list
+                print_commands(&framework.options().commands);
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
                 octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);

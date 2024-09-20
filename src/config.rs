@@ -62,6 +62,7 @@ pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, Error> {
 #[command(
     slash_command,
     subcommands("list", "get", "set"),
+    category = "Config",
     install_context = "Guild",
     interaction_context = "Guild",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS",

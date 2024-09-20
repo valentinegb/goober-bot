@@ -31,6 +31,7 @@ use crate::{emoji::*, Context, Error};
 /// Challenge someone to a game of Rock Paper Scissors
 #[command(
     slash_command,
+    category = "Other",
     install_context = "Guild|User",
     interaction_context = "Guild|BotDm|PrivateChannel",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"

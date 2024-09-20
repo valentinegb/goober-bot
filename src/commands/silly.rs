@@ -52,6 +52,7 @@ macro_rules! silly_command {
         #[$doc]
         #[command(
             slash_command,
+            category = "Silly",
             install_context = "Guild|User",
             interaction_context = "Guild|BotDm|PrivateChannel",
             required_bot_permissions = "USE_EXTERNAL_EMOJIS"

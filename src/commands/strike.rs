@@ -122,6 +122,7 @@ fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
 #[command(
     slash_command,
     subcommands("give", "history", "repeal"),
+    category = "Strikes",
     install_context = "Guild",
     interaction_context = "Guild",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"

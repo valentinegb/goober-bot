@@ -34,6 +34,7 @@ use crate::{
 /// Sends a message anonymously
 #[command(
     slash_command,
+    category = "Other",
     install_context = "Guild",
     interaction_context = "Guild",
     required_bot_permissions = "MANAGE_WEBHOOKS|SEND_MESSAGES|USE_EXTERNAL_EMOJIS",
