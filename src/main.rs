@@ -73,6 +73,14 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     fn command_string<U, E>(command: &poise::Command<U, E>) -> String {
         let mut string = String::new();
 
+        for subcommand in &command.subcommands {
+            string += &command_string(subcommand);
+        }
+
+        if !command.subcommands.is_empty() {
+            return string;
+        }
+
         string += &format!("- `/{}", command.qualified_name);
 
         for parameter in &command.parameters {
@@ -140,13 +148,7 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
         string += &format!("\n### {category}\n\n");
 
         for command in category_commands {
-            for subcommand in &command.subcommands {
-                string += &command_string(subcommand);
-            }
-
-            if command.subcommands.is_empty() {
-                string += &command_string(command);
-            }
+            string += &command_string(command);
         }
     }
 
@@ -234,10 +236,10 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
-                start_activity_loop(ctx.clone());
-                info!("Activity loop started");
                 // Omit `category` argument on a command to hide from list
                 print_commands(&framework.options().commands);
+                start_activity_loop(ctx.clone());
+                info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
                 octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);
