@@ -304,6 +304,22 @@ silly_command! {
     }
 }
 
+silly_command! {
+    /// Hey, hey, hey, hey, hey, hey, hey-
+    fn poke("Whom to get the attention of") {
+        bot_message = "Huh, oh- what do you need {author}? {FLOOF}";
+        author_message = "{author} has... poked themselves? I'm not sure why... {FLOOF_WHAT}";
+        messages = [
+            "Hey {user}, hey {user}, hey {user}, hey {user}-\nI think {author} might want your attention {FLOOF_BLEP}",
+            "\\*poke* \\*poke*\n{author}'s poking you, {user} {FLOOF_BLEP}",
+            "{author} poked {user} with a stick from a distance {FLOOF_PEEK}",
+            "{user} felt a sudden poke from {author}, startling them {FLOOF_OWO}",
+            "Sorry {user}, {author}'s not gonna stop poking you until you pay attention to them {FLOOF_TIRED}",
+            "{user} suddenly felt a poke on their shoulder, only to turn and see {author} innocently looking away {FLOOF_INNOCENT}",
+        ];
+    }
+}
+
 // TODO: add `/kick`?
 // TODO: add `/lick`?
 // TODO: add `/punch`?

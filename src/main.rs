@@ -193,6 +193,7 @@ async fn main(
                 commands::meow(),
                 commands::murder(),
                 commands::pat(),
+                commands::poke(),
                 commands::revive(),
                 commands::rock_paper_scissors(),
                 commands::slap(),
