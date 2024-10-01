@@ -520,16 +520,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
 
 [[package]]
-name = "colored"
-version = "2.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cbf2150cce219b664a8a70df7a1f933836724b503f8a413af9365b4dcc4d90b8"
-dependencies = [
- "lazy_static",
- "windows-sys 0.48.0",
-]
-
-[[package]]
 name = "comfy-table"
 version = "6.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1197,6 +1187,30 @@ checksum = "e5274423e17b7c9fc20b6e7e208532f9b19825d82dfd615708b70edd83df41f1"
 dependencies = [
  "ahash",
  "allocator-api2",
+]
+
+[[package]]
+name = "headers"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "06683b93020a07e3dbcf5f8c0f6d40080d725bea7936fc01ad345c01b97dc270"
+dependencies = [
+ "base64 0.21.7",
+ "bytes",
+ "headers-core",
+ "http 0.2.12",
+ "httpdate",
+ "mime",
+ "sha1",
+]
+
+[[package]]
+name = "headers-core"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e7f66481bfee273957b1f20485a4ff3362987f85b2c236580d81b4eb7a326429"
+dependencies = [
+ "http 0.2.12",
 ]
 
 [[package]]
@@ -2652,6 +2666,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "reqwest-middleware"
+version = "0.2.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a735987236a8e238bf0296c7e351b999c188ccc11477f311b82b55c93984216"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "http 0.2.12",
+ "reqwest 0.11.27",
+ "serde",
+ "task-local-extensions",
+ "thiserror",
+]
+
+[[package]]
 name = "resvg"
 version = "0.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3050,7 +3079,7 @@ dependencies = [
  "static_assertions",
  "time",
  "tokio",
- "tokio-tungstenite",
+ "tokio-tungstenite 0.21.0",
  "tracing",
  "typemap_rev",
  "typesize",
@@ -3085,10 +3114,33 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
-name = "shuttle-codegen"
-version = "0.47.0"
+name = "shuttle-api-client"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d0e472cdad882debb65474b618f1a2e1504460b0803f84a0ca18b84493ffd2b"
+checksum = "166fbe3022a11ff3f9f771b673f9e39578dec9274a406ff278ed9ee620272e0a"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "headers",
+ "http 0.2.12",
+ "percent-encoding",
+ "reqwest 0.11.27",
+ "reqwest-middleware",
+ "rmp-serde",
+ "serde",
+ "serde_json",
+ "shuttle-common",
+ "tokio",
+ "tokio-tungstenite 0.20.1",
+ "url",
+ "uuid",
+]
+
+[[package]]
+name = "shuttle-codegen"
+version = "0.48.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e60a2db8b8548a2a725316ae5d7a04b4dad680a4746372d1b7172f2065f9c345"
 dependencies = [
  "proc-macro-error",
  "proc-macro2",
@@ -3098,11 +3150,12 @@ dependencies = [
 
 [[package]]
 name = "shuttle-common"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "31f26e99a8921bb0824d0cb5fa7c2fe077d7b0476634c9b3c99f775ba94b468d"
+checksum = "89c694264eba4a286c85f9cc27f0059232fb4863cb668a11286e6b93e879a4d5"
 dependencies = [
  "anyhow",
+ "async-trait",
  "chrono",
  "comfy-table",
  "crossterm 0.27.0",
@@ -3110,6 +3163,7 @@ dependencies = [
  "opentelemetry",
  "opentelemetry-http",
  "pin-project",
+ "reqwest 0.11.27",
  "semver",
  "serde",
  "serde_json",
@@ -3119,6 +3173,7 @@ dependencies = [
  "tracing",
  "tracing-opentelemetry",
  "tracing-subscriber",
+ "typeshare",
  "url",
  "uuid",
  "zeroize",
@@ -3126,7 +3181,7 @@ dependencies = [
 
 [[package]]
 name = "shuttle-persist-msgpack"
-version = "0.47.0"
+version = "0.48.0"
 dependencies = [
  "async-trait",
  "rmp-serde",
@@ -3137,9 +3192,9 @@ dependencies = [
 
 [[package]]
 name = "shuttle-proto"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "12d68790de14e4048738be652b1c5803a1563aef1a20cc00979855c2e497ec5d"
+checksum = "51d322a55314553aad71cd506451b817bec1d2ef5459d939f5642b472870c1e9"
 dependencies = [
  "futures-core",
  "prost",
@@ -3150,15 +3205,16 @@ dependencies = [
 
 [[package]]
 name = "shuttle-runtime"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07c18036c9640c0e74c0ce4a67cc11e4e6603179305f74558035fe5a033ec77f"
+checksum = "20628ddf00446da52c448ef39b987321227195f6393dc6a5066a12fc22491bd3"
 dependencies = [
  "anyhow",
  "async-trait",
- "colored",
+ "hyper 0.14.30",
  "serde",
  "serde_json",
+ "shuttle-api-client",
  "shuttle-codegen",
  "shuttle-common",
  "shuttle-proto",
@@ -3168,14 +3224,15 @@ dependencies = [
  "tokio-stream",
  "tokio-util",
  "tonic",
+ "tracing",
  "tracing-subscriber",
 ]
 
 [[package]]
 name = "shuttle-serenity"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d5fd46b851d55746e3c994800fca48782ab4aa5cd0d8c16ae1d2934a96debfe9"
+checksum = "f899a80629f3c3d007f0bb8df4ec064b7c9e5758e04e7fe9114929f9c7ef5909"
 dependencies = [
  "serenity",
  "shuttle-runtime",
@@ -3183,9 +3240,9 @@ dependencies = [
 
 [[package]]
 name = "shuttle-service"
-version = "0.47.0"
+version = "0.48.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff6f3011b6766b3aad6b93f16aaf9beb5fe9e600e85e409a5077d8e2f0b055c4"
+checksum = "57770033649fa028aa9cc76702c66eb6c93b47a103f5ad15e2739c6404689bba"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3544,6 +3601,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "61c41af27dd6d1e27b1b16b489db798443478cef1f06a660c96db617ba5de3b1"
 
 [[package]]
+name = "task-local-extensions"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba323866e5d033818e3240feeb9f7db2c4296674e4d9e16b97b7bf8f490434e8"
+dependencies = [
+ "pin-utils",
+]
+
+[[package]]
 name = "tempfile"
 version = "3.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3763,6 +3829,21 @@ dependencies = [
 
 [[package]]
 name = "tokio-tungstenite"
+version = "0.20.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "212d5dcb2a1ce06d81107c3d0ffa3121fe974b73f068c8282cb1c32328113b6c"
+dependencies = [
+ "futures-util",
+ "log",
+ "rustls 0.21.12",
+ "tokio",
+ "tokio-rustls 0.24.1",
+ "tungstenite 0.20.1",
+ "webpki-roots 0.25.4",
+]
+
+[[package]]
+name = "tokio-tungstenite"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c83b561d025642014097b66e6c1bb422783339e0909e4429cde4749d1990bc38"
@@ -3773,7 +3854,7 @@ dependencies = [
  "rustls-pki-types",
  "tokio",
  "tokio-rustls 0.25.0",
- "tungstenite",
+ "tungstenite 0.21.0",
  "webpki-roots 0.26.3",
 ]
 
@@ -4059,6 +4140,26 @@ dependencies = [
 
 [[package]]
 name = "tungstenite"
+version = "0.20.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9e3dac10fd62eaf6617d3a904ae222845979aec67c615d1c842b4002c7666fb9"
+dependencies = [
+ "byteorder",
+ "bytes",
+ "data-encoding",
+ "http 0.2.12",
+ "httparse",
+ "log",
+ "rand",
+ "rustls 0.21.12",
+ "sha1",
+ "thiserror",
+ "url",
+ "utf-8",
+]
+
+[[package]]
+name = "tungstenite"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ef1a641ea34f399a848dea702823bbecfb4c486f911735368f1f137cb8257e1"
@@ -4089,6 +4190,28 @@ name = "typenum"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
+
+[[package]]
+name = "typeshare"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "04f17399b76c2e743d58eac0635d7686e9c00f48cd4776f00695d9882a7d3187"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+ "typeshare-annotation",
+]
+
+[[package]]
+name = "typeshare-annotation"
+version = "1.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a615d6c2764852a2e88a4f16e9ce1ea49bb776b5872956309e170d63a042a34f"
+dependencies = [
+ "quote",
+ "syn 2.0.76",
+]
 
 [[package]]
 name = "typesize"
