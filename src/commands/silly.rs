@@ -320,8 +320,4 @@ silly_command! {
     }
 }
 
-// TODO: add `/kick`?
-// TODO: add `/lick`?
-// TODO: add `/punch`?
-// TODO: add `/stab`?
-// TODO: add `/throw`?
+// TODO: add `/tickle`
