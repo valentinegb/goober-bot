@@ -18,7 +18,7 @@ rand = "0.8.5"
 chrono = "0.4.38"
 paste = "1.0.15"
 octocrab = "0.41.1"
-serde_json = "1.0.128"
+serde_json = "1.0.132"
 topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
 commit-history = { version = "0.1.0", path = "commit-history" }
 charts-rs = { version = "0.3.18", features = ["image-encoder"] }
