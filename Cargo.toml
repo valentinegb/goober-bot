@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-anyhow = "1.0.90"
+anyhow = "1.0.91"
 poise = { git = "https://github.com/fgardt/poise.git", branch = "feat/user_apps", version = "0.6.1", features = [ "unstable" ] }
 shuttle-runtime = "0.48.0"
 # Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
