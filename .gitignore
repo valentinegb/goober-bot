@@ -9,6 +9,6 @@ target/
 # MSVC Windows builds of rustc generate these, which store debugging information
 *.pdb
 
-.shuttle-storage
+.shuttle*/
 Secrets*.toml
 .DS_Store
