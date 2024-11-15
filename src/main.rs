@@ -103,9 +103,7 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
 
         string += "`";
 
-        if command.name == "sponsors" {
-            string += " 💖";
-        } else if command.name == "vote" {
+        if command.name == "vote" {
             string += " ❤️";
         }
 

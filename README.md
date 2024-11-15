@@ -21,7 +21,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Sep 28, 2024*
+*Last updated Nov 15, 2024*
 
 ### Silly
 
@@ -49,22 +49,21 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 ### Config
 
 - `/config list`
-- `/config get anon_channel`
-- `/config get anon_enabled`
-- `/config get anon_log_channel`
 - `/config get strikes_enabled`
 - `/config get strikes_log_channel`
-- `/config set anon_channel [value]`
-- `/config set anon_enabled <value>`
-- `/config set anon_log_channel [value]`
+- `/config get anon_enabled`
+- `/config get anon_channel`
+- `/config get anon_log_channel`
 - `/config set strikes_enabled <value>`
 - `/config set strikes_log_channel [value]`
+- `/config set anon_enabled <value>`
+- `/config set anon_channel [value]`
+- `/config set anon_log_channel [value]`
 
 ### Other
 
 - `/anon <message>`
 - `/rock_paper_scissors <user>`
-- `/sponsors` 💖
 - `/timestamp [year] [month] [day] [hour] [minute] [second] [timezone] [style]`
 - `/updates`
 - `/vote` ❤️
