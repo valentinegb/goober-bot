@@ -21,7 +21,7 @@ use poise::{
 };
 use rand::{seq::IteratorRandom, thread_rng};
 
-use crate::{emoji::*, sponsors::has_early_access, Context, Error};
+use crate::{emoji::*, Context, Error};
 
 /// ```
 /// silly_command!(
@@ -63,7 +63,7 @@ macro_rules! silly_command {
         ) -> Result<(), Error> {
             $(
                 if stringify!($early_access) == "early_access" {
-                    if !has_early_access(ctx).await? {
+                    if !crate::monetary::has_early_access(ctx).await? {
                         return Ok(())
                     }
                 }

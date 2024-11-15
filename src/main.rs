@@ -26,8 +26,8 @@ mod commands;
 mod config;
 mod emoji;
 mod error;
+mod monetary;
 mod persist;
-mod sponsors;
 
 pub(crate) use crate::error::Error;
 
@@ -42,7 +42,6 @@ use analytics::analytics;
 use anyhow::Context as _;
 use chrono::Utc;
 use config::config;
-use octocrab::Octocrab;
 use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
     Framework, FrameworkOptions,
@@ -64,6 +63,7 @@ struct Data {
     persist: PersistInstance,
     #[cfg(not(debug_assertions))]
     topgg_client: topgg::Client,
+    buy_me_a_coffee_client: buy_me_a_coffee::Client,
 }
 
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -165,17 +165,18 @@ async fn main(
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
         .context("`DISCORD_TOKEN` was not found")?;
-    let github_pat = secret_store
-        .get("GITHUB_PAT")
-        .context("`GITHUB_PAT` was not found")?;
     #[cfg(not(debug_assertions))]
     let topgg_token = secret_store
         .get("TOPGG_TOKEN")
         .context("`TOPGG_TOKEN` was not found")?;
+    let buy_me_a_coffee_pat = secret_store
+        .get("BUY_ME_A_COFFEE_PAT")
+        .context("`BUY_ME_A_COFFEE_PAT` was not found")?;
     #[cfg(not(debug_assertions))]
     let topgg_client = topgg::Client::new(topgg_token);
     #[cfg(not(debug_assertions))]
     let mut autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
+    let buy_me_a_coffee_client = buy_me_a_coffee::Client::new(buy_me_a_coffee_pat);
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -197,7 +198,6 @@ async fn main(
                 commands::revive(),
                 commands::rock_paper_scissors(),
                 commands::slap(),
-                commands::sponsors(),
                 commands::strike(),
                 commands::timestamp(),
                 commands::updates(),
@@ -245,13 +245,12 @@ async fn main(
                 info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
-                octocrab::initialise(Octocrab::builder().personal_token(github_pat).build()?);
-                info!("GitHub authenticated");
 
                 Ok(Data {
                     persist,
                     #[cfg(not(debug_assertions))]
                     topgg_client,
+                    buy_me_a_coffee_client,
                 })
             })
         })
