@@ -39,6 +39,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/poke <user>`
 - `/revive <user>`
 - `/slap <user>`
+- `/tickle <user>`
 
 ### Strikes
 

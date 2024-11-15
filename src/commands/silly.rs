@@ -320,4 +320,20 @@ silly_command! {
     }
 }
 
-// TODO: add `/tickle`
+silly_command! {
+    /// Wh- HO- HAH HAH HAH- ST- STOP IT HAH-
+    #[early_access]
+    fn tickle("TICKLE SOMEBODY ELSE, PLEEAASE") {
+        bot_message = "N- NO- HAH HAH- HEEE- HO- HAH- PLEASE- SOMEBODY- MAKE {author} STOPPPP HUHEHAH- {FLOOF_SCARED}";
+        author_message = "{author}- you can't tickle *yourself*, it won't work... {FLOOF_TIRED}";
+        messages = [
+            "Oh no- {user}, {author}'s discovered your weakness: *tickles* {FLOOF_NERVOUS}",
+            "The crime: {user}'s been *killed*\nThe criminal: {author}\nThe weapon: *tickles* {FLOOF_SAD}",
+            "All it took from {author} was a little \\*tickle\\* \\*tickle\\* and {user} totally collapsed {FLOOF_LOL}",
+            "WOAH, OH MY GOD, {author} TACKLED {user} TO THE GROUND AND- oh {author}'s just tickling them, they'll be fine {FLOOF_HAPPY}",
+            "{author} tried to tickle {user}, ***but they resisted...*** woah, that's crazy, honestly {FLOOF_OWO}",
+            "Alright, so, {author}, you wanna take down {user}, huh? *Well I've got just the thing, one weird trick discovered by a mom, **tickles*** {FLOOF_COOL}",
+            "Oof, {author} suddenly tickled {user}, but got punched in the face by {user}'s reflexes- ouch... {FLOOF_LURK}"
+        ];
+    }
+}

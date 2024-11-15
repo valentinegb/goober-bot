@@ -197,6 +197,7 @@ async fn main(
                 commands::rock_paper_scissors(),
                 commands::slap(),
                 commands::strike(),
+                commands::tickle(),
                 commands::timestamp(),
                 commands::updates(),
                 #[cfg(not(debug_assertions))]
