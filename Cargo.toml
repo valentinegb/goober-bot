@@ -21,7 +21,7 @@ serde_json = "1.0.132"
 topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
 commit-history = { version = "0.1.0", path = "commit-history" }
 charts-rs = { version = "0.3.19", features = ["image-encoder"] }
-buy_me_a_coffee = "0.2.0"
+buy_me_a_coffee = "0.3.1"
 
 [workspace]
 members = ["commit-history", "shuttle-persist-msgpack"]
