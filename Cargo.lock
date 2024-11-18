@@ -303,9 +303,9 @@ checksum = "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c"
 
 [[package]]
 name = "buy_me_a_coffee"
-version = "0.2.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51790312c1bcbf8230e7f03271abe93da1c7f8268977f16a329955d3ba34c216"
+checksum = "b6e64ec7763dd0f4646f274c24b9613808fcdd9e126e57ce9f00d3a327de2416"
 dependencies = [
  "reqwest 0.12.7",
  "serde",
