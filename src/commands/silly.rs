@@ -132,14 +132,17 @@ silly_command! {
 }
 
 silly_command! {
-    /// Express a wide range of emotions via- your teeth in somebody's skin
-    fn bite("The skin-haver in question") {
-        bot_message = "Help please {author}'s biting me {FLOOF_OWO}";
+    /// You wild animal...
+    fn bite("That tame person...") {
+        bot_message = "BAH- {author}'S BITING ME- GET IT OFF GET IT OFF- {FLOOF_SCARED}";
         author_message = "{author} bit themselves... why'd they do that? {A_FLOOF_LOAD}";
         messages = [
             "D- did {author} just bite {user}?? {FLOOF_OWO}",
             "The intrusive thoughts won and now {author}'s biting {user} {FLOOF_MISCHIEF}",
             "\\*CHOMP\\*\n{author} bit {user} {FLOOF_NOM}",
+            "Oh, sorry {user}, I guess {author} got hungry {FLOOF_TIRED}",
+            "Eeeeek! {user}, didn't you know? *{author} bites!* {FLOOF_NERVOUS}",
+            "{author} got a little too close to {user} and got bit {FLOOF_NERVOUS}",
         ];
     }
 }
