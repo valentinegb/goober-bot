@@ -138,7 +138,6 @@ silly_command! {
         author_message = "{author} bit themselves... why'd they do that? {A_FLOOF_LOAD}";
         messages = [
             "D- did {author} just bite {user}?? {FLOOF_OWO}",
-            "Awww, {author} gave {user} a love bite... I think- actually, it's hard to say {FLOOF_TIRED}",
             "The intrusive thoughts won and now {author}'s biting {user} {FLOOF_MISCHIEF}",
             "\\*CHOMP\\*\n{author} bit {user} {FLOOF_NOM}",
         ];
