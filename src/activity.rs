@@ -19,6 +19,7 @@ use std::time::Duration;
 use poise::serenity_prelude::{self, ActivityData};
 use rand::{seq::SliceRandom, thread_rng};
 use tokio::task::spawn_blocking;
+use tracing::info;
 
 const SLEEP_SECS: u64 = 10 * 60;
 
@@ -43,13 +44,12 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
         let mut rng = thread_rng();
 
         loop {
-            ctx.set_activity(Some(
-                activities
-                    .choose(&mut rng)
-                    .expect("`activities` should not be empty")
-                    .clone(),
-            ));
+            let chosen_activity = activities
+                .choose(&mut rng)
+                .expect("`activities` should not be empty");
 
+            ctx.set_activity(Some(chosen_activity.clone()));
+            info!(?chosen_activity, "Set activity");
             std::thread::sleep(Duration::from_secs(SLEEP_SECS));
         }
     });
