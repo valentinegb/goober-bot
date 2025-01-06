@@ -7,4 +7,4 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-git2 = "0.19.0"
+git2 = "0.20.0"
