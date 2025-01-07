@@ -275,7 +275,7 @@ silly_command! {
 silly_command! {
     /// FNAF style
     fn jumpscare("Night guard") {
-        bot_message = "# *AAAAAAAA-*\n*{author}... \\*gasp* **jumpscared** me... jeez...* {FLOOF_SCARED}";
+        bot_message = "# *AAAAAAAA-*\n*{author}... \\*gasp\\* **jumpscared** me... jeez...* {FLOOF_SCARED}";
         author_message = "{author} looked in a mirror and went \"raaahhhh!\"\nVery scary {FLOOF_SMUG}";
         messages = [
             "{author} did the bite of '87 on {user} {FLOOF_NOM}",
