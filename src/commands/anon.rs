@@ -25,9 +25,9 @@ use poise::{
 
 use crate::{
     config::{get_config_key, Config},
+    database::read_or_write_default,
     emoji::*,
     error::UserError,
-    persist::load_or_save_default,
     Context, Error,
 };
 
@@ -49,7 +49,7 @@ pub(crate) async fn anon(
         anon_channel,
         anon_log_channel,
         ..
-    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+    } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
     if !anon_enabled {
         bail!(UserError(anyhow!(

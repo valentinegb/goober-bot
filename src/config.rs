@@ -23,7 +23,7 @@ use poise::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::{emoji::*, persist::load_or_save_default, Context, Data, Error};
+use crate::{database::read_or_write_default, emoji::*, Context, Data, Error};
 
 trait ToConfigString {
     fn to_config_string(&self) -> String;
@@ -88,7 +88,7 @@ macro_rules! config {
             /// Lists all configuration options for this server
             #[command(slash_command, ephemeral)]
             async fn list(ctx: Context<'_>) -> Result<(), Error> {
-                let config: Config = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+                let config: Config = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
                 ctx.send(CreateReply::default().embed(
                     CreateEmbed::new()
@@ -122,7 +122,7 @@ macro_rules! config {
                 #[doc = "Gets the " $title " configuration option"]
                 #[command(slash_command, rename = $name_str, ephemeral)]
                 async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), Error> {
-                    let Config { $name, .. } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+                    let Config { $name, .. } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
                     ctx.send(
                         CreateReply::default().embed(
@@ -165,10 +165,10 @@ macro_rules! config {
                     #[description = "The value to set " $title " to"] value: $type,
                 ) -> Result<(), Error> {
                     let config_key = get_config_key(ctx)?;
-                    let mut config: Config = load_or_save_default(ctx, &config_key)?;
+                    let mut config: Config = read_or_write_default(ctx, &config_key).await?;
 
                     config.$name = value;
-                    ctx.data().persist.save(&config_key, config)?;
+                    ctx.data().op.write_serialized(&config_key, &config).await?;
                     ctx.say(format!(
                         "**{}** has been set to **{}** {FLOOF_HAPPY}",
                         $title,

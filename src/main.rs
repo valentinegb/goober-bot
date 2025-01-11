@@ -24,10 +24,10 @@ mod activity;
 mod analytics;
 mod commands;
 mod config;
+mod database;
 mod emoji;
 mod error;
 mod monetary;
-mod persist;
 
 pub(crate) use crate::error::Error;
 
@@ -49,18 +49,19 @@ use poise::{
 use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
+use shuttle_shared_db::SerdeJsonOperator;
 #[cfg(not(debug_assertions))]
 use tokio::spawn;
 #[cfg(not(debug_assertions))]
 use topgg::Autoposter;
-use tracing::{error, info};
+use tracing::{debug, error, info};
 
 use crate::activity::start_activity_loop;
 
 /// User data, which is stored and accessible in all command invocations
 #[derive(Debug)]
 struct Data {
-    persist: PersistInstance,
+    op: SerdeJsonOperator,
     #[cfg(not(debug_assertions))]
     topgg_client: topgg::Client,
     buy_me_a_coffee_client: buy_me_a_coffee::Client,
@@ -155,10 +156,32 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     println!("{}", string.trim_end());
 }
 
+async fn migrate_data(persist: &PersistInstance, op: &SerdeJsonOperator) -> Result<(), Error> {
+    info!("Starting migration of data...");
+
+    let keys = persist.list()?;
+
+    for key in &keys {
+        info!("Migrating {key:?}...");
+
+        let value: serde_json::Value = persist.load(key)?;
+
+        debug!(?value);
+        op.write_serialized(key, &value).await?;
+        persist.remove(key)?;
+        info!("Migrated {key:?}");
+    }
+
+    info!("Finished migration of {} keys", keys.len());
+
+    Ok(())
+}
+
 #[shuttle_runtime::main]
 async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
     #[shuttle_persist_msgpack::Persist] persist: PersistInstance,
+    #[shuttle_shared_db::Postgres] op: SerdeJsonOperator,
 ) -> ShuttleSerenity {
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -213,7 +236,7 @@ async fn main(
             },
             pre_command: |ctx| {
                 Box::pin(async move {
-                    if let Err(err) = analytics::increment(ctx) {
+                    if let Err(err) = analytics::increment(ctx).await {
                         error!("An error occured whilst performing analytics: {err:#?}");
                     }
 
@@ -238,6 +261,7 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
+                migrate_data(&persist, &op).await?;
                 // Omit `category` argument on a command to hide from list
                 print_commands(&framework.options().commands);
                 start_activity_loop(ctx.clone());
@@ -246,7 +270,7 @@ async fn main(
                 info!("Commands registered");
 
                 Ok(Data {
-                    persist,
+                    op,
                     #[cfg(not(debug_assertions))]
                     topgg_client,
                     buy_me_a_coffee_client,

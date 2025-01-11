@@ -57,7 +57,7 @@ async fn error(
     ephemeral
 )]
 async fn delete_config(ctx: Context<'_>) -> Result<(), Error> {
-    ctx.data().persist.remove(&get_config_key(ctx)?)?;
+    ctx.data().op.0.delete(&get_config_key(ctx)?).await?;
     ctx.say(format!("Server config file deleted {FLOOF_MUG}"))
         .await?;
 

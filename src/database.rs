@@ -14,32 +14,30 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::bail;
 use serde::{de::DeserializeOwned, Serialize};
-use shuttle_persist_msgpack::PersistError;
 
-use crate::{Context, Error};
+use crate::Context;
 
-/// Loads a value from [`shuttle_persist_msgpack`] (if the value exists), or
-/// saves the default of the value (if the value does not exist).
-pub(crate) fn load_or_save_default<T>(ctx: Context<'_>, key: &str) -> Result<T, Error>
+/// Reads a value from [`shuttle_shared_db::SerdeJsonOperator`] (if the value
+/// exists), or writes the default of the value (if the value does not exist).
+pub(crate) async fn read_or_write_default<T>(
+    ctx: Context<'_>,
+    key: &str,
+) -> Result<T, opendal::Error>
 where
     T: DeserializeOwned + Serialize + Default,
 {
     let data = ctx.data();
 
-    Ok(match data.persist.load(key) {
-        Ok(t) => t,
-        Err(err) => match err {
-            PersistError::Open(ref io_err) => match io_err.kind() {
-                std::io::ErrorKind::NotFound => {
-                    data.persist.save(key, T::default())?;
+    match data.op.read_serialized(key).await {
+        Ok(t) => Ok(t),
+        Err(err) => match err.kind() {
+            opendal::ErrorKind::NotFound => {
+                data.op.write_serialized(key, &T::default()).await?;
 
-                    data.persist.load(key)?
-                }
-                _ => bail!(err),
-            },
-            _ => bail!(err),
+                Ok(data.op.read_serialized(key).await?)
+            }
+            _ => Err(err),
         },
-    })
+    }
 }

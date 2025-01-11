@@ -28,9 +28,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     config::{get_config_key, Config},
+    database::read_or_write_default,
     emoji::*,
     error::UserError,
-    persist::load_or_save_default,
     Context, Error,
 };
 
@@ -102,12 +102,12 @@ pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, 
 
 /// Returns an error if strikes are not enabled, otherwise returns
 /// `strikes_log_channel`, which may be [`None`].
-fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
+async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
     let Config {
         strikes_enabled,
         strikes_log_channel,
         ..
-    } = load_or_save_default(ctx, &get_config_key(ctx)?)?;
+    } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
     if !strikes_enabled {
         bail!(UserError(anyhow!(
@@ -147,9 +147,9 @@ async fn give(
     #[description = "When the strike should expire, in months. If not specified, strike will never expire"]
     expiration: Option<u32>,
 ) -> Result<(), Error> {
-    let log_channel = pre_strike_command(ctx)?;
+    let log_channel = pre_strike_command(ctx).await?;
     let strikes_key = &get_strikes_key(ctx, user)?;
-    let mut strikes: Strikes = load_or_save_default(ctx, strikes_key)?;
+    let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
     let strike = Strike {
         issuer: ctx.author().id,
         issued: Timestamp::now(),
@@ -168,7 +168,10 @@ async fn give(
     };
 
     strikes.push(strike.clone());
-    ctx.data().persist.save(strikes_key, strikes)?;
+    ctx.data()
+        .op
+        .write_serialized(strikes_key, &strikes)
+        .await?;
 
     let allowed_mentions = CreateAllowedMentions::new();
 
@@ -210,7 +213,7 @@ async fn history(
     #[description = "User to get the strike history of"] user: Option<User>,
     #[description = "Show even expired strikes"] all: Option<bool>,
 ) -> Result<(), Error> {
-    pre_strike_command(ctx)?;
+    pre_strike_command(ctx).await?;
 
     let user = user.as_ref().unwrap_or(ctx.author());
 
@@ -228,7 +231,7 @@ async fn history(
     }
 
     let strikes_key = &get_strikes_key(ctx, user.id)?;
-    let strikes: Strikes = load_or_save_default(ctx, strikes_key)?;
+    let strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
     let all = all.unwrap_or(false);
     let mut description = String::new();
     let mut clean = true;
@@ -297,9 +300,9 @@ async fn repeal(
         )));
     }
 
-    let log_channel = pre_strike_command(ctx)?;
+    let log_channel = pre_strike_command(ctx).await?;
     let strikes_key = &get_strikes_key(ctx, user)?;
-    let mut strikes: Strikes = load_or_save_default(ctx, strikes_key)?;
+    let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
     let strike_i = strike_i.unwrap_or(strikes.len());
     let repealer = &mut strikes
         .get_mut(strike_i - 1)
@@ -316,7 +319,10 @@ async fn repeal(
     }
 
     *repealer = Some(ctx.author().id);
-    ctx.data().persist.save(strikes_key, strikes)?;
+    ctx.data()
+        .op
+        .write_serialized(strikes_key, &strikes)
+        .await?;
 
     let allowed_mentions = CreateAllowedMentions::new();
 

@@ -20,33 +20,33 @@ use charts_rs::{HorizontalBarChart, THEME_DARK};
 use chrono::{DateTime, TimeDelta, Utc};
 use poise::{command, serenity_prelude::CreateAttachment, CreateReply};
 
-use crate::{persist::load_or_save_default, Context, Error};
+use crate::{database::read_or_write_default, Context, Error};
 
 const KEY: &str = "analytics";
 
 type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 
-fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
-    let mut analytics: Analytics = load_or_save_default(ctx, KEY)?;
+async fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
+    let mut analytics: Analytics = read_or_write_default(ctx, KEY).await?;
 
     for invocations in analytics.values_mut() {
         invocations
             .retain(|date_time| Utc::now().signed_duration_since(date_time) <= TimeDelta::days(1));
     }
 
-    ctx.data().persist.save(KEY, &analytics)?;
+    ctx.data().op.write_serialized(KEY, &analytics).await?;
 
     Ok(analytics)
 }
 
-pub(super) fn increment(ctx: Context<'_>) -> Result<(), Error> {
-    let mut analytics = load(ctx)?;
+pub(super) async fn increment(ctx: Context<'_>) -> Result<(), Error> {
+    let mut analytics = load(ctx).await?;
     let invocations = analytics
         .entry(ctx.invoked_command_name().to_string())
         .or_default();
 
     invocations.push(Utc::now());
-    ctx.data().persist.save(KEY, analytics)?;
+    ctx.data().op.write_serialized(KEY, &analytics).await?;
 
     Ok(())
 }
@@ -62,7 +62,7 @@ pub(super) fn increment(ctx: Context<'_>) -> Result<(), Error> {
 pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), Error> {
     ctx.defer_ephemeral().await?;
 
-    let mut analytics: Vec<(_, _)> = load(ctx)?.into_iter().collect();
+    let mut analytics: Vec<(_, _)> = load(ctx).await?.into_iter().collect();
 
     analytics.sort_by(|(_, invocations_a), (_, invocations_b)| {
         invocations_b.len().cmp(&invocations_a.len())
