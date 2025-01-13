@@ -11,7 +11,7 @@ shuttle-runtime = "0.51.0"
 # Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
 shuttle-serenity = "0.51.0"
 tracing = "0.1.41"
-tokio = "1.42.0"
+tokio = "1.43.0"
 serde = { version = "1.0.217", features = ["derive"] }
 shuttle-persist-msgpack = { version = "0.51.0", path = "shuttle-persist-msgpack" }
 rand = "0.8.5"
