@@ -23,7 +23,7 @@ commit-history = { version = "0.1.0", path = "commit-history" }
 charts-rs = { version = "0.3.19", features = ["image-encoder"] }
 buy_me_a_coffee = "0.3.1"
 shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
-opendal = { version = "0.51.0", default-features = false }
+opendal = { version = "0.51.1", default-features = false }
 
 [workspace]
 members = ["commit-history", "shuttle-persist-msgpack"]
