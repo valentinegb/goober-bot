@@ -17,7 +17,7 @@ shuttle-persist-msgpack = { version = "0.51.0", path = "shuttle-persist-msgpack"
 rand = "0.8.5"
 chrono = "0.4.39"
 paste = "1.0.15"
-serde_json = "1.0.134"
+serde_json = "1.0.135"
 topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
 commit-history = { version = "0.1.0", path = "commit-history" }
 charts-rs = { version = "0.3.19", features = ["image-encoder"] }
