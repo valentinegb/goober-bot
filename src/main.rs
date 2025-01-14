@@ -46,7 +46,6 @@ use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
     Framework, FrameworkOptions,
 };
-use shuttle_persist_msgpack::PersistInstance;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use shuttle_shared_db::SerdeJsonOperator;
@@ -54,7 +53,7 @@ use shuttle_shared_db::SerdeJsonOperator;
 use tokio::spawn;
 #[cfg(not(debug_assertions))]
 use topgg::Autoposter;
-use tracing::{debug, error, info};
+use tracing::{error, info};
 
 use crate::activity::start_activity_loop;
 
@@ -156,31 +155,9 @@ fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     println!("{}", string.trim_end());
 }
 
-async fn migrate_data(persist: &PersistInstance, op: &SerdeJsonOperator) -> Result<(), Error> {
-    info!("Starting migration of data...");
-
-    let keys = persist.list()?;
-
-    for key in &keys {
-        info!("Migrating {key:?}...");
-
-        let value: serde_json::Value = persist.load(key)?;
-
-        debug!(?value);
-        op.write_serialized(key, &value).await?;
-        persist.remove(key)?;
-        info!("Migrated {key:?}");
-    }
-
-    info!("Finished migration of {} keys", keys.len());
-
-    Ok(())
-}
-
 #[shuttle_runtime::main]
 async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
-    #[shuttle_persist_msgpack::Persist] persist: PersistInstance,
     #[shuttle_shared_db::Postgres] op: SerdeJsonOperator,
 ) -> ShuttleSerenity {
     let discord_token = secret_store
@@ -261,7 +238,6 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
-                migrate_data(&persist, &op).await?;
                 // Omit `category` argument on a command to hide from list
                 print_commands(&framework.options().commands);
                 start_activity_loop(ctx.clone());

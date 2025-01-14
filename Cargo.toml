@@ -13,7 +13,6 @@ shuttle-serenity = "0.51.0"
 tracing = "0.1.41"
 tokio = "1.43.0"
 serde = { version = "1.0.217", features = ["derive"] }
-shuttle-persist-msgpack = { version = "0.51.0", path = "shuttle-persist-msgpack" }
 rand = "0.8.5"
 chrono = "0.4.39"
 paste = "1.0.15"
@@ -26,4 +25,4 @@ shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
 opendal = { version = "0.51.1", default-features = false }
 
 [workspace]
-members = ["commit-history", "shuttle-persist-msgpack"]
+members = ["commit-history"]

@@ -1244,7 +1244,6 @@ dependencies = [
  "rand",
  "serde",
  "serde_json",
- "shuttle-persist-msgpack",
  "shuttle-runtime",
  "shuttle-serenity",
  "shuttle-shared-db",
@@ -3602,17 +3601,6 @@ dependencies = [
  "url",
  "uuid",
  "zeroize",
-]
-
-[[package]]
-name = "shuttle-persist-msgpack"
-version = "0.51.0"
-dependencies = [
- "async-trait",
- "rmp-serde",
- "serde",
- "shuttle-service",
- "thiserror 2.0.11",
 ]
 
 [[package]]
