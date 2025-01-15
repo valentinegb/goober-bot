@@ -39,7 +39,6 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::custom("Reading The Rust Book"),
             ActivityData::watching("cat videos"),
             ActivityData::watching("Gravity Falls"),
-            ActivityData::watching("Tessa"),
         ];
         let mut rng = thread_rng();
         let mut last_activity = None;
