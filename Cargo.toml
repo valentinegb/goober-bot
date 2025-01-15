@@ -6,23 +6,22 @@ publish = false
 
 [dependencies]
 anyhow = "1.0.95"
-poise = { git = "https://github.com/fgardt/poise.git", branch = "feat/user_apps", version = "0.6.1", features = [ "unstable" ] }
-shuttle-runtime = "0.51.0"
-# Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
-shuttle-serenity = "0.51.0"
-tracing = "0.1.41"
-tokio = "1.43.0"
-serde = { version = "1.0.217", features = ["derive"] }
-rand = "0.8.5"
-chrono = "0.4.39"
-paste = "1.0.15"
-serde_json = "1.0.135"
-topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ], git = "https://github.com/Top-gg-Community/rust-sdk.git" }
-commit-history = { version = "0.1.0", path = "commit-history" }
-charts-rs = { version = "0.3.19", features = ["image-encoder"] }
 buy_me_a_coffee = "0.3.1"
-shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
+charts-rs = { version = "0.3.19", features = ["image-encoder"] }
+chrono = "0.4.39"
+commit-history = { version = "0.1.0", path = "commit-history" }
 opendal = { version = "0.51.1", default-features = false }
+paste = "1.0.15"
+poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6", version = "0.6.1" }
+rand = "0.8.5"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
+shuttle-runtime = "0.51.0"
+shuttle-serenity = "0.51.0"
+shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
+tokio = "1.43.0"
+topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ] }
+tracing = "0.1.41"
 
 [workspace]
 members = ["commit-history"]
