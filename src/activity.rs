@@ -42,13 +42,29 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::watching("Tessa"),
         ];
         let mut rng = thread_rng();
+        let mut last_activity = None;
 
         loop {
             let chosen_activity = activities
                 .choose(&mut rng)
                 .expect("`activities` should not be empty");
 
+            // FIXME: This is ridiculous, too much for so little.
+            //        Fix this after the PR for Serenity is merged.
+            if let Some(last_activity) = last_activity {
+                if serde_json::to_string(chosen_activity)
+                    .expect("activities should not fail to serialize")
+                    == serde_json::to_string(last_activity)
+                        .expect("activities should not fail to serialize")
+                {
+                    continue;
+                }
+            }
+
             ctx.set_activity(Some(chosen_activity.clone()));
+
+            last_activity = Some(chosen_activity);
+
             info!(?chosen_activity, "Set activity");
             std::thread::sleep(Duration::from_secs(SLEEP_SECS));
         }
