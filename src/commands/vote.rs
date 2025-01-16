@@ -17,7 +17,7 @@
 use anyhow::Context as _;
 use poise::command;
 
-use crate::{emoji::*, Context, Error};
+use crate::{emoji::*, Context};
 
 /// Vote for Goober Bot on Top.gg!
 #[command(
@@ -27,7 +27,7 @@ use crate::{emoji::*, Context, Error};
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), Error> {
+pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), anyhow::Error> {
     let has_voted = ctx
         .data()
         .topgg_client
