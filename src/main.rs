@@ -31,14 +31,10 @@ mod monetary;
 
 #[cfg(not(debug_assertions))]
 use std::time::Duration;
-use std::{
-    collections::{BTreeMap, HashSet},
-    fmt::Debug,
-};
+use std::{collections::HashSet, fmt::Debug};
 
 use analytics::analytics;
 use anyhow::Context as _;
-use chrono::Utc;
 use config::config;
 use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
@@ -65,93 +61,6 @@ struct Data {
 }
 
 type Context<'a> = poise::Context<'a, Data, anyhow::Error>;
-
-fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
-    #[must_use]
-    fn command_string<U, E>(command: &poise::Command<U, E>) -> String {
-        let mut string = String::new();
-
-        for subcommand in &command.subcommands {
-            string += &command_string(subcommand);
-        }
-
-        if !command.subcommands.is_empty() {
-            return string;
-        }
-
-        string += &format!("- `/{}", command.qualified_name);
-
-        for parameter in &command.parameters {
-            string += " ";
-
-            if parameter.required {
-                string += "<";
-            } else {
-                string += "[";
-            }
-
-            string += &format!("{}", parameter.name);
-
-            if parameter.required {
-                string += ">";
-            } else {
-                string += "]";
-            }
-        }
-
-        string += "`";
-
-        if command.name == "vote" {
-            string += " ❤️";
-        }
-
-        string += "\n";
-
-        string
-    }
-
-    let mut string = String::new();
-    let mut category_keys = Vec::new();
-    let mut categories: BTreeMap<&String, Vec<&poise::Command<U, E>>> = BTreeMap::new();
-
-    for command in commands {
-        if let Some(category) = &command.category {
-            if !category_keys.contains(&category) {
-                category_keys.push(category);
-            }
-
-            let category_commands = categories.entry(category).or_default();
-
-            category_commands.push(command);
-        }
-    }
-
-    category_keys.sort_by(|a, b| categories[b].len().cmp(&categories[a].len()));
-
-    let other_category_key_index = category_keys
-        .binary_search(&&String::from("Other"))
-        .expect("there should be a command category called \"Other\"");
-    let other_category_key = category_keys.remove(other_category_key_index);
-
-    category_keys.push(other_category_key);
-
-    string += &format!(
-        "## Commands\n\n*Last updated {}*\n",
-        Utc::now().format("%b %e, %Y")
-    );
-
-    for category in category_keys {
-        let category_commands = &categories[category];
-
-        string += &format!("\n### {category}\n\n");
-
-        for command in category_commands {
-            string += &command_string(command);
-        }
-    }
-
-    println!("{}", string.trim_end());
-}
 
 #[shuttle_runtime::main]
 async fn main(
@@ -240,8 +149,7 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
-                // Omit `category` argument on a command to hide from list
-                print_commands(&framework.options().commands);
+                commands::print_all(&framework.options().commands);
                 start_activity_loop(ctx.clone());
                 info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
