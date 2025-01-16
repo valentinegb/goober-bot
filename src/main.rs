@@ -69,6 +69,7 @@ async fn main(
 ) -> ShuttleSerenity {
     tracing_subscriber::fmt()
         .with_env_filter("goober_bot=debug,info")
+        .without_time()
         .init();
 
     let discord_token = secret_store
