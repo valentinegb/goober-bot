@@ -1249,6 +1249,7 @@ dependencies = [
  "tokio",
  "topgg",
  "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
@@ -3632,7 +3633,6 @@ dependencies = [
  "tokio-util",
  "tonic",
  "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

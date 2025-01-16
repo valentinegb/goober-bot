@@ -158,6 +158,10 @@ async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
     #[shuttle_shared_db::Postgres] op: SerdeJsonOperator,
 ) -> ShuttleSerenity {
+    tracing_subscriber::fmt()
+        .with_env_filter("goober_bot=debug,info")
+        .init();
+
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
         .context("`DISCORD_TOKEN` was not found")?;

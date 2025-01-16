@@ -16,12 +16,13 @@ poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca162
 rand = "0.8.5"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.135"
-shuttle-runtime = "0.51.0"
+shuttle-runtime = { version = "0.51.0", default-features = false }
 shuttle-serenity = "0.51.0"
 shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
 tokio = "1.43.0"
 topgg = { version = "1.4.2", features = [ "autoposter", "serenity-cached" ] }
 tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 
 [workspace]
 members = ["commit-history"]
