@@ -31,7 +31,7 @@ use crate::{
     database::read_or_write_default,
     emoji::*,
     error::UserError,
-    Context, Error,
+    Context,
 };
 
 const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "Failed to send message in strike log channel";
@@ -93,7 +93,7 @@ impl Strike {
 }
 
 /// Gets the strikes key for `user` for the server in `ctx`.
-pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, Error> {
+pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, anyhow::Error> {
     Ok(format!(
         "strikes_{}_{user}",
         ctx.guild_id().context("Expected context to be in guild")?
@@ -102,7 +102,7 @@ pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, 
 
 /// Returns an error if strikes are not enabled, otherwise returns
 /// `strikes_log_channel`, which may be [`None`].
-async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error> {
+async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, anyhow::Error> {
     let Config {
         strikes_enabled,
         strikes_log_channel,
@@ -127,7 +127,7 @@ async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, Error
     interaction_context = "Guild",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
-pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), Error> {
+pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
     unreachable!()
 }
 
@@ -146,7 +146,7 @@ async fn give(
     comment: Option<String>,
     #[description = "When the strike should expire, in months. If not specified, strike will never expire"]
     expiration: Option<u32>,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     let log_channel = pre_strike_command(ctx).await?;
     let strikes_key = &get_strikes_key(ctx, user)?;
     let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
@@ -212,7 +212,7 @@ async fn history(
     ctx: Context<'_>,
     #[description = "User to get the strike history of"] user: Option<User>,
     #[description = "Show even expired strikes"] all: Option<bool>,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     pre_strike_command(ctx).await?;
 
     let user = user.as_ref().unwrap_or(ctx.author());
@@ -293,7 +293,7 @@ async fn repeal(
     #[description = "Strike to repeal (most recent by default)"]
     #[rename = "strike"]
     strike_i: Option<usize>,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     if user == ctx.author().id {
         bail!(UserError(anyhow!(
             "You cannot repeal one of your own strikes",

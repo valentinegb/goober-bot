@@ -22,7 +22,7 @@ use poise::{
     ChoiceParameter,
 };
 
-use crate::{emoji::*, error::UserError, Context, Error};
+use crate::{emoji::*, error::UserError, Context};
 
 const SECONDS_PER_HOUR: i32 = 3600;
 
@@ -95,7 +95,7 @@ pub(crate) async fn timestamp(
     #[max = 14]
     timezone: Option<i32>,
     #[description = "Default is short date time"] style: Option<FormattedTimestampStyleChoice>,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     let timezone = timezone.unwrap_or(0);
     let fixed_offset = FixedOffset::east_opt(timezone * SECONDS_PER_HOUR)
         .context(UserError(anyhow!("Entered timezone difference is invalid")))?;

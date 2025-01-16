@@ -28,7 +28,7 @@ use crate::{
     database::read_or_write_default,
     emoji::*,
     error::UserError,
-    Context, Error,
+    Context,
 };
 
 /// Sends a message anonymously
@@ -43,7 +43,7 @@ use crate::{
 pub(crate) async fn anon(
     ctx: Context<'_>,
     #[description = "Message to send anonymously"] message: String,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     let Config {
         anon_enabled,
         anon_channel,

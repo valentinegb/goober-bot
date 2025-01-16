@@ -26,7 +26,7 @@ use poise::{
 };
 use rand::{seq::IteratorRandom, thread_rng};
 
-use crate::{emoji::*, Context, Error};
+use crate::{emoji::*, Context};
 
 /// Challenge someone to a game of Rock Paper Scissors
 #[command(
@@ -39,7 +39,7 @@ use crate::{emoji::*, Context, Error};
 pub(crate) async fn rock_paper_scissors(
     ctx: Context<'_>,
     #[description = "Person you want to play with"] user: UserId,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     let bot_id = ctx.framework().bot_id;
     let choose_buttons = vec![
         CreateButton::new("rock")

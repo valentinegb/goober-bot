@@ -24,10 +24,8 @@ use tracing::{error, warn};
 
 use crate::emoji::*;
 
-pub(crate) type Error = anyhow::Error;
-
 #[derive(Debug)]
-pub(crate) struct UserError(pub(crate) Error);
+pub(crate) struct UserError(pub(crate) anyhow::Error);
 
 impl fmt::Display for UserError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -42,7 +40,7 @@ impl std::error::Error for UserError {
 }
 
 pub(super) async fn on_error(
-    error: FrameworkError<'_, impl Debug, Error>,
+    error: FrameworkError<'_, impl Debug, anyhow::Error>,
 ) -> Result<(), serenity_prelude::Error> {
     match error {
         FrameworkError::Command { error, ctx, .. } => {

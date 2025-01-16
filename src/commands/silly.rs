@@ -21,7 +21,7 @@ use poise::{
 };
 use rand::{seq::IteratorRandom, thread_rng};
 
-use crate::{emoji::*, Context, Error};
+use crate::{emoji::*, Context};
 
 /// ```
 /// silly_command!(
@@ -60,7 +60,7 @@ macro_rules! silly_command {
         pub(crate) async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
-        ) -> Result<(), Error> {
+        ) -> Result<(), anyhow::Error> {
             $(
                 if stringify!($early_access) == "early_access" {
                     if !crate::monetary::has_early_access(ctx).await? {

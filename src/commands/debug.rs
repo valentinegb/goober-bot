@@ -17,7 +17,7 @@
 use anyhow::{anyhow, bail};
 use poise::{command, ChoiceParameter};
 
-use crate::{config::get_config_key, emoji::*, error::UserError, Context, Error};
+use crate::{config::get_config_key, emoji::*, error::UserError, Context};
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {
@@ -28,7 +28,7 @@ enum ErrorKind {
 
 /// Commands to aid in development of the bot
 #[command(slash_command, subcommands("error", "delete_config"))]
-pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
+pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
     unreachable!();
 }
 
@@ -37,7 +37,7 @@ pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), Error> {
 async fn error(
     _ctx: Context<'_>,
     #[description = "Kind of error to return"] kind: ErrorKind,
-) -> Result<(), Error> {
+) -> Result<(), anyhow::Error> {
     match kind {
         ErrorKind::User => bail!(UserError(
             anyhow!("This is an example of a user error")
@@ -56,7 +56,7 @@ async fn error(
     required_bot_permissions = "USE_EXTERNAL_EMOJIS",
     ephemeral
 )]
-async fn delete_config(ctx: Context<'_>) -> Result<(), Error> {
+async fn delete_config(ctx: Context<'_>) -> Result<(), anyhow::Error> {
     ctx.data().op.0.delete(&get_config_key(ctx)?).await?;
     ctx.say(format!("Server config file deleted {FLOOF_MUG}"))
         .await?;

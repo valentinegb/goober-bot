@@ -20,13 +20,13 @@ use charts_rs::{HorizontalBarChart, THEME_DARK};
 use chrono::{DateTime, TimeDelta, Utc};
 use poise::{command, serenity_prelude::CreateAttachment, CreateReply};
 
-use crate::{database::read_or_write_default, Context, Error};
+use crate::{database::read_or_write_default, Context};
 
 const KEY: &str = "analytics";
 
 type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 
-async fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
+async fn load(ctx: Context<'_>) -> Result<Analytics, anyhow::Error> {
     let mut analytics: Analytics = read_or_write_default(ctx, KEY).await?;
 
     for invocations in analytics.values_mut() {
@@ -39,7 +39,7 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, Error> {
     Ok(analytics)
 }
 
-pub(super) async fn increment(ctx: Context<'_>) -> Result<(), Error> {
+pub(super) async fn increment(ctx: Context<'_>) -> Result<(), anyhow::Error> {
     let mut analytics = load(ctx).await?;
     let invocations = analytics
         .entry(ctx.invoked_command_name().to_string())
@@ -59,7 +59,7 @@ pub(super) async fn increment(ctx: Context<'_>) -> Result<(), Error> {
     owners_only,
     ephemeral
 )]
-pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), Error> {
+pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), anyhow::Error> {
     ctx.defer_ephemeral().await?;
 
     let mut analytics: Vec<(_, _)> = load(ctx).await?.into_iter().collect();

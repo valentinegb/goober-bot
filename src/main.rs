@@ -29,8 +29,6 @@ mod emoji;
 mod error;
 mod monetary;
 
-pub(crate) use crate::error::Error;
-
 #[cfg(not(debug_assertions))]
 use std::time::Duration;
 use std::{
@@ -66,7 +64,7 @@ struct Data {
     buy_me_a_coffee_client: buy_me_a_coffee::Client,
 }
 
-type Context<'a> = poise::Context<'a, Data, Error>;
+type Context<'a> = poise::Context<'a, Data, anyhow::Error>;
 
 fn print_commands<U, E>(commands: &[poise::Command<U, E>]) {
     #[must_use]
