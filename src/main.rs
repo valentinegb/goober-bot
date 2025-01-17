@@ -150,7 +150,6 @@ async fn main(
         })
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
-                commands::print_all(&framework.options().commands);
                 start_activity_loop(ctx.clone());
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
