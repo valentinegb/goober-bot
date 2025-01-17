@@ -152,7 +152,6 @@ async fn main(
             Box::pin(async move {
                 commands::print_all(&framework.options().commands);
                 start_activity_loop(ctx.clone());
-                info!("Activity loop started");
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 info!("Commands registered");
 

@@ -16,7 +16,7 @@
 
 use std::time::Duration;
 
-use poise::serenity_prelude::{self, ActivityData};
+use poise::serenity_prelude::{self, ActivityData, ActivityType};
 use rand::{seq::SliceRandom, thread_rng};
 use tokio::task::spawn_blocking;
 use tracing::info;
@@ -24,6 +24,26 @@ use tracing::info;
 const SLEEP_SECS: u64 = 10 * 60;
 
 pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
+    fn activity_to_string(activity: ActivityData) -> String {
+        if let Some(state) = activity.state {
+            return state;
+        }
+
+        let mut string = match activity.kind {
+            ActivityType::Playing => "Playing ",
+            ActivityType::Streaming => "Streaming ",
+            ActivityType::Listening => "Listening to ",
+            ActivityType::Watching => "Watching ",
+            ActivityType::Competing => "Competing in ",
+            _ => return format!("{activity:?}"),
+        }
+        .to_string();
+
+        string += &activity.name;
+
+        string
+    }
+
     spawn_blocking(move || {
         let activities = [
             ActivityData::custom("Testing random activities"),
@@ -64,8 +84,12 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
 
             last_activity = Some(chosen_activity);
 
-            info!(?chosen_activity, "Set activity");
+            info!(
+                "Set activity to {:?}",
+                activity_to_string(chosen_activity.clone()),
+            );
             std::thread::sleep(Duration::from_secs(SLEEP_SECS));
         }
     });
+    info!("Activity loop started");
 }
