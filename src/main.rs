@@ -94,6 +94,7 @@ async fn main(
                 commands::anon(),
                 commands::bap(),
                 commands::bite(),
+                commands::blow_up(),
                 commands::boop(),
                 commands::carry(),
                 commands::debug(),

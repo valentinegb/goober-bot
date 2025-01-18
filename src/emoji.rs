@@ -25,32 +25,36 @@ use paste::paste;
 // in debug builds, uses emojis from Goober Bot Dev app
 // in release builds, uses emojis from Goober Bot app
 
-/// Creates an emoji `&str` constant for debug builds and another for release builds.
+/// Creates an emoji `&str` constant for debug builds and another for release
+/// builds.
 ///
-/// ## Example
+/// # Examples
 ///
 /// ```
 /// emoji!("emojiName", "1234567890987654321" /* debug */, "1234567890987654321" /* release */);
+/// emoji!("animatedEmoji", "1234567890987654321" /* debug */, "1234567890987654321" /* release */, true /* gif */);
 /// ```
 macro_rules! emoji {
-    ($name:literal, $debug_id:literal, $release_id:literal) => {
+    ($name:literal, $debug_id:literal, $release_id:literal, $format:literal, $prefix:literal) => {
         paste! {
-            #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $debug_id, ".webp?quality=lossless)")]
+            #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $debug_id, ".", $format, "?quality=lossless)")]
             #[cfg(debug_assertions)]
-            pub(crate) const [<$name:snake:upper>]: &str = concat!("<:", $name, ":", $debug_id, ">");
-            #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $release_id, ".webp?quality=lossless)")]
+            pub(crate) const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $debug_id, ">");
+            #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $release_id, ".", $format, "?quality=lossless)")]
             #[cfg(not(debug_assertions))]
-            pub(crate) const [<$name:snake:upper>]: &str = concat!("<:", $name, ":", $release_id, ">");
+            pub(crate) const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $release_id, ">");
         }
+    };
+    ($name:literal, $debug_id:literal, $release_id:literal$(, false)?) => {
+        emoji!($name, $debug_id, $release_id, "webp", "");
+    };
+    ($name:literal, $debug_id:literal, $release_id:literal, true) => {
+        emoji!($name, $debug_id, $release_id, "gif", "a");
     };
 }
 
-/// ![](https://cdn.discordapp.com/emojis/1263605189995266058.gif?quality=lossless)
-#[cfg(debug_assertions)]
-pub(crate) const A_FLOOF_LOAD: &str = "<a:afloofLoad:1263605189995266058>";
-/// ![](https://cdn.discordapp.com/emojis/1263609041179906059.gif?quality=lossless)
-#[cfg(not(debug_assertions))]
-pub(crate) const A_FLOOF_LOAD: &str = "<a:afloofLoad:1263609041179906059>";
+#[rustfmt::skip]
+emoji!("explosion", "1330040514405470311", "1330044953132400703", true);
 emoji!("floof", "1263605435785810104", "1263609061539315722");
 emoji!("floofAngry", "1263605462927016077", "1263609077661962331");
 emoji!("floofBlep", "1263605485488308295", "1263609094791495724");
@@ -63,6 +67,8 @@ emoji!("floofHeart", "1263605598524539001", "1263609201431675002");
 #[rustfmt::skip]
 emoji!("floofInnocent", "1263605617034006619", "1263609220725608519");
 emoji!("floofLoad", "1263605636411949118", "1263609237762871336");
+#[rustfmt::skip]
+emoji!("floofLoadAnimated", "1263605189995266058", "1263609041179906059", true);
 emoji!("floofLol", "1263605657886654495", "1263609255647510668");
 emoji!("floofLurk", "1263605681420894258", "1263609272818729082");
 #[rustfmt::skip]

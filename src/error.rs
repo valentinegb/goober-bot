@@ -53,7 +53,7 @@ pub(super) async fn on_error(
                     CreateReply::default()
                         .embed(
                             CreateEmbed::new()
-                                .title(format!("User Error {A_FLOOF_LOAD}"))
+                                .title(format!("User Error {FLOOF_LOAD_ANIMATED}"))
                                 .description(format!("{:?}", user_error.0))
                                 .color(Color::GOLD),
                         )
@@ -71,7 +71,7 @@ pub(super) async fn on_error(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title(format!("Command Error {A_FLOOF_LOAD}"))
+                            .title(format!("Command Error {FLOOF_LOAD_ANIMATED}"))
                             .description(format!("{error:?}"))
                             .color(Color::RED),
                     )
@@ -110,7 +110,7 @@ pub(super) async fn on_error(
                 CreateReply::default()
                     .embed(
                         CreateEmbed::new()
-                            .title(format!("Argument Parsing Error {A_FLOOF_LOAD}"))
+                            .title(format!("Argument Parsing Error {FLOOF_LOAD_ANIMATED}"))
                             .description("There's probably been an update to this command recently. Please try running it again in a few seconds.")
                             .color(Color::RED),
                     )

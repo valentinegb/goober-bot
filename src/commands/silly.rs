@@ -109,7 +109,7 @@ silly_command! {
         author_message = "{author} just booped themselves... that's a litle sad, won't someone else boop them? {FLOOF_SAD}";
         messages = [
             "{author} booped {user}!!! {FLOOF_OWO}",
-            "{user} just got booped by {author}?? {A_FLOOF_LOAD}",
+            "{user} just got booped by {author}?? {FLOOF_LOAD_ANIMATED}",
             "Lmao I just saw {author} boop {user} {FLOOF_LOL}",
             "Dear {user},\n\nGet booped, nerd. {FLOOF_SMUG}\n\nSincerely, {author}",
             "{author} booped {user}, I think they're trying to pick a fight {FLOOF_NERVOUS}",
@@ -121,7 +121,7 @@ silly_command! {
     /// Embrace the bobin within us all and gnaw on one's bones
     fn gnaw("The subject of today's gnawing") {
         bot_message = "GRAAAHH {author} STOP GNAWING MY BONES GET OFF HELP {FLOOF_SCARED}";
-        author_message = "{author}'s gnawing on... their own bones? Are they good...? {A_FLOOF_LOAD}";
+        author_message = "{author}'s gnawing on... their own bones? Are they good...? {FLOOF_LOAD_ANIMATED}";
         messages = [
             "{author} is gnawing on {user}'s bones {FLOOF_NOM}",
             "{author} craves the bones of {user} {FLOOF_NOM}",
@@ -135,7 +135,7 @@ silly_command! {
     /// You wild animal...
     fn bite("That tame person...") {
         bot_message = "BAH- {author}'S BITING ME- GET IT OFF GET IT OFF- {FLOOF_SCARED}";
-        author_message = "{author} bit themselves... why'd they do that? {A_FLOOF_LOAD}";
+        author_message = "{author} bit themselves... why'd they do that? {FLOOF_LOAD_ANIMATED}";
         messages = [
             "D- did {author} just bite {user}?? {FLOOF_OWO}",
             "The intrusive thoughts won and now {author}'s biting {user} {FLOOF_MISCHIEF}",
@@ -336,6 +336,24 @@ silly_command! {
             "{author} tried to tickle {user}, ***but they resisted...*** woah, that's crazy, honestly {FLOOF_OWO}",
             "Alright, so, {author}, you wanna take down {user}, huh? *Well I've got just the thing, one weird trick discovered by a mom, **tickles*** {FLOOF_COOL}",
             "Oof, {author} suddenly tickled {user}, but got punched in the face by {user}'s reflexes- ouch... {FLOOF_LURK}"
+        ];
+    }
+}
+
+silly_command! {
+    /// *Blows up pancakes with mind*
+    #[early_access]
+    fn blow_up(r#""Mah fricking pancakes""#) {
+        bot_message = "{author} blew up Goober B... wait, wh- {EXPLOSION}";
+        author_message = "***{author}'S SELF DESTRUCTING!!! {FLOOF_SCARED}***";
+        messages = [
+            "{author} blew up {user} with their mind {FLOOF_NERVOUS}",
+            "{author} snapped their fingers and {user} exploded {FLOOF_NERVOUS}",
+            "{author} just, said \"blow up\", and then {user} blew up?? {FLOOF_NERVOUS}",
+            "{user} was engulfed in an explosion, meanwhile {author} walked the other way, wearing sunglasses, of course {FLOOF_COOL}",
+            "Oh no... {author} hit the big red button, and {user} *exploded* {FLOOF_NERVOUS}",
+            "*{user}, get out of here! {author}'s gonna-* {EXPLOSION}",
+            "Oops, {author} found out that the trigger word for the explosive implant in {user}'s head was \"petrichor\" {FLOOF_NERVOUS}"
         ];
     }
 }
