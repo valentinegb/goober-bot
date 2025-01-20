@@ -15,7 +15,7 @@ paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6", version = "0.6.1" }
 rand = "0.8.5"
 serde = { version = "1.0.217", features = ["derive"] }
-serde_json = "1.0.135"
+serde_json = "1.0.137"
 shuttle-runtime = { version = "0.51.0", default-features = false }
 shuttle-serenity = "0.51.0"
 shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
