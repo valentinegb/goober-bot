@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use charts_rs::{HorizontalBarChart, THEME_DARK};
 use chrono::{DateTime, TimeDelta, Utc};
@@ -28,7 +28,23 @@ type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 
 async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error> {
     let mut analytics: Analytics = read_or_write_default(ctx, KEY).await?;
+    let commands: HashSet<_> = ctx
+        .framework()
+        .options
+        .commands
+        .iter()
+        .map(|command| command.identifying_name.clone())
+        .collect();
 
+    // Ensure all commands are in analytics
+    for command in &commands {
+        analytics.entry(command.clone()).or_default();
+    }
+
+    // Remove commands from analytics that no longer exist
+    analytics.retain(|command, _| commands.contains(command));
+
+    // Remove command invocations which were more than a day ago
     for invocations in analytics.values_mut() {
         invocations
             .retain(|date_time| Utc::now().signed_duration_since(date_time) <= TimeDelta::days(1));
@@ -42,7 +58,7 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error>
 pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let mut analytics = load(ctx).await?;
     let invocations = analytics
-        .entry(ctx.invoked_command_name().to_string())
+        .entry(ctx.command().identifying_name.clone())
         .or_default();
 
     invocations.push(Utc::now());
