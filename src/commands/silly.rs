@@ -87,7 +87,7 @@ macro_rules! silly_command {
                 ]
                 .into_iter()
                 .choose(&mut rng)
-                .expect("List of possible message content should not be empty");
+                .expect("list of possible message content should not be empty");
             }
 
             ctx.send(

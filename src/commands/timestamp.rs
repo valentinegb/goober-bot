@@ -102,7 +102,7 @@ pub(crate) async fn timestamp(
 ) -> Result<(), poise_error::anyhow::Error> {
     let timezone = timezone.unwrap_or(0);
     let fixed_offset = FixedOffset::east_opt(timezone * SECONDS_PER_HOUR)
-        .context(UserError(anyhow!("Entered timezone difference is invalid")))?;
+        .context(UserError(anyhow!("entered timezone difference is invalid")))?;
     let now = Utc::now().with_timezone(&fixed_offset);
     let year = year.unwrap_or_else(|| now.year());
     let month = month.unwrap_or_else(|| now.month());
@@ -113,7 +113,7 @@ pub(crate) async fn timestamp(
     let datetime = fixed_offset
         .with_ymd_and_hms(year, month, day, hour, minute, second)
         .earliest()
-        .context(UserError(anyhow!("Entered date/time is invalid")))?;
+        .context(UserError(anyhow!("entered date/time is invalid")))?;
     let formatted_timestamp = FormattedTimestamp::new(datetime.into(), style.map(|s| s.into()));
 
     ctx.say(format!("Copy this and use it anywhere that supports Discord formatting {FLOOF_HAPPY}\n```\n{formatted_timestamp}\n```\nLooks like this btw: {formatted_timestamp}\n*If this isn't the timestamp you expected, make sure you set `timezone` to your timezone!*")).await?;

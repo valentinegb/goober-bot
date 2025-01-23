@@ -18,7 +18,7 @@ use poise::{
     command,
     serenity_prelude::{
         Color, CreateAllowedMentions, CreateEmbed, CreateEmbedAuthor, CreateMessage, CreateWebhook,
-        ExecuteWebhook, Mentionable, Timestamp,
+        ExecuteWebhook, Timestamp,
     },
 };
 use poise_error::{
@@ -55,15 +55,15 @@ pub(crate) async fn anon(
 
     if !anon_enabled {
         bail!(UserError(anyhow!(
-            "`/anon` is not enabled, the `anon_enabled` config option is `false`",
+            r#"/anon is not enabled, the "anon_enabled" config option is set to "false""#,
         )));
     }
 
     if let Some(anon_channel) = anon_channel {
         if anon_channel != ctx.channel_id() {
             bail!(UserError(anyhow!(
-                "`/anon` is only allowed in {} due to the `anon_channel` config option being set",
-                anon_channel.mention(),
+                r#"/anon is only allowed in #{} due to the "anon_channel" config option being set"#,
+                anon_channel.name(ctx).await?,
             )));
         }
     }
@@ -72,7 +72,7 @@ pub(crate) async fn anon(
     let webhook = match channel
         .webhooks(ctx)
         .await
-        .context("Could not get channel webhooks")?
+        .context("could not get channel webhooks")?
         .into_iter()
         .find(|webhook| {
             webhook
@@ -87,7 +87,7 @@ pub(crate) async fn anon(
                     .audit_log_reason("`/anon` used in channel without existing Anonymous webhook"),
             )
             .await
-            .context("Could not create webhook")?,
+            .context("could not create webhook")?,
     };
 
     let author = ctx.author();
@@ -114,13 +114,13 @@ pub(crate) async fn anon(
                     .allowed_mentions(CreateAllowedMentions::new()),
             )
             .await
-            .context("Failed to log anonymous message")?;
+            .context("failed to log anonymous message")?;
     }
 
     webhook
         .execute(ctx, false, ExecuteWebhook::new().content(message))
         .await
-        .context("Failed to send message in anon log channel")?;
+        .context("failed to send message in anon log channel")?;
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
         .await?;

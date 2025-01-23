@@ -54,7 +54,7 @@ impl ToConfigString for ChannelId {
 pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::anyhow::Error> {
     Ok(format!(
         "config_{}",
-        ctx.guild_id().context("Expected context to be in guild")?
+        ctx.guild_id().context("expected context to be in guild")?
     ))
 }
 

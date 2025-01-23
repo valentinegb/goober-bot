@@ -33,8 +33,8 @@ pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Er
         .topgg_client
         .has_voted(ctx.author().id)
         .await
-        .context("Could not check if user has voted")
-        .context("Top.gg dun goofed")?;
+        .context("could not check if user has voted")
+        .context("top.gg dun goofed")?;
     let message = if has_voted {
         format!("You've already voted today, thank you so much! ily {FLOOF_HEART}")
     } else {

@@ -36,7 +36,7 @@ use crate::{
     Context,
 };
 
-const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "Failed to send message in strike log channel";
+const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "failed to send message in strike log channel";
 
 type Strikes = Vec<Strike>;
 
@@ -101,7 +101,7 @@ pub(crate) fn get_strikes_key(
 ) -> Result<String, poise_error::anyhow::Error> {
     Ok(format!(
         "strikes_{}_{user}",
-        ctx.guild_id().context("Expected context to be in guild")?
+        ctx.guild_id().context("expected context to be in guild")?
     ))
 }
 
@@ -118,7 +118,7 @@ async fn pre_strike_command(
 
     if !strikes_enabled {
         bail!(UserError(anyhow!(
-            "Strikes are not enabled, see `/config get strikes_enabled`",
+            r#"strikes are not enabled, see "/config get strikes_enabled""#,
         )));
     }
 
@@ -166,7 +166,7 @@ async fn give(
             Some(expiration) => Some(
                 Timestamp::now()
                     .checked_add_months(Months::new(expiration))
-                    .context("Failed to create timestamp from months")?
+                    .context("failed to create timestamp from months")?
                     .into(),
             ),
             None => None,
@@ -228,12 +228,12 @@ async fn history(
         && !ctx
             .author_member()
             .await
-            .context("Expected author to be member")?
+            .context("expected author to be member")?
             .permissions
             .is_some_and(|permissions| permissions.view_audit_log())
     {
         bail!(UserError(anyhow!(
-            "You must have the View Audit Log permission to see the strike history of other users",
+            "you must have the View Audit Log permission to see the strike history of other users",
         )));
     }
 
@@ -303,7 +303,7 @@ async fn repeal(
 ) -> Result<(), poise_error::anyhow::Error> {
     if user == ctx.author().id {
         bail!(UserError(anyhow!(
-            "You cannot repeal one of your own strikes",
+            "you cannot repeal one of your own strikes",
         )));
     }
 
@@ -314,14 +314,14 @@ async fn repeal(
     let repealer = &mut strikes
         .get_mut(strike_i - 1)
         .context(UserError(anyhow!(
-            "User does not have a strike #{strike_i}",
+            "user does not have a strike #{strike_i}",
         )))?
         .repealer;
 
     if repealer.is_some() {
         bail!(UserError(anyhow!(
             "{}'s strike #{strike_i} has already been repealed",
-            user.mention(),
+            user.to_user(ctx).await?.name,
         )));
     }
 

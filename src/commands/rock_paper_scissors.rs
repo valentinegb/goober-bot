@@ -91,7 +91,7 @@ pub(crate) async fn rock_paper_scissors(
                 ["rock", "paper", "scissors"]
                     .into_iter()
                     .choose(&mut rng)
-                    .context("Expected possible bot choices to not be empty")?
+                    .context("expected possible bot choices to not be empty")?
             };
             let outcome_message = if bot_choice == choose_interaction.data.custom_id {
                 format!(
@@ -99,7 +99,7 @@ pub(crate) async fn rock_paper_scissors(
                     bot_choice
                         .chars()
                         .next()
-                        .context("Expected bot choice to have at least one character")?
+                        .context("expected bot choice to have at least one character")?
                         .to_uppercase(),
                     &bot_choice[1..],
                     choose_interaction.data.custom_id,
@@ -107,33 +107,29 @@ pub(crate) async fn rock_paper_scissors(
             } else {
                 match bot_choice {
                     "rock" => match choose_interaction.data.custom_id.as_str() {
-                        "paper" => format!(
-                            "Paper beats rock and you win! {FLOOF_HAPPY}",
+                        "paper" => format!("Paper beats rock and you win! {FLOOF_HAPPY}",),
+                        "scissors" => format!("Rock beats scissors and I win! {FLOOF_HAPPY}",),
+                        other => bail!(
+                            r#"expected component to have custom ID of either "paper" or "scissors", got {other:?}"#,
                         ),
-                        "scissors" => format!(
-                            "Rock beats scissors and I win! {FLOOF_HAPPY}",
-                        ),
-                        other => bail!("Expected component to have custom ID of either \"paper\" or \"scissors\", got \"{other}\""),
                     },
                     "paper" => match choose_interaction.data.custom_id.as_str() {
-                        "rock" => format!(
-                            "Paper beats rock and I win! {FLOOF_HAPPY}",
+                        "rock" => format!("Paper beats rock and I win! {FLOOF_HAPPY}",),
+                        "scissors" => format!("Scissors beats paper and you win! {FLOOF_HAPPY}",),
+                        other => bail!(
+                            r#"expected component to have custom ID of either "rock" or "scissors", got {other:?}"#,
                         ),
-                        "scissors" => format!(
-                            "Scissors beats paper and you win! {FLOOF_HAPPY}",
-                        ),
-                        other => bail!("Expected component to have custom ID of either \"rock\" or \"scissors\", got \"{other}\""),
                     },
                     "scissors" => match choose_interaction.data.custom_id.as_str() {
-                        "rock" => format!(
-                            "Rock beats scissors and you win! {FLOOF_HAPPY}",
+                        "rock" => format!("Rock beats scissors and you win! {FLOOF_HAPPY}",),
+                        "paper" => format!("Scissors beats paper and I win! {FLOOF_HAPPY}",),
+                        other => bail!(
+                            r#"expected component to have custom ID of either "rock" or "paper", got {other:?}"#,
                         ),
-                        "paper" => format!(
-                            "Scissors beats paper and I win! {FLOOF_HAPPY}",
-                        ),
-                        other => bail!("Expected component to have custom ID of either \"rock\" or \"paper\", got \"{other}\""),
                     },
-                    other => bail!("Expected component to have custom ID of either \"rock\", \"paper\", or \"scissors\", got \"{other}\""),
+                    other => bail!(
+                        r#"expected component to have custom ID of either "rock", "paper", or "scissors", got {other:?}"#,
+                    ),
                 }
             };
 
@@ -242,7 +238,9 @@ pub(crate) async fn rock_paper_scissors(
                     .await_component_interactions(ctx)
                     .stream();
 
-                while let Some(user_choose_interaction) = user_choose_interaction_stream.next().await {
+                while let Some(user_choose_interaction) =
+                    user_choose_interaction_stream.next().await
+                {
                     if user_choose_interaction.user.id == author.id {
                         user_choose_interaction
                             .create_response(
@@ -292,7 +290,9 @@ pub(crate) async fn rock_paper_scissors(
                         .await_component_interactions(ctx)
                         .stream();
 
-                    while let Some(author_choose_interaction) = author_choose_interaction_stream.next().await {
+                    while let Some(author_choose_interaction) =
+                        author_choose_interaction_stream.next().await
+                    {
                         if author_choose_interaction.user.id == user {
                             author_choose_interaction
                                 .create_response(
@@ -327,9 +327,13 @@ pub(crate) async fn rock_paper_scissors(
                             continue;
                         }
 
-                        accept_interaction.delete_followup(ctx, author_choose_followup).await?;
+                        accept_interaction
+                            .delete_followup(ctx, author_choose_followup)
+                            .await?;
 
-                        let outcome_message = if user_choose_interaction.data.custom_id == author_choose_interaction.data.custom_id {
+                        let outcome_message = if user_choose_interaction.data.custom_id
+                            == author_choose_interaction.data.custom_id
+                        {
                             format!(
                                 "{}{} and {}... it's a tie! {FLOOF_OWO}",
                                 user_choose_interaction
@@ -337,7 +341,7 @@ pub(crate) async fn rock_paper_scissors(
                                     .custom_id
                                     .chars()
                                     .next()
-                                    .context("Expected component custom ID to have at least one character")?
+                                    .context("expected component custom ID to have at least one character")?
                                     .to_uppercase(),
                                 &user_choose_interaction
                                     .data
@@ -355,7 +359,7 @@ pub(crate) async fn rock_paper_scissors(
                                     "scissors" => format!(
                                         "Rock beats scissors and {user_mention} wins! {FLOOF_HAPPY}",
                                     ),
-                                    other => bail!("Expected component to have custom ID of either \"paper\" or \"scissors\", got \"{other}\""),
+                                    other => bail!(r#"expected component to have custom ID of either "paper" or "scissors", got {other:?}"#),
                                 },
                                 "paper" => match author_choose_interaction.data.custom_id.as_str() {
                                     "rock" => format!(
@@ -364,7 +368,7 @@ pub(crate) async fn rock_paper_scissors(
                                     "scissors" => format!(
                                         "Scissors beats paper and {author_mention} wins! {FLOOF_HAPPY}",
                                     ),
-                                    other => bail!("Expected component to have custom ID of either \"rock\" or \"scissors\", got \"{other}\""),
+                                    other => bail!(r#"expected component to have custom ID of either "rock" or "scissors", got {other:?}"#),
                                 },
                                 "scissors" => match author_choose_interaction.data.custom_id.as_str() {
                                     "rock" => format!(
@@ -373,17 +377,18 @@ pub(crate) async fn rock_paper_scissors(
                                     "paper" => format!(
                                         "Scissors beats paper and {user_mention} wins! {FLOOF_HAPPY}",
                                     ),
-                                    other => bail!("Expected component to have custom ID of either \"rock\" or \"paper\", got \"{other}\""),
+                                    other => bail!(r#"expected component to have custom ID of either "rock" or "paper", got {other:?}"#),
                                 },
-                                other => bail!("Expected component to have custom ID of either \"rock\", \"paper\", or \"scissors\", got \"{other}\""),
+                                other => bail!(r#"expected component to have custom ID of either "rock", "paper", or "scissors", got {other:?}"#),
                             }
                         };
 
-                        accept_interaction.create_followup(
-                            ctx,
-                            CreateInteractionResponseFollowup::new()
-                                .content(outcome_message),
-                        ).await?;
+                        accept_interaction
+                            .create_followup(
+                                ctx,
+                                CreateInteractionResponseFollowup::new().content(outcome_message),
+                            )
+                            .await?;
 
                         break;
                     }
@@ -391,17 +396,21 @@ pub(crate) async fn rock_paper_scissors(
                     break;
                 }
             }
-            "decline" => accept_interaction.create_response(
-                ctx,
-                CreateInteractionResponse::Message(
-                    CreateInteractionResponseMessage::new()
-                        .content(format!(
-                            "{user_mention} declined {FLOOF_SAD}",
-                        ))
-                        .allowed_mentions(CreateAllowedMentions::new())
-                )
-            ).await?,
-            other => bail!("Expected component to have custom ID of either \"accept\" or \"decline\", got \"{other}\""),
+            "decline" => {
+                accept_interaction
+                    .create_response(
+                        ctx,
+                        CreateInteractionResponse::Message(
+                            CreateInteractionResponseMessage::new()
+                                .content(format!("{user_mention} declined {FLOOF_SAD}",))
+                                .allowed_mentions(CreateAllowedMentions::new()),
+                        ),
+                    )
+                    .await?
+            }
+            other => bail!(
+                r#"expected component to have custom ID of either "accept" or "decline", got {other:?}"#,
+            ),
         }
 
         break;

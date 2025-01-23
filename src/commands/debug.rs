@@ -46,12 +46,12 @@ async fn error(
 ) -> Result<(), poise_error::anyhow::Error> {
     match kind {
         ErrorKind::User => bail!(UserError(
-            anyhow!("This is an example of a user error")
-                .context("This is an example of extra context")
+            anyhow!("this is an example of a user error")
+                .context("this is an example of extra context")
         )),
-        ErrorKind::Internal => Err(anyhow!("This is an example of an internal error")
-            .context("This is an example of extra context")),
-        ErrorKind::Panic => panic!("This is an example of a panic"),
+        ErrorKind::Internal => Err(anyhow!("this is an example of an internal error")
+            .context("this is an example of extra context")),
+        ErrorKind::Panic => panic!("this is an example of a panic"),
     }
 }
 
