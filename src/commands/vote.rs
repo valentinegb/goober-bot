@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::Context as _;
 use poise::command;
+use poise_error::anyhow::Context as _;
 
 use crate::{emoji::*, Context};
 
@@ -27,7 +27,7 @@ use crate::{emoji::*, Context};
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let has_voted = ctx
         .data()
         .topgg_client

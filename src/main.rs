@@ -26,7 +26,6 @@ mod commands;
 mod config;
 mod database;
 mod emoji;
-mod error;
 mod monetary;
 
 #[cfg(not(debug_assertions))]
@@ -34,12 +33,12 @@ use std::time::Duration;
 use std::{collections::HashSet, fmt::Debug};
 
 use analytics::analytics;
-use anyhow::Context as _;
 use config::config;
 use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
     Framework, FrameworkOptions,
 };
+use poise_error::{anyhow::Context as _, on_error};
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use shuttle_shared_db::SerdeJsonOperator;
@@ -60,7 +59,7 @@ struct Data {
     buy_me_a_coffee_client: buy_me_a_coffee::Client,
 }
 
-type Context<'a> = poise::Context<'a, Data, anyhow::Error>;
+type Context<'a> = poise::Context<'a, Data, poise_error::anyhow::Error>;
 
 #[shuttle_runtime::main]
 async fn main(
@@ -117,13 +116,7 @@ async fn main(
                 commands::vote(),
                 config(),
             ],
-            on_error: |error| {
-                Box::pin(async move {
-                    if let Err(e) = error::on_error(error).await {
-                        error!("Error while handling error: {e}");
-                    }
-                })
-            },
+            on_error,
             pre_command: |ctx| {
                 Box::pin(async move {
                     if let Err(err) = analytics::increment(ctx).await {

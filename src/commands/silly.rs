@@ -60,7 +60,7 @@ macro_rules! silly_command {
         pub(crate) async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
-        ) -> Result<(), anyhow::Error> {
+        ) -> Result<(), poise_error::anyhow::Error> {
             $(
                 if stringify!($early_access) == "early_access" {
                     if !crate::monetary::has_early_access(ctx).await? {

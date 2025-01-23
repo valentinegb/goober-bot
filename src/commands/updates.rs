@@ -31,7 +31,7 @@ use crate::Context;
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.send(
         CreateReply::default().embed(
             CreateEmbed::new()

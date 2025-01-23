@@ -16,22 +16,25 @@
 
 use std::collections::BTreeMap;
 
-use anyhow::{anyhow, bail};
 use chrono::Utc;
 use poise::{command, ChoiceParameter};
+use poise_error::{
+    anyhow::{anyhow, bail},
+    UserError,
+};
 
-use crate::{config::get_config_key, emoji::*, error::UserError, Context, Data};
+use crate::{config::get_config_key, emoji::*, Context, Data};
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {
     User,
-    Command,
     Internal,
+    Panic,
 }
 
 /// Commands to aid in development of the bot
 #[command(slash_command, subcommands("error", "delete_config", "commands"))]
-pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!();
 }
 
@@ -40,15 +43,15 @@ pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
 async fn error(
     _ctx: Context<'_>,
     #[description = "Kind of error to return"] kind: ErrorKind,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     match kind {
         ErrorKind::User => bail!(UserError(
             anyhow!("This is an example of a user error")
                 .context("This is an example of extra context")
         )),
-        ErrorKind::Command => Err(anyhow!("This is an example of a command error")
+        ErrorKind::Internal => Err(anyhow!("This is an example of an internal error")
             .context("This is an example of extra context")),
-        ErrorKind::Internal => panic!("This is an example of an internal error"),
+        ErrorKind::Panic => panic!("This is an example of a panic"),
     }
 }
 
@@ -59,7 +62,7 @@ async fn error(
     required_bot_permissions = "USE_EXTERNAL_EMOJIS",
     ephemeral
 )]
-async fn delete_config(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+async fn delete_config(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.data().op.0.delete(&get_config_key(ctx)?).await?;
     ctx.say(format!("Server config file deleted {FLOOF_MUG}"))
         .await?;
@@ -69,7 +72,7 @@ async fn delete_config(ctx: Context<'_>) -> Result<(), anyhow::Error> {
 
 /// Prints the list of commands that goes in the bot's GitHub README
 #[command(slash_command, ephemeral)]
-async fn commands(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+async fn commands(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     #[must_use]
     fn command_string<U, E>(command: &poise::Command<U, E>) -> String {
         let mut string = String::new();
@@ -93,7 +96,7 @@ async fn commands(ctx: Context<'_>) -> Result<(), anyhow::Error> {
                 string += "[";
             }
 
-            string += &format!("{}", parameter.name);
+            string += &parameter.name;
 
             if parameter.required {
                 string += ">";
@@ -115,7 +118,7 @@ async fn commands(ctx: Context<'_>) -> Result<(), anyhow::Error> {
 
     let mut string = String::new();
     let mut category_keys = Vec::new();
-    let mut categories: BTreeMap<&String, Vec<&poise::Command<Data, anyhow::Error>>> =
+    let mut categories: BTreeMap<&String, Vec<&poise::Command<Data, poise_error::anyhow::Error>>> =
         BTreeMap::new();
 
     for command in &ctx.framework().options.commands {

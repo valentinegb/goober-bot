@@ -26,7 +26,7 @@ const KEY: &str = "analytics";
 
 type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
 
-async fn load(ctx: Context<'_>) -> Result<Analytics, anyhow::Error> {
+async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error> {
     let mut analytics: Analytics = read_or_write_default(ctx, KEY).await?;
 
     for invocations in analytics.values_mut() {
@@ -39,7 +39,7 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, anyhow::Error> {
     Ok(analytics)
 }
 
-pub(super) async fn increment(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let mut analytics = load(ctx).await?;
     let invocations = analytics
         .entry(ctx.invoked_command_name().to_string())
@@ -59,7 +59,7 @@ pub(super) async fn increment(ctx: Context<'_>) -> Result<(), anyhow::Error> {
     owners_only,
     ephemeral
 )]
-pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.defer_ephemeral().await?;
 
     let mut analytics: Vec<(_, _)> = load(ctx).await?.into_iter().collect();

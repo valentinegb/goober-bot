@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::Context as _;
 use paste::paste;
 use poise::{
     command,
     serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
     CreateReply, FrameworkError,
 };
+use poise_error::anyhow::Context as _;
 use serde::{Deserialize, Serialize};
 
 use crate::{database::read_or_write_default, emoji::*, Context, Data};
@@ -51,7 +51,7 @@ impl ToConfigString for ChannelId {
 }
 
 /// Gets the config key for the server in `ctx`.
-pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, anyhow::Error> {
+pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::anyhow::Error> {
     Ok(format!(
         "config_{}",
         ctx.guild_id().context("Expected context to be in guild")?
@@ -68,7 +68,7 @@ pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, anyhow::Error> 
     required_bot_permissions = "USE_EXTERNAL_EMOJIS",
     default_member_permissions = "MANAGE_GUILD"
 )]
-pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!()
 }
 
@@ -87,7 +87,7 @@ macro_rules! config {
 
             /// Lists all configuration options for this server
             #[command(slash_command, ephemeral)]
-            async fn list(ctx: Context<'_>) -> Result<(), anyhow::Error> {
+            async fn list(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
                 let config: Config = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
                 ctx.send(CreateReply::default().embed(
@@ -102,8 +102,8 @@ macro_rules! config {
                 Ok(())
             }
 
-            fn get() -> poise::Command<Data, anyhow::Error> {
-                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, anyhow::Error>> {
+            fn get() -> poise::Command<Data, poise_error::anyhow::Error> {
+                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, poise_error::anyhow::Error>> {
                     unreachable!();
                 }
 
@@ -121,7 +121,7 @@ macro_rules! config {
             $(
                 #[doc = "Gets the " $title " configuration option"]
                 #[command(slash_command, rename = $name_str, ephemeral)]
-                async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), anyhow::Error> {
+                async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
                     let Config { $name, .. } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
 
                     ctx.send(
@@ -140,8 +140,8 @@ macro_rules! config {
                 }
             )+
 
-            fn set() -> poise::Command<Data, anyhow::Error> {
-                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, anyhow::Error>> {
+            fn set() -> poise::Command<Data, poise_error::anyhow::Error> {
+                async fn inner(_ctx: Context<'_>) -> Result<(), FrameworkError<'_, Data, poise_error::anyhow::Error>> {
                     unreachable!();
                 }
 
@@ -163,7 +163,7 @@ macro_rules! config {
                 async fn [<set_ $name>](
                     ctx: Context<'_>,
                     #[description = "The value to set " $title " to"] value: $type,
-                ) -> Result<(), anyhow::Error> {
+                ) -> Result<(), poise_error::anyhow::Error> {
                     let config_key = get_config_key(ctx)?;
                     let mut config: Config = read_or_write_default(ctx, &config_key).await?;
 

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{anyhow, bail, Context as _};
 use chrono::Months;
 use poise::{
     command,
@@ -24,13 +23,16 @@ use poise::{
     },
     CreateReply,
 };
+use poise_error::{
+    anyhow::{anyhow, bail, Context as _},
+    UserError,
+};
 use serde::{Deserialize, Serialize};
 
 use crate::{
     config::{get_config_key, Config},
     database::read_or_write_default,
     emoji::*,
-    error::UserError,
     Context,
 };
 
@@ -88,12 +90,15 @@ impl Strike {
 
     fn is_expired(&self) -> bool {
         self.expiration
-            .map_or(false, |expiration| expiration <= Timestamp::now())
+            .is_some_and(|expiration| expiration <= Timestamp::now())
     }
 }
 
 /// Gets the strikes key for `user` for the server in `ctx`.
-pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, anyhow::Error> {
+pub(crate) fn get_strikes_key(
+    ctx: Context<'_>,
+    user: UserId,
+) -> Result<String, poise_error::anyhow::Error> {
     Ok(format!(
         "strikes_{}_{user}",
         ctx.guild_id().context("Expected context to be in guild")?
@@ -102,7 +107,9 @@ pub(crate) fn get_strikes_key(ctx: Context<'_>, user: UserId) -> Result<String, 
 
 /// Returns an error if strikes are not enabled, otherwise returns
 /// `strikes_log_channel`, which may be [`None`].
-async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, anyhow::Error> {
+async fn pre_strike_command(
+    ctx: Context<'_>,
+) -> Result<Option<ChannelId>, poise_error::anyhow::Error> {
     let Config {
         strikes_enabled,
         strikes_log_channel,
@@ -127,7 +134,7 @@ async fn pre_strike_command(ctx: Context<'_>) -> Result<Option<ChannelId>, anyho
     interaction_context = "Guild",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
-pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), anyhow::Error> {
+pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!()
 }
 
@@ -146,7 +153,7 @@ async fn give(
     comment: Option<String>,
     #[description = "When the strike should expire, in months. If not specified, strike will never expire"]
     expiration: Option<u32>,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     let log_channel = pre_strike_command(ctx).await?;
     let strikes_key = &get_strikes_key(ctx, user)?;
     let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
@@ -212,7 +219,7 @@ async fn history(
     ctx: Context<'_>,
     #[description = "User to get the strike history of"] user: Option<User>,
     #[description = "Show even expired strikes"] all: Option<bool>,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     pre_strike_command(ctx).await?;
 
     let user = user.as_ref().unwrap_or(ctx.author());
@@ -223,7 +230,7 @@ async fn history(
             .await
             .context("Expected author to be member")?
             .permissions
-            .map_or(false, |permissions| permissions.view_audit_log())
+            .is_some_and(|permissions| permissions.view_audit_log())
     {
         bail!(UserError(anyhow!(
             "You must have the View Audit Log permission to see the strike history of other users",
@@ -293,7 +300,7 @@ async fn repeal(
     #[description = "Strike to repeal (most recent by default)"]
     #[rename = "strike"]
     strike_i: Option<usize>,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     if user == ctx.author().id {
         bail!(UserError(anyhow!(
             "You cannot repeal one of your own strikes",

@@ -14,15 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{anyhow, Context as _};
 use chrono::{Datelike, FixedOffset, TimeZone, Timelike, Utc};
 use poise::{
     command,
     serenity_prelude::{FormattedTimestamp, FormattedTimestampStyle},
     ChoiceParameter,
 };
+use poise_error::{
+    anyhow::{anyhow, Context as _},
+    UserError,
+};
 
-use crate::{emoji::*, error::UserError, Context};
+use crate::{emoji::*, Context};
 
 const SECONDS_PER_HOUR: i32 = 3600;
 
@@ -59,6 +62,7 @@ impl From<FormattedTimestampStyleChoice> for FormattedTimestampStyle {
 }
 
 /// Generates a Unix timestamp for your use in Discord styled messages
+#[allow(clippy::too_many_arguments)]
 #[command(
     slash_command,
     category = "Other",
@@ -95,7 +99,7 @@ pub(crate) async fn timestamp(
     #[max = 14]
     timezone: Option<i32>,
     #[description = "Default is short date time"] style: Option<FormattedTimestampStyleChoice>,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     let timezone = timezone.unwrap_or(0);
     let fixed_offset = FixedOffset::east_opt(timezone * SECONDS_PER_HOUR)
         .context(UserError(anyhow!("Entered timezone difference is invalid")))?;
@@ -110,8 +114,7 @@ pub(crate) async fn timestamp(
         .with_ymd_and_hms(year, month, day, hour, minute, second)
         .earliest()
         .context(UserError(anyhow!("Entered date/time is invalid")))?;
-    let formatted_timestamp =
-        FormattedTimestamp::new(datetime.into(), style.and_then(|s| Some(s.into())));
+    let formatted_timestamp = FormattedTimestamp::new(datetime.into(), style.map(|s| s.into()));
 
     ctx.say(format!("Copy this and use it anywhere that supports Discord formatting {FLOOF_HAPPY}\n```\n{formatted_timestamp}\n```\nLooks like this btw: {formatted_timestamp}\n*If this isn't the timestamp you expected, make sure you set `timezone` to your timezone!*")).await?;
 

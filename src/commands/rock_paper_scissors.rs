@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{bail, Context as _};
 use poise::{
     command,
     serenity_prelude::{
@@ -24,6 +23,7 @@ use poise::{
     },
     CreateReply,
 };
+use poise_error::anyhow::{bail, Context as _};
 use rand::{seq::IteratorRandom, thread_rng};
 
 use crate::{emoji::*, Context};
@@ -39,7 +39,7 @@ use crate::{emoji::*, Context};
 pub(crate) async fn rock_paper_scissors(
     ctx: Context<'_>,
     #[description = "Person you want to play with"] user: UserId,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     let bot_id = ctx.framework().bot_id;
     let choose_buttons = vec![
         CreateButton::new("rock")
@@ -76,7 +76,7 @@ pub(crate) async fn rock_paper_scissors(
             .await_component_interactions(ctx)
             .stream();
 
-        while let Some(choose_interaction) = choose_interaction_stream.next().await {
+        if let Some(choose_interaction) = choose_interaction_stream.next().await {
             bot_reply
                 .edit(
                     ctx,
@@ -98,7 +98,7 @@ pub(crate) async fn rock_paper_scissors(
                     "{}{} and {}... it's a tie! {FLOOF_OWO}",
                     bot_choice
                         .chars()
-                        .nth(0)
+                        .next()
                         .context("Expected bot choice to have at least one character")?
                         .to_uppercase(),
                     &bot_choice[1..],
@@ -147,8 +147,6 @@ pub(crate) async fn rock_paper_scissors(
                     ),
                 )
                 .await?;
-
-            break;
         }
 
         return Ok(());
@@ -338,7 +336,7 @@ pub(crate) async fn rock_paper_scissors(
                                     .data
                                     .custom_id
                                     .chars()
-                                    .nth(0)
+                                    .next()
                                     .context("Expected component custom ID to have at least one character")?
                                     .to_uppercase(),
                                 &user_choose_interaction

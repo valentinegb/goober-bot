@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use anyhow::{anyhow, bail, Context as _};
 use poise::{
     command,
     serenity_prelude::{
@@ -22,12 +21,15 @@ use poise::{
         ExecuteWebhook, Mentionable, Timestamp,
     },
 };
+use poise_error::{
+    anyhow::{anyhow, bail, Context as _},
+    UserError,
+};
 
 use crate::{
     config::{get_config_key, Config},
     database::read_or_write_default,
     emoji::*,
-    error::UserError,
     Context,
 };
 
@@ -43,7 +45,7 @@ use crate::{
 pub(crate) async fn anon(
     ctx: Context<'_>,
     #[description = "Message to send anonymously"] message: String,
-) -> Result<(), anyhow::Error> {
+) -> Result<(), poise_error::anyhow::Error> {
     let Config {
         anon_enabled,
         anon_channel,
@@ -75,7 +77,7 @@ pub(crate) async fn anon(
         .find(|webhook| {
             webhook
                 .application_id
-                .map_or(false, |id| id.get() == ctx.framework().bot_id.get())
+                .is_some_and(|id| id.get() == ctx.framework().bot_id.get())
         }) {
         Some(webhook) => webhook,
         None => channel
