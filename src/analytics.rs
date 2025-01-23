@@ -57,9 +57,13 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error>
 
 pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let mut analytics = load(ctx).await?;
-    let invocations = analytics
-        .entry(ctx.command().identifying_name.clone())
-        .or_default();
+    let root_command = ctx
+        .parent_commands()
+        .first()
+        .map_or(ctx.command().identifying_name.clone(), |root_command| {
+            root_command.identifying_name.clone()
+        });
+    let invocations = analytics.entry(root_command).or_default();
 
     invocations.push(Utc::now());
     ctx.data().op.write_serialized(KEY, &analytics).await?;
