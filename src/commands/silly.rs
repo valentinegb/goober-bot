@@ -357,3 +357,36 @@ silly_command! {
         ];
     }
 }
+
+silly_command! {
+    /// hamburger
+    #[early_access]
+    fn hamburger("hamburger") {
+        bot_message = "{author} hamburger";
+        author_message = "{author} hamburger";
+        messages = [
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburger",
+            "{author} {user} hamburber",
+        ];
+    }
+}

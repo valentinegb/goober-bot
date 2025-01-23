@@ -98,6 +98,7 @@ async fn main(
                 commands::carry(),
                 commands::debug(),
                 commands::gnaw(),
+                commands::hamburger(),
                 commands::hug(),
                 commands::jumpscare(),
                 commands::kiss(),
