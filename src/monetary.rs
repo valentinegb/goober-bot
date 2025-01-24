@@ -15,10 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use buy_me_a_coffee::MemberStatus;
-use poise::{
-    serenity_prelude::{self, UserId},
-    CreateReply,
-};
+use poise::{serenity_prelude::UserId, CreateReply};
 
 use crate::emoji::*;
 
@@ -28,7 +25,7 @@ use crate::emoji::*;
 #[allow(unused)]
 pub(super) async fn has_early_access(
     ctx: crate::Context<'_>,
-) -> Result<bool, serenity_prelude::Error> {
+) -> Result<bool, poise_error::anyhow::Error> {
     let author = ctx.author();
 
     if ctx.framework().options().owners.contains(&author.id)

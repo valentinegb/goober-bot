@@ -12,7 +12,7 @@ commit-history = { version = "0.1.0", path = "commit-history" }
 opendal = { version = "0.51.1", default-features = false }
 paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
-poise_error = "1.1.0"
+poise_error = "1.2.0"
 rand = "0.8.5"
 serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.137"

@@ -39,8 +39,9 @@ use crate::{emoji::*, Context};
 /// ```
 macro_rules! silly_command {
     (
-        #[$doc:meta]
-        $(#[$early_access:ident])?
+        #[doc = $doc:expr]
+        #[early_access]
+        $(#[command($command_extra:expr)])?
         fn $name:ident($user_description:literal) {
             bot_message = $bot_message:literal;
             author_message = $author_message:literal;
@@ -49,26 +50,42 @@ macro_rules! silly_command {
             ];
         }
     ) => {
-        #[$doc]
+        silly_command! {
+            #[doc = $doc]
+            #[command(check = "crate::monetary::has_early_access"$(, $command_extra)?)]
+            fn $name($user_description) {
+                bot_message = $bot_message;
+                author_message = $author_message;
+                messages = [
+                    $($message),+,
+                ];
+            }
+        }
+    };
+    (
+        #[doc = $doc:expr]
+        $(#[command($command_extra:expr)])?
+        fn $name:ident($user_description:literal) {
+            bot_message = $bot_message:literal;
+            author_message = $author_message:literal;
+            messages = [
+                $($message:literal),+$(,)?
+            ];
+        }
+    ) => {
+        #[doc = $doc]
         #[command(
             slash_command,
             category = "Silly",
             install_context = "Guild|User",
             interaction_context = "Guild|BotDm|PrivateChannel",
-            required_bot_permissions = "USE_EXTERNAL_EMOJIS"
+            required_bot_permissions = "USE_EXTERNAL_EMOJIS",
+            $($command_extra)?
         )]
         pub(crate) async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
         ) -> Result<(), poise_error::anyhow::Error> {
-            $(
-                if stringify!($early_access) == "early_access" {
-                    if !crate::monetary::has_early_access(ctx).await? {
-                        return Ok(())
-                    }
-                }
-            )?
-
             let content;
 
             if user == ctx.framework().bot_id {

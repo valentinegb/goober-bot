@@ -2587,9 +2587,9 @@ dependencies = [
 
 [[package]]
 name = "poise_error"
-version = "1.1.0"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87c55948cc63541510970d125bd7f3146e464fcbf0f78cc702ed482cca4d3a05"
+checksum = "25c22d468fd14162332e60f14b0dff4d63f81896311f11bf8b56674d33317208"
 dependencies = [
  "anyhow",
  "poise",
