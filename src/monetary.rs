@@ -29,8 +29,10 @@ pub(super) async fn has_early_access(
     let author = ctx.author();
 
     if ctx.framework().options().owners.contains(&author.id)
+        // Cool people :>
         || author.id == UserId::new(993768189924229171 /* queerzi */)
         || author.id == UserId::new(354060711732969473 /* woodmanvevo */)
+        || author.id == UserId::new(864271366844579871 /* meekoseeko */)
     {
         return Ok(true);
     }
