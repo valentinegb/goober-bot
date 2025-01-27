@@ -19,7 +19,7 @@ use poise::{
     serenity_prelude::{CreateAllowedMentions, Mentionable, UserId},
     CreateReply,
 };
-use rand::{seq::IteratorRandom, thread_rng};
+use rand::{rng, seq::IteratorRandom};
 
 use crate::{emoji::*, Context};
 
@@ -93,7 +93,7 @@ macro_rules! silly_command {
             } else if user == ctx.author().id {
                 content = format!($author_message, author = ctx.author().mention());
             } else {
-                let mut rng = thread_rng();
+                let mut rng = rng();
 
                 content = [
                     $(format!(

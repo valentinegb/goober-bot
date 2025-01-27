@@ -24,7 +24,7 @@ use poise::{
     CreateReply,
 };
 use poise_error::anyhow::{bail, Context as _};
-use rand::{seq::IteratorRandom, thread_rng};
+use rand::{rng, seq::IteratorRandom};
 
 use crate::{emoji::*, Context};
 
@@ -86,7 +86,7 @@ pub(crate) async fn rock_paper_scissors(
                 .await?;
 
             let bot_choice = {
-                let mut rng = thread_rng();
+                let mut rng = rng();
 
                 ["rock", "paper", "scissors"]
                     .into_iter()
