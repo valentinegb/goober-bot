@@ -17,7 +17,7 @@
 use std::time::Duration;
 
 use poise::serenity_prelude::{self, ActivityData, ActivityType};
-use rand::{seq::SliceRandom, thread_rng};
+use rand::{rng, seq::IndexedRandom};
 use tokio::task::spawn_blocking;
 use tracing::info;
 
@@ -61,7 +61,7 @@ pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::watching("Gravity Falls"),
             ActivityData::watching("Doctor Who"),
         ];
-        let mut rng = thread_rng();
+        let mut rng = rng();
         let mut last_activity = None;
 
         loop {
