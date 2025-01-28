@@ -123,7 +123,7 @@ silly_command! {
     /// Boops a being :3c
     fn boop("Your victim >:3") {
         bot_message = "I have been booped by {author} {FLOOF_OWO}";
-        author_message = "{author} just booped themselves... that's a litle sad, won't someone else boop them? {FLOOF_SAD}";
+        author_message = "{author} just booped themselves... that's a little sad, won't someone else boop them? {FLOOF_SAD}";
         messages = [
             "{author} booped {user}!!! {FLOOF_OWO}",
             "{user} just got booped by {author}?? {FLOOF_LOAD_ANIMATED}",
@@ -216,7 +216,7 @@ silly_command! {
     /// 😳
     fn kiss("Omg who is it who is it???") {
         bot_message = "\\*gasp* oh- oh my goodness- {author} kissed me!!! {FLOOF_WOOZY}";
-        author_message = "{author} kissed theirselves? ...how? {FLOOF_WHAT}";
+        author_message = "{author} kissed themselves? ...how? {FLOOF_WHAT}";
         messages = [
             "AWWWWWWWWW- {author} gave {user} a kiss!!!! {FLOOF_PLEAD}",
             "Hehehehe, {author} gave {user} a little smooooch {FLOOF_HAPPY}",
@@ -267,7 +267,7 @@ silly_command! {
             "{author} tried to knock some sense into {user} by slapping them {FLOOF_LOL}",
             "{author} decided to slap {user} across the face {FLOOF_OWO}",
             "{author} slapped {user}, just cuz they felt like it {FLOOF_BLEP}",
-            "{user} find themeselves facing the opposite direction after {author}'s slap turned them around {FLOOF_OWO}",
+            "{user} find themselves facing the opposite direction after {author}'s slap turned them around {FLOOF_OWO}",
             "In slapstick fashion, {author} slapped {user} causing them to comically spin in circles {FLOOF_LOL}",
         ];
     }

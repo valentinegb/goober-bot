@@ -121,7 +121,7 @@ async fn main(
             pre_command: |ctx| {
                 Box::pin(async move {
                     if let Err(err) = analytics::increment(ctx).await {
-                        error!("An error occured whilst performing analytics: {err:#?}");
+                        error!("An error occurred whilst performing analytics: {err:#?}");
                     }
 
                     info!(
