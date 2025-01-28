@@ -28,8 +28,6 @@ mod database;
 mod emoji;
 mod monetary;
 
-#[cfg(not(debug_assertions))]
-use std::time::Duration;
 use std::{collections::HashSet, fmt::Debug};
 
 use analytics::analytics;
@@ -42,10 +40,6 @@ use poise_error::{anyhow::Context as _, on_error};
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use shuttle_shared_db::SerdeJsonOperator;
-#[cfg(not(debug_assertions))]
-use tokio::spawn;
-#[cfg(not(debug_assertions))]
-use topgg::Autoposter;
 use tracing::{error, info};
 
 use crate::activity::start_activity_loop;
@@ -71,21 +65,40 @@ async fn main(
         .without_time()
         .init();
 
-    let discord_token = secret_store
-        .get("DISCORD_TOKEN")
-        .context("`DISCORD_TOKEN` was not found")?;
     #[cfg(not(debug_assertions))]
-    let topgg_token = secret_store
-        .get("TOPGG_TOKEN")
-        .context("`TOPGG_TOKEN` was not found")?;
-    let buy_me_a_coffee_pat = secret_store
-        .get("BUY_ME_A_COFFEE_PAT")
-        .context("`BUY_ME_A_COFFEE_PAT` was not found")?;
+    let topgg_client = {
+        let topgg_token = secret_store
+            .get("TOPGG_TOKEN")
+            .context("`TOPGG_TOKEN` was not found")?;
+
+        topgg::Client::new(topgg_token)
+    };
+    let buy_me_a_coffee_client = {
+        let buy_me_a_coffee_pat = secret_store
+            .get("BUY_ME_A_COFFEE_PAT")
+            .context("`BUY_ME_A_COFFEE_PAT` was not found")?;
+
+        buy_me_a_coffee::Client::new(buy_me_a_coffee_pat)
+    };
+    let client_builder = {
+        let discord_token = secret_store
+            .get("DISCORD_TOKEN")
+            .context("`DISCORD_TOKEN` was not found")?;
+
+        ClientBuilder::new(discord_token, GatewayIntents::GUILDS)
+    };
     #[cfg(not(debug_assertions))]
-    let topgg_client = topgg::Client::new(topgg_token);
-    #[cfg(not(debug_assertions))]
-    let mut autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
-    let buy_me_a_coffee_client = buy_me_a_coffee::Client::new(buy_me_a_coffee_pat);
+    let client_builder = {
+        use std::time::Duration;
+
+        use topgg::Autoposter;
+
+        info!("Bot will post stats to Top.gg");
+
+        let autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
+
+        client_builder.event_handler_arc(autoposter.handler())
+    };
     let framework = Framework::builder()
         .options(FrameworkOptions {
             commands: vec![
@@ -158,28 +171,7 @@ async fn main(
             })
         })
         .build();
-    #[allow(unused_mut)]
-    let mut client_builder =
-        ClientBuilder::new(discord_token, GatewayIntents::GUILDS).framework(framework);
-
-    #[cfg(not(debug_assertions))]
-    {
-        client_builder = client_builder.event_handler_arc(autoposter.handler());
-
-        info!("Top.gg autoposter handler passed to client builder");
-        spawn(async move {
-            loop {
-                if let Some(result) = autoposter.recv().await {
-                    match result {
-                        Ok(_) => info!("Autoposter posted stats successfully"),
-                        Err(err) => error!("Autoposter returned an error: {err:#?}"),
-                    }
-                }
-            }
-        });
-        info!("Began awaiting Top.gg autoposter responses");
-    }
-
+    let client_builder = client_builder.framework(framework);
     let client = client_builder.await.map_err(CustomError::new)?;
 
     Ok(client.into())
