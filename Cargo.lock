@@ -325,17 +325,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "79296716171880943b8470b5f8d03aa55eb2e645a4874bdbb28adb49162e012c"
 
 [[package]]
-name = "buy_me_a_coffee"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b6e64ec7763dd0f4646f274c24b9613808fcdd9e126e57ce9f00d3a327de2416"
-dependencies = [
- "reqwest 0.12.12",
- "serde",
- "thiserror 1.0.69",
-]
-
-[[package]]
 name = "bytecount"
 version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1244,7 +1233,6 @@ dependencies = [
 name = "goober-bot"
 version = "1.0.0"
 dependencies = [
- "buy_me_a_coffee",
  "charts-rs",
  "chrono",
  "commit-history",

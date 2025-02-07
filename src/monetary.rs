@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use buy_me_a_coffee::MemberStatus;
-use poise::CreateReply;
+use poise::{
+    serenity_prelude::{GuildId, RoleId},
+    CreateReply,
+};
 
 use crate::emoji::*;
 
@@ -26,36 +28,21 @@ use crate::emoji::*;
 pub(super) async fn has_early_access(
     ctx: crate::Context<'_>,
 ) -> Result<bool, poise_error::anyhow::Error> {
-    let author = ctx.author();
+    let author_id = ctx.author().id;
 
-    if ctx.framework().options().owners.contains(&author.id) {
+    if ctx.framework().options().owners.contains(&author_id) {
         return Ok(true);
     }
 
-    let mut i = 1;
+    let goober_bot_dev_guild = GuildId::new(1250948547403055114);
+    let early_access_role = RoleId::new(1337229578472652846);
 
-    while let Ok(page) = ctx
-        .data()
-        .buy_me_a_coffee_client
-        .members(MemberStatus::Active, i)
+    if goober_bot_dev_guild
+        .member(ctx, author_id)
         .await
+        .is_ok_and(|member| member.roles.contains(&early_access_role))
     {
-        for membership in page.data {
-            if membership
-                .message
-                .is_some_and(|message| message.contains(&author.name))
-            {
-                continue;
-            }
-
-            if membership.id != 218876 {
-                continue;
-            }
-
-            return Ok(true);
-        }
-
-        i += 1;
+        return Ok(true);
     }
 
     ctx.send(

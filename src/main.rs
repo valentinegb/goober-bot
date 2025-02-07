@@ -50,7 +50,6 @@ struct Data {
     op: SerdeJsonOperator,
     #[cfg(not(debug_assertions))]
     topgg_client: topgg::Client,
-    buy_me_a_coffee_client: buy_me_a_coffee::Client,
 }
 
 type Context<'a> = poise::Context<'a, Data, poise_error::anyhow::Error>;
@@ -72,13 +71,6 @@ async fn main(
             .context("`TOPGG_TOKEN` was not found")?;
 
         topgg::Client::new(topgg_token)
-    };
-    let buy_me_a_coffee_client = {
-        let buy_me_a_coffee_pat = secret_store
-            .get("BUY_ME_A_COFFEE_PAT")
-            .context("`BUY_ME_A_COFFEE_PAT` was not found")?;
-
-        buy_me_a_coffee::Client::new(buy_me_a_coffee_pat)
     };
     let client_builder = {
         let discord_token = secret_store
@@ -166,7 +158,6 @@ async fn main(
                     op,
                     #[cfg(not(debug_assertions))]
                     topgg_client,
-                    buy_me_a_coffee_client,
                 })
             })
         })
