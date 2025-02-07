@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use buy_me_a_coffee::MemberStatus;
-use poise::{serenity_prelude::UserId, CreateReply};
+use poise::CreateReply;
 
 use crate::emoji::*;
 
@@ -28,38 +28,34 @@ pub(super) async fn has_early_access(
 ) -> Result<bool, poise_error::anyhow::Error> {
     let author = ctx.author();
 
-    if ctx.framework().options().owners.contains(&author.id)
-        // Cool people :>
-        || author.id == UserId::new(993768189924229171 /* queerzi */)
-        || author.id == UserId::new(354060711732969473 /* woodmanvevo */)
-        || author.id == UserId::new(864271366844579871 /* meekoseeko */)
-    {
+    if ctx.framework().options().owners.contains(&author.id) {
         return Ok(true);
     }
 
-    if let Some(ref email) = author.email {
-        let mut i = 1;
+    let mut i = 1;
 
-        while let Ok(page) = ctx
-            .data()
-            .buy_me_a_coffee_client
-            .members(MemberStatus::Active, i)
-            .await
-        {
-            for membership in page.data {
-                if membership.payer_email != *email {
-                    continue;
-                }
-
-                if membership.id != 218876 {
-                    continue;
-                }
-
-                return Ok(true);
+    while let Ok(page) = ctx
+        .data()
+        .buy_me_a_coffee_client
+        .members(MemberStatus::Active, i)
+        .await
+    {
+        for membership in page.data {
+            if membership
+                .message
+                .is_some_and(|message| message.contains(&author.name))
+            {
+                continue;
             }
 
-            i += 1;
+            if membership.id != 218876 {
+                continue;
+            }
+
+            return Ok(true);
         }
+
+        i += 1;
     }
 
     ctx.send(
