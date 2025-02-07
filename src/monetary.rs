@@ -29,11 +29,6 @@ pub(super) async fn has_early_access(
     ctx: crate::Context<'_>,
 ) -> Result<bool, poise_error::anyhow::Error> {
     let author_id = ctx.author().id;
-
-    if ctx.framework().options().owners.contains(&author_id) {
-        return Ok(true);
-    }
-
     let goober_bot_dev_guild = GuildId::new(1250948547403055114);
     let early_access_role = RoleId::new(1337229578472652846);
 
