@@ -17,7 +17,7 @@ serde = { version = "1.0.217", features = ["derive"] }
 serde_json = "1.0.138"
 shuttle-runtime = { version = "0.51.0", default-features = false }
 shuttle-serenity = "0.51.0"
-shuttle-shared-db = { version = "0.51.0", features = ["opendal-postgres"] }
+shuttle-shared-db = { version = "0.52.0", features = ["opendal-postgres"] }
 tokio = "1.43.0"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"] }
 tracing = "0.1.41"

@@ -3591,7 +3591,7 @@ dependencies = [
  "rmp-serde",
  "serde",
  "serde_json",
- "shuttle-common",
+ "shuttle-common 0.51.0",
  "tokio",
  "tokio-tungstenite 0.20.1",
  "url",
@@ -3642,6 +3642,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "shuttle-common"
+version = "0.52.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe67fd538b14ab589db991ffb97dcfe3bad425c9e4f70ec6ba0873a82fb80d61"
+dependencies = [
+ "chrono",
+ "http 1.2.0",
+ "semver",
+ "serde",
+ "serde_json",
+ "strum 0.26.3",
+ "tracing",
+ "typeshare",
+ "zeroize",
+]
+
+[[package]]
 name = "shuttle-proto"
 version = "0.51.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3650,7 +3667,7 @@ dependencies = [
  "futures-core",
  "prost",
  "prost-types",
- "shuttle-common",
+ "shuttle-common 0.51.0",
  "tonic",
 ]
 
@@ -3667,9 +3684,9 @@ dependencies = [
  "serde_json",
  "shuttle-api-client",
  "shuttle-codegen",
- "shuttle-common",
+ "shuttle-common 0.51.0",
  "shuttle-proto",
- "shuttle-service",
+ "shuttle-service 0.51.0",
  "strfmt",
  "tokio",
  "tokio-stream",
@@ -3697,23 +3714,37 @@ dependencies = [
  "anyhow",
  "async-trait",
  "serde",
- "shuttle-common",
+ "shuttle-common 0.51.0",
+ "strfmt",
+ "thiserror 2.0.11",
+]
+
+[[package]]
+name = "shuttle-service"
+version = "0.52.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b71f5573199cfafbd03129989d104781891929624d94c52291145a46a5c7ed34"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "serde",
+ "shuttle-common 0.52.0",
  "strfmt",
  "thiserror 2.0.11",
 ]
 
 [[package]]
 name = "shuttle-shared-db"
-version = "0.51.0"
+version = "0.52.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e7be3c2740755561fdc08ebfadf269bc1ee50d266365a736b756236f304a01d5"
+checksum = "8d14bd2ec23ac24e4cbebe6be9bee2f180fdb4ea7e7f85d620dca23acd491476"
 dependencies = [
  "async-trait",
  "diesel-async",
  "opendal",
  "serde",
  "serde_json",
- "shuttle-service",
+ "shuttle-service 0.52.0",
  "sqlx",
 ]
 
