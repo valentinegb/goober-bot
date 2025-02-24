@@ -37,6 +37,7 @@ use paste::paste;
 macro_rules! emoji {
     ($name:literal, $debug_id:literal, $release_id:literal, $format:literal, $prefix:literal) => {
         paste! {
+            #[allow(clippy::suspicious_doc_comments)]
             #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $debug_id, ".", $format, "?quality=lossless)")]
             #[cfg(debug_assertions)]
             pub(crate) const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $debug_id, ">");
