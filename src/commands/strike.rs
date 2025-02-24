@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use std::fmt;
+
 use chrono::Months;
 use poise::{
     command,
@@ -27,7 +29,7 @@ use poise_error::{
     anyhow::{anyhow, bail, Context as _},
     UserError,
 };
-use serde::{Deserialize, Serialize};
+use serde::{de::Visitor, Deserialize, Deserializer, Serialize};
 
 use crate::{
     config::{get_config_key, Config},
@@ -46,7 +48,8 @@ struct Strike {
     issuer: UserId,
     issued: Timestamp,
     #[serde(default)]
-    rule: Option<u8>,
+    #[serde(deserialize_with = "deserialize_rule")]
+    rule: Option<String>,
     #[serde(default)]
     comment: Option<String>,
     #[serde(default)]
@@ -62,7 +65,7 @@ impl Strike {
             false => String::new(),
         };
         let for_breaking_rule = match self.rule {
-            Some(rule) => format!(" for breaking **rule {rule}**"),
+            Some(ref rule) => format!(" for breaking **rule {rule}**"),
             None => String::new(),
         };
         let with_comment = match self.comment {
@@ -92,6 +95,58 @@ impl Strike {
         self.expiration
             .is_some_and(|expiration| expiration <= Timestamp::now())
     }
+}
+
+struct RuleVisitor;
+
+impl<'de> Visitor<'de> for RuleVisitor {
+    type Value = Option<String>;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+        formatter.write_str("an integer, a string, or none")
+    }
+
+    fn visit_none<E>(self) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        Ok(None)
+    }
+
+    fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_any(RuleVisitor)
+    }
+
+    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        Ok(Some(v.to_string()))
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        Ok(Some(v.to_string()))
+    }
+
+    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
+    where
+        E: serde::de::Error,
+    {
+        Ok(Some(v))
+    }
+}
+
+fn deserialize_rule<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    deserializer.deserialize_option(RuleVisitor)
 }
 
 /// Gets the strikes key for `user` for the server in `ctx`.
@@ -148,7 +203,9 @@ pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), poise_error::anyhow:
 async fn give(
     ctx: Context<'_>,
     #[description = "User to give strike to"] user: UserId,
-    #[description = "Infracted rule that strike is being given in response to"] rule: Option<u8>,
+    #[description = "Infracted rule that strike is being given in response to"]
+    #[max_length = 7]
+    rule: Option<String>,
     #[description = "Any comment on the strike, such as explanation of a specific circumstance"]
     comment: Option<String>,
     #[description = "When the strike should expire, in months. If not specified, strike will never expire"]
