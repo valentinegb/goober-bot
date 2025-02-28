@@ -15,13 +15,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{CreateAllowedMentions, Mentionable, UserId},
-    CreateReply,
 };
 use rand::{rng, seq::IteratorRandom};
 
-use crate::{emoji::*, Context};
+use crate::{Context, emoji::*};
 
 /// ```
 /// silly_command!(
@@ -159,7 +158,7 @@ silly_command! {
             "\\*CHOMP\\*\n{author} bit {user} {FLOOF_NOM}",
             "Oh, sorry {user}, I guess {author} got hungry {FLOOF_TIRED}",
             "Eeeeek! {user}, didn't you know? *{author} bites!* {FLOOF_NERVOUS}",
-            "{author} got a little too close to {user} and got bit {FLOOF_NERVOUS}",
+            "{user} got a little too close to {author} and got bit {FLOOF_NERVOUS}",
         ];
     }
 }
