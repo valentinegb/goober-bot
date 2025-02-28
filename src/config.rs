@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use diesel::{ExpressionMethods as _, OptionalExtension as _, QueryDsl as _};
+use diesel_async::RunQueryDsl as _;
 use paste::paste;
 use poise::{
-    command,
+    CreateReply, FrameworkError, command,
     serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
-    CreateReply, FrameworkError,
 };
-use poise_error::anyhow::Context as _;
-use serde::{Deserialize, Serialize};
 
-use crate::{database::read_or_write_default, emoji::*, Context, Data};
+use crate::{Context, Data, emoji::*, models::Config};
 
 trait ToConfigString {
     fn to_config_string(&self) -> String;
@@ -50,14 +49,6 @@ impl ToConfigString for ChannelId {
     }
 }
 
-/// Gets the config key for the server in `ctx`.
-pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::anyhow::Error> {
-    Ok(format!(
-        "config_{}",
-        ctx.guild_id().context("expected context to be in guild")?
-    ))
-}
-
 /// Subcommands related to getting and setting server configuration
 #[command(
     slash_command,
@@ -78,17 +69,22 @@ macro_rules! config {
         let $name:ident: $type:ty = ($name_str:literal, $title:literal);
     )+) => {
         paste! {
-            #[derive(Deserialize, Serialize, Default)]
-            #[non_exhaustive]
-            #[serde(default)]
-            pub(crate) struct Config {
-                $(pub(crate) $name: $type),+
-            }
-
             /// Lists all configuration options for this server
             #[command(slash_command, ephemeral)]
             async fn list(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
-                let config: Config = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
+                use crate::schema::configs::dsl::*;
+
+                let mut conn = ctx.data().pool.get().await?;
+                let config: Config = match configs
+                    .find(ctx.guild_id().unwrap())
+                    .first(&mut conn)
+                    .await
+                    .optional()? {
+                        Some(config) => config,
+                        None => diesel::insert_into(configs)
+                            .default_values()
+                            .get_result(&mut conn).await?,
+                    };
 
                 ctx.send(CreateReply::default().embed(
                     CreateEmbed::new()
@@ -122,14 +118,26 @@ macro_rules! config {
                 #[doc = "Gets the " $title " configuration option"]
                 #[command(slash_command, rename = $name_str, ephemeral)]
                 async fn [<get_ $name>](ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
-                    let Config { $name, .. } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
+                    use crate::schema::configs::dsl::*;
+
+                    let mut conn = ctx.data().pool.get().await?;
+                    let config: Config = match configs
+                        .find(ctx.guild_id().unwrap())
+                        .first(&mut conn)
+                        .await
+                        .optional()? {
+                            Some(config) => config,
+                            None => diesel::insert_into(configs)
+                                .default_values()
+                                .get_result(&mut conn).await?,
+                        };
 
                     ctx.send(
                         CreateReply::default().embed(
                             CreateEmbed::new()
                                 .title($title)
                                 .description($desc)
-                                .field("Current Value", $name.to_config_string(), false)
+                                .field("Current Value", config.$name.to_config_string(), false)
                                 .timestamp(Timestamp::now())
                                 .color(Color::BLUE),
                         ),
@@ -164,11 +172,14 @@ macro_rules! config {
                     ctx: Context<'_>,
                     #[description = "The value to set " $title " to"] value: $type,
                 ) -> Result<(), poise_error::anyhow::Error> {
-                    let config_key = get_config_key(ctx)?;
-                    let mut config: Config = read_or_write_default(ctx, &config_key).await?;
+                    use crate::schema::configs::dsl::*;
 
-                    config.$name = value;
-                    ctx.data().op.write_serialized(&config_key, &config).await?;
+                    let mut conn = ctx.data().pool.get().await?;
+
+                    diesel::update(configs.filter(guild.eq(ctx.guild_id().unwrap())))
+                        .set($name.eq(value))
+                        .execute(&mut conn)
+                        .await?;
                     ctx.say(format!(
                         "**{}** has been set to **{}** {FLOOF_HAPPY}",
                         $title,

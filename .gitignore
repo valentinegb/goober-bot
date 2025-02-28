@@ -12,3 +12,4 @@ target/
 .shuttle*/
 Secrets*.toml
 .DS_Store
+.env

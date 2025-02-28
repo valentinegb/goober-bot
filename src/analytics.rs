@@ -14,20 +14,22 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use charts_rs::{HorizontalBarChart, THEME_DARK};
-use chrono::{DateTime, TimeDelta, Utc};
-use poise::{command, serenity_prelude::CreateAttachment, CreateReply};
+use chrono::{TimeDelta, Utc};
+use diesel::{prelude::*, upsert::excluded};
+use diesel_async::RunQueryDsl;
+use poise::{CreateReply, command, serenity_prelude::CreateAttachment};
 
-use crate::{database::read_or_write_default, Context};
+use crate::{Context, models::Analytics, schema};
 
-const KEY: &str = "analytics";
-
-type Analytics = HashMap<String, Vec<DateTime<Utc>>>;
-
-async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error> {
-    let mut analytics: Analytics = read_or_write_default(ctx, KEY).await?;
+async fn load(ctx: Context<'_>) -> Result<Vec<Analytics>, poise_error::anyhow::Error> {
+    let mut conn = ctx.data().pool.get().await?;
+    let mut analytics = schema::analytics::table
+        .select(Analytics::as_select())
+        .load(&mut conn)
+        .await?;
     let commands: HashSet<_> = ctx
         .framework()
         .options
@@ -38,19 +40,34 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error>
 
     // Ensure all commands are in analytics
     for command in &commands {
-        analytics.entry(command.clone()).or_default();
+        if !analytics
+            .iter()
+            .any(|analytics| analytics.command == *command)
+        {
+            analytics.push(Analytics {
+                command: command.clone(),
+                invocations: Vec::new(),
+            });
+        }
     }
 
     // Remove commands from analytics that no longer exist
-    analytics.retain(|command, _| commands.contains(command));
+    analytics.retain(|analytics| commands.contains(&analytics.command));
 
     // Remove command invocations which were more than a day ago
-    for invocations in analytics.values_mut() {
-        invocations
-            .retain(|date_time| Utc::now().signed_duration_since(date_time) <= TimeDelta::days(1));
+    for analytics in analytics.iter_mut() {
+        analytics.invocations.retain(|date_time| {
+            Utc::now().signed_duration_since(date_time.and_utc()) <= TimeDelta::days(1)
+        });
     }
 
-    ctx.data().op.write_serialized(KEY, &analytics).await?;
+    diesel::insert_into(schema::analytics::table)
+        .values(&analytics)
+        .on_conflict(schema::analytics::columns::command)
+        .do_update()
+        .set(schema::analytics::columns::command.eq(excluded(schema::analytics::columns::command)))
+        .execute(&mut conn)
+        .await?;
 
     Ok(analytics)
 }
@@ -63,10 +80,31 @@ pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyho
         .map_or(ctx.command().identifying_name.clone(), |root_command| {
             root_command.identifying_name.clone()
         });
-    let invocations = analytics.entry(root_command).or_default();
+    let invocations = match analytics
+        .iter_mut()
+        .find(|analytics| analytics.command == root_command)
+    {
+        Some(analytics) => &mut analytics.invocations,
+        None => {
+            analytics.push(Analytics {
+                command: root_command.clone(),
+                invocations: Vec::new(),
+            });
 
-    invocations.push(Utc::now());
-    ctx.data().op.write_serialized(KEY, &analytics).await?;
+            &mut analytics.last_mut().unwrap().invocations
+        }
+    };
+
+    invocations.push(Utc::now().naive_utc());
+
+    let mut conn = ctx.data().pool.get().await?;
+
+    diesel::update(
+        schema::analytics::table.filter(schema::analytics::columns::command.eq(root_command)),
+    )
+    .set(schema::analytics::columns::invocations.eq(invocations.clone()))
+    .execute(&mut conn)
+    .await?;
 
     Ok(())
 }
@@ -82,18 +120,21 @@ pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyho
 pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.defer_ephemeral().await?;
 
-    let mut analytics: Vec<(_, _)> = load(ctx).await?.into_iter().collect();
+    let mut analytics: Vec<Analytics> = load(ctx).await?;
 
-    analytics.sort_by(|(_, invocations_a), (_, invocations_b)| {
-        invocations_b.len().cmp(&invocations_a.len())
+    analytics.sort_by(|analytics_a, analytics_b| {
+        analytics_b
+            .invocations
+            .len()
+            .cmp(&analytics_a.invocations.len())
     });
 
     let mut series_data = Vec::new();
     let mut x_axis_data = Vec::new();
 
-    for (command, invocations) in analytics {
-        series_data.push(invocations.len() as f32);
-        x_axis_data.push(format!("/{command}"));
+    for analytics in analytics {
+        series_data.push(analytics.invocations.len() as f32);
+        x_axis_data.push(format!("/{}", analytics.command));
     }
 
     let mut chart = HorizontalBarChart::new_with_theme(

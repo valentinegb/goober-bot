@@ -14,151 +14,26 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use std::fmt;
-
-use chrono::Months;
+use chrono::{Months, Utc};
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{
         ChannelId, Color, CreateAllowedMentions, CreateEmbed, CreateEmbedAuthor, CreateMessage,
         Mentionable, Timestamp, User, UserId,
     },
-    CreateReply,
 };
 use poise_error::{
-    anyhow::{anyhow, bail, Context as _},
     UserError,
+    anyhow::{Context as _, anyhow, bail},
 };
-use serde::{de::Visitor, Deserialize, Deserializer, Serialize};
 
 use crate::{
-    config::{get_config_key, Config},
-    database::read_or_write_default,
-    emoji::*,
     Context,
+    emoji::*,
+    models::{Config, NewStrike, Strike},
 };
 
 const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "failed to send message in strike log channel";
-
-type Strikes = Vec<Strike>;
-
-#[derive(Deserialize, Serialize, Clone)]
-#[non_exhaustive]
-struct Strike {
-    issuer: UserId,
-    issued: Timestamp,
-    #[serde(default)]
-    #[serde(deserialize_with = "deserialize_rule")]
-    rule: Option<String>,
-    #[serde(default)]
-    comment: Option<String>,
-    #[serde(default)]
-    expiration: Option<Timestamp>,
-    #[serde(default)]
-    repealer: Option<UserId>,
-}
-
-impl Strike {
-    fn to_string(&self, user: impl Mentionable, with_issuer: bool, with_issued: bool) -> String {
-        let on = match with_issued {
-            true => format!(" on <t:{}:d>", self.issued.unix_timestamp()),
-            false => String::new(),
-        };
-        let for_breaking_rule = match self.rule {
-            Some(ref rule) => format!(" for breaking **rule {rule}**"),
-            None => String::new(),
-        };
-        let with_comment = match self.comment {
-            Some(ref comment) => format!(" with comment **\"{comment}\"**"),
-            None => String::new(),
-        };
-        let which_expires = match self.expiration {
-            Some(expiration) => format!(" which expires <t:{}:R>", expiration.unix_timestamp()),
-            None => String::new(),
-        };
-        let ave = format!(
-            "ave {} a strike{on}{for_breaking_rule}{with_comment}{which_expires}",
-            user.mention(),
-        );
-        let message = match with_issuer {
-            true => format!("{} g{ave}", self.issuer.mention()),
-            false => format!("G{ave}",),
-        };
-
-        match self.repealer {
-            Some(repealer) => format!("~~{message}~~ **repealed** by {}", repealer.mention()),
-            None => message,
-        }
-    }
-
-    fn is_expired(&self) -> bool {
-        self.expiration
-            .is_some_and(|expiration| expiration <= Timestamp::now())
-    }
-}
-
-struct RuleVisitor;
-
-impl<'de> Visitor<'de> for RuleVisitor {
-    type Value = Option<String>;
-
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("an integer, a string, or none")
-    }
-
-    fn visit_none<E>(self) -> Result<Self::Value, E>
-    where
-        E: serde::de::Error,
-    {
-        Ok(None)
-    }
-
-    fn visit_some<D>(self, deserializer: D) -> Result<Self::Value, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        deserializer.deserialize_any(RuleVisitor)
-    }
-
-    fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
-    where
-        E: serde::de::Error,
-    {
-        Ok(Some(v.to_string()))
-    }
-
-    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
-    where
-        E: serde::de::Error,
-    {
-        Ok(Some(v.to_string()))
-    }
-
-    fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
-    where
-        E: serde::de::Error,
-    {
-        Ok(Some(v))
-    }
-}
-
-fn deserialize_rule<'de, D>(deserializer: D) -> Result<Option<String>, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    deserializer.deserialize_option(RuleVisitor)
-}
-
-/// Gets the strikes key for `user` for the server in `ctx`.
-pub(crate) fn get_strikes_key(
-    ctx: Context<'_>,
-    user: UserId,
-) -> Result<String, poise_error::anyhow::Error> {
-    Ok(format!(
-        "strikes_{}_{user}",
-        ctx.guild_id().context("expected context to be in guild")?
-    ))
-}
 
 /// Returns an error if strikes are not enabled, otherwise returns
 /// `strikes_log_channel`, which may be [`None`].
@@ -169,7 +44,19 @@ async fn pre_strike_command(
         strikes_enabled,
         strikes_log_channel,
         ..
-    } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
+    } = {
+        use diesel::QueryDsl as _;
+        use diesel_async::RunQueryDsl as _;
+
+        use crate::schema::configs::dsl::*;
+
+        let mut conn = ctx.data().pool.get().await?;
+
+        configs
+            .find(ctx.guild_id().unwrap())
+            .first(&mut conn)
+            .await?
+    };
 
     if !strikes_enabled {
         bail!(UserError(anyhow!(
@@ -212,39 +99,41 @@ async fn give(
     expiration: Option<u32>,
 ) -> Result<(), poise_error::anyhow::Error> {
     let log_channel = pre_strike_command(ctx).await?;
-    let strikes_key = &get_strikes_key(ctx, user)?;
-    let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
-    let strike = Strike {
+    let strike = NewStrike {
+        guild: ctx.guild_id().unwrap(),
+        user,
         issuer: ctx.author().id,
-        issued: Timestamp::now(),
+        issued: None,
         rule,
         comment,
         expiration: match expiration {
             Some(expiration) => Some(
-                Timestamp::now()
+                Utc::now()
                     .checked_add_months(Months::new(expiration))
                     .context("failed to create timestamp from months")?
-                    .into(),
+                    .naive_utc(),
             ),
             None => None,
         },
         repealer: None,
     };
+    let strike: Strike = {
+        use diesel_async::RunQueryDsl as _;
 
-    strikes.push(strike.clone());
-    ctx.data()
-        .op
-        .write_serialized(strikes_key, &strikes)
-        .await?;
+        use crate::schema::strikes::dsl::*;
 
+        let mut conn = ctx.data().pool.get().await?;
+
+        diesel::insert_into(strikes)
+            .values(strike)
+            .get_result(&mut conn)
+            .await?
+    };
     let allowed_mentions = CreateAllowedMentions::new();
 
     ctx.send(
         CreateReply::default()
-            .content(format!(
-                "{} {FLOOF_SAD}",
-                strike.to_string(user, false, false)
-            ))
+            .content(format!("{} {FLOOF_SAD}", strike.to_string(false, false)))
             .allowed_mentions(allowed_mentions.clone()),
     )
     .await?;
@@ -257,8 +146,8 @@ async fn give(
                     .embed(
                         CreateEmbed::new()
                             .title("Strike Given")
-                            .description(strike.to_string(user, true, false))
-                            .timestamp(strike.issued)
+                            .description(strike.to_string(true, false))
+                            .timestamp(strike.issued.and_utc())
                             .color(Color::RED),
                     )
                     .allowed_mentions(allowed_mentions),
@@ -294,8 +183,18 @@ async fn history(
         )));
     }
 
-    let strikes_key = &get_strikes_key(ctx, user.id)?;
-    let strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
+    let strikes: Vec<Strike> = {
+        use diesel::{ExpressionMethods as _, QueryDsl as _};
+        use diesel_async::RunQueryDsl as _;
+
+        let mut conn = ctx.data().pool.get().await?;
+
+        crate::schema::strikes::table
+            .filter(crate::schema::strikes::columns::guild.eq(ctx.guild_id().unwrap()))
+            .filter(crate::schema::strikes::columns::user.eq(user.id))
+            .load(&mut conn)
+            .await?
+    };
     let all = all.unwrap_or(false);
     let mut description = String::new();
     let mut clean = true;
@@ -311,11 +210,7 @@ async fn history(
             description += "\n";
         }
 
-        description += &format!(
-            "- #{}: {}",
-            i + 1,
-            strike.to_string(user.clone(), true, true)
-        );
+        description += &format!("- #{}: {}", i + 1, strike.to_string(true, true));
     }
 
     if clean {
@@ -365,15 +260,26 @@ async fn repeal(
     }
 
     let log_channel = pre_strike_command(ctx).await?;
-    let strikes_key = &get_strikes_key(ctx, user)?;
-    let mut strikes: Strikes = read_or_write_default(ctx, strikes_key).await?;
+    let strikes: Vec<(i32, Option<UserId>)> = {
+        use diesel::{ExpressionMethods as _, QueryDsl as _};
+        use diesel_async::RunQueryDsl as _;
+
+        let mut conn = ctx.data().pool.get().await?;
+
+        crate::schema::strikes::table
+            .filter(crate::schema::strikes::columns::guild.eq(ctx.guild_id().unwrap()))
+            .filter(crate::schema::strikes::columns::user.eq(user))
+            .select((
+                crate::schema::strikes::columns::id,
+                crate::schema::strikes::columns::repealer,
+            ))
+            .load(&mut conn)
+            .await?
+    };
     let strike_i = strike_i.unwrap_or(strikes.len());
-    let repealer = &mut strikes
-        .get_mut(strike_i - 1)
-        .context(UserError(anyhow!(
-            "user does not have a strike #{strike_i}",
-        )))?
-        .repealer;
+    let (id, repealer) = strikes.get(strike_i - 1).context(UserError(anyhow!(
+        "user does not have a strike #{strike_i}",
+    )))?;
 
     if repealer.is_some() {
         bail!(UserError(anyhow!(
@@ -382,11 +288,19 @@ async fn repeal(
         )));
     }
 
-    *repealer = Some(ctx.author().id);
-    ctx.data()
-        .op
-        .write_serialized(strikes_key, &strikes)
+    {
+        use diesel::{ExpressionMethods as _, QueryDsl as _};
+        use diesel_async::RunQueryDsl as _;
+
+        let mut conn = ctx.data().pool.get().await?;
+
+        diesel::update(
+            crate::schema::strikes::table.filter(crate::schema::strikes::columns::id.eq(id)),
+        )
+        .set(crate::schema::strikes::columns::repealer.eq(Some(ctx.author().id)))
+        .execute(&mut conn)
         .await?;
+    }
 
     let allowed_mentions = CreateAllowedMentions::new();
 

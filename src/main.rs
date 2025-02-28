@@ -24,30 +24,43 @@ mod activity;
 mod analytics;
 mod commands;
 mod config;
-mod database;
+mod diesel_migration;
 mod emoji;
+mod models;
 mod monetary;
+mod schema;
 
-use std::{collections::HashSet, fmt::Debug};
+use std::collections::HashSet;
 
 use analytics::analytics;
 use config::config;
-use poise::{
-    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
-    Framework, FrameworkOptions,
+use diesel_async::{
+    AsyncPgConnection,
+    async_connection_wrapper::AsyncConnectionWrapper,
+    pooled_connection::deadpool::{self, Object},
 };
-use poise_error::{anyhow::Context as _, on_error};
+use diesel_migration::migrate_opendal_to_diesel;
+use diesel_migrations::{EmbeddedMigrations, MigrationHarness, embed_migrations};
+use poise::{
+    Framework, FrameworkOptions,
+    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
+};
+use poise_error::{
+    anyhow::{Context as _, anyhow},
+    on_error,
+};
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
-use shuttle_shared_db::SerdeJsonOperator;
+use tokio::task::spawn_blocking;
 use tracing::{error, info};
 
 use crate::activity::start_activity_loop;
 
+const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+
 /// User data, which is stored and accessible in all command invocations
-#[derive(Debug)]
 struct Data {
-    op: SerdeJsonOperator,
+    pool: deadpool::Pool<AsyncPgConnection>,
     #[cfg(not(debug_assertions))]
     topgg_client: topgg::Client,
 }
@@ -57,12 +70,27 @@ type Context<'a> = poise::Context<'a, Data, poise_error::anyhow::Error>;
 #[shuttle_runtime::main]
 async fn main(
     #[shuttle_runtime::Secrets] secret_store: SecretStore,
-    #[shuttle_shared_db::Postgres] op: SerdeJsonOperator,
+    #[shuttle_shared_db::Postgres] pool: deadpool::Pool<AsyncPgConnection>,
 ) -> ShuttleSerenity {
     tracing_subscriber::fmt()
         .with_env_filter("goober_bot=debug,info")
         .without_time()
         .init();
+
+    let conn: AsyncPgConnection = { Object::take(pool.get().await.map_err(CustomError::new)?) };
+    let mut async_wrapper: AsyncConnectionWrapper<AsyncPgConnection> =
+        AsyncConnectionWrapper::from(conn);
+
+    spawn_blocking(move || {
+        async_wrapper
+            .run_pending_migrations(MIGRATIONS)
+            .map_err(|err| anyhow!(err))?;
+
+        Ok::<_, CustomError>(())
+    })
+    .await
+    .map_err(CustomError::new)??;
+    migrate_opendal_to_diesel(&pool).await?;
 
     #[cfg(not(debug_assertions))]
     let topgg_client = {
@@ -155,7 +183,7 @@ async fn main(
                 info!("Commands registered");
 
                 Ok(Data {
-                    op,
+                    pool,
                     #[cfg(not(debug_assertions))]
                     topgg_client,
                 })

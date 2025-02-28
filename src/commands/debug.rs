@@ -17,13 +17,15 @@
 use std::collections::BTreeMap;
 
 use chrono::Utc;
-use poise::{command, ChoiceParameter};
+use diesel::{ExpressionMethods as _, QueryDsl as _};
+use diesel_async::RunQueryDsl as _;
+use poise::{ChoiceParameter, command};
 use poise_error::{
-    anyhow::{anyhow, bail},
     UserError,
+    anyhow::{anyhow, bail},
 };
 
-use crate::{config::get_config_key, emoji::*, Context, Data};
+use crate::{Context, Data, emoji::*};
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {
@@ -63,7 +65,13 @@ async fn error(
     ephemeral
 )]
 async fn delete_config(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
-    ctx.data().op.0.delete(&get_config_key(ctx)?).await?;
+    use crate::schema::configs::dsl::*;
+
+    let mut conn = ctx.data().pool.get().await?;
+
+    diesel::delete(configs.filter(guild.eq(ctx.guild_id().unwrap())))
+        .execute(&mut conn)
+        .await?;
     ctx.say(format!("Server config file deleted {FLOOF_MUG}"))
         .await?;
 

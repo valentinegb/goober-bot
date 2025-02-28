@@ -1,31 +1,38 @@
 [package]
 name = "goober-bot"
 version = "1.0.0"
-edition = "2021"
+edition = "2024"
 publish = false
 
 [dependencies]
 charts-rs = { version = "0.3.19", features = ["image-encoder"] }
 chrono = "0.4.39"
 commit-history = { version = "0.1.0", path = "commit-history" }
-opendal = { version = "0.51.2", default-features = false }
+diesel = { version = "*", features = ["chrono"] }
+diesel-async = { version = "*", features = ["async-connection-wrapper"] }
+diesel_migrations = "*"
 paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
 poise_error = "1.2.0"
 rand = "0.9.0"
 serde = { version = "1.0.218", features = ["derive"] }
 serde_json = "1.0.139"
-shuttle-runtime = { version = "0.52.0", default-features = false }
-shuttle-serenity = "0.52.0"
-shuttle-shared-db = { version = "0.52.0", features = ["opendal-postgres"] }
+shuttle-runtime = { git = "https://github.com/shuttle-hq/shuttle.git", rev = "ca4e667571e1f3cbdaa81407270489f7e0fc0d6f", default-features = false }
+shuttle-serenity = { git = "https://github.com/shuttle-hq/shuttle.git", rev = "ca4e667571e1f3cbdaa81407270489f7e0fc0d6f" }
+shuttle-shared-db = { features = [
+    "postgres",
+    "diesel-async-deadpool",
+], git = "https://github.com/shuttle-hq/shuttle.git", rev = "ca4e667571e1f3cbdaa81407270489f7e0fc0d6f" }
 tokio = "1.43.0"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+serenity = { version = "0.12.4", features = ["diesel"] }
 
 # Ensures that poise_error uses the same version of poise
 [patch.crates-io]
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
+serenity = { git = "https://github.com/valentinegb/serenity.git", branch = "diesel" }
 
 [workspace]
 members = ["commit-history"]

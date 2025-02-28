@@ -22,16 +22,11 @@ use poise::{
     },
 };
 use poise_error::{
-    anyhow::{anyhow, bail, Context as _},
     UserError,
+    anyhow::{Context as _, anyhow, bail},
 };
 
-use crate::{
-    config::{get_config_key, Config},
-    database::read_or_write_default,
-    emoji::*,
-    Context,
-};
+use crate::{Context, emoji::*, models::Config};
 
 /// Sends a message anonymously
 #[command(
@@ -51,7 +46,19 @@ pub(crate) async fn anon(
         anon_channel,
         anon_log_channel,
         ..
-    } = read_or_write_default(ctx, &get_config_key(ctx)?).await?;
+    } = {
+        use diesel::QueryDsl as _;
+        use diesel_async::RunQueryDsl as _;
+
+        use crate::schema::configs::dsl::*;
+
+        let mut conn = ctx.data().pool.get().await?;
+
+        configs
+            .find(ctx.guild_id().unwrap())
+            .first(&mut conn)
+            .await?
+    };
 
     if !anon_enabled {
         bail!(UserError(anyhow!(
