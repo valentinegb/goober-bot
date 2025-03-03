@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-charts-rs = { version = "0.3.19", features = ["image-encoder"] }
+charts-rs = { version = "0.3.20", features = ["image-encoder"] }
 chrono = "0.4.40"
 commit-history = { version = "0.1.0", path = "commit-history" }
 opendal = { version = "0.51.2", default-features = false }
