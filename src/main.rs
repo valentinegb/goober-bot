@@ -102,6 +102,7 @@ async fn main(
                 commands::boop(),
                 commands::carry(),
                 commands::debug(),
+                commands::defenestrate(),
                 commands::gnaw(),
                 commands::hamburger(),
                 commands::hug(),

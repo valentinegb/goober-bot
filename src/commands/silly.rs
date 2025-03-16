@@ -15,12 +15,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use poise::{
-    CreateReply, command,
+    command,
     serenity_prelude::{CreateAllowedMentions, Mentionable, UserId},
+    CreateReply,
 };
 use rand::{rng, seq::IteratorRandom};
 
-use crate::{Context, emoji::*};
+use crate::{emoji::*, Context};
 
 /// ```
 /// silly_command!(
@@ -406,3 +407,23 @@ silly_command! {
         ];
     }
 }
+
+silly_command! {
+    /// What does "defenestrate" mean...?
+    #[early_access]
+    fn defenestrate("I guess you could just try it and see...") {
+        bot_message = "Oh no! {author}'s defenestrating me! Which is a (rare) word which means to throw (someone) out of a window! Oh no!!! {FLOOF_OWO}";
+        author_message = "{author} needed out so they swiftly *jumped out of the window* to their immediate left. Seems a little bit rash to me {FLOOF_TIRED}";
+        messages = [
+            "{author} defenestrated {user}. Haha you thought I was gonna tell you what the word meant hehe {FLOOF_TEEHEE}",
+            "> # de•fen•es•trate |dēˈfenəˌstrāt|\n> -# verb *[with object]*\n> 1. *rare* **throw (someone) out of a window**: *{author} defenestrated {user} in a case that was previously suspected to be suicide.*\n> 2. **remove or dismiss (someone) from a position of power or authority**: *the overwhelming view is that they should be defenestrated before the next election.*\n> \n> ### ORIGIN\n> **early 17th century (as *defenestrated*): see defenestration.**\n\nSo now you know! {FLOOF_BLEP}",
+            "Oh, {author} threw {user} out of a window- so that's what it means... {FLOOF_TIRED}",
+            "{author} *threw* {user} *out of a window*- like, *breaking through the glass, {user} is now a puddle on the ground outside*! Idk how to express how ridiculous this is {FLOOF_NERVOUS}",
+            "Hey {author}, where'd {user} go?\n \\*suspiciously {user} shaped hole in the window* {FLOOF_LOAD_ANIMATED}",
+            "Oopsies {author} just commited a crime on {user}! They pushed {user} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
+            "{author}, you just pushed {user} out of a window... don't play dumb, you knew what the word meant, you're a smart cookie- and a criminal {FLOOF_WHAT}",
+        ];
+    }
+}
+
+// TODO: /cuddle
