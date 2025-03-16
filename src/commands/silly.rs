@@ -420,7 +420,7 @@ silly_command! {
             "Oh, {author} threw {user} out of a window- so that's what it means... {FLOOF_TIRED}",
             "{author} *threw* {user} *out of a window*- like, *breaking through the glass, {user} is now a puddle on the ground outside*! Idk how to express how ridiculous this is {FLOOF_NERVOUS}",
             "Hey {author}, where'd {user} go?\n \\*suspiciously {user} shaped hole in the window* {FLOOF_LOAD_ANIMATED}",
-            "Oopsies {author} just commited a crime on {user}! They pushed {user} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
+            "Oopsies {author} just committed a crime on {user}! They pushed {user} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
             "{author}, you just pushed {user} out of a window... don't play dumb, you knew what the word meant, you're a smart cookie- and a criminal {FLOOF_WHAT}",
         ];
     }
