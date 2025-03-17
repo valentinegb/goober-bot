@@ -16,7 +16,7 @@ rand = "0.9.0"
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 shuttle-runtime = { version = "0.52.0", default-features = false }
-shuttle-serenity = "0.52.0"
+shuttle-serenity = "0.53.0"
 shuttle-shared-db = { version = "0.52.0", features = ["opendal-postgres"] }
 tokio = "1.44.0"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"] }
