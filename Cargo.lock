@@ -647,9 +647,9 @@ dependencies = [
 
 [[package]]
 name = "diesel"
-version = "2.1.6"
+version = "2.2.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff236accb9a5069572099f0b350a92e9560e8e63a9b8d546162f4a5e03026bb2"
+checksum = "470eb10efc8646313634c99bb1593f402a6434cbd86e266770c6e39219adb86a"
 dependencies = [
  "bitflags 2.8.0",
  "byteorder",
@@ -659,9 +659,9 @@ dependencies = [
 
 [[package]]
 name = "diesel-async"
-version = "0.4.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acada1517534c92d3f382217b485db8a8638f111b0e3f2a2a8e26165050f77be"
+checksum = "51a307ac00f7c23f526a04a77761a0519b9f0eb2838ebf5b905a58580095bdcb"
 dependencies = [
  "async-trait",
  "diesel",
@@ -673,11 +673,12 @@ dependencies = [
 
 [[package]]
 name = "diesel_derives"
-version = "2.1.4"
+version = "2.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14701062d6bed917b5c7103bdffaee1e4609279e240488ad24e7bd979ca6866c"
+checksum = "a93958254b70bea63b4187ff73d10180599d9d8d177071b7f91e6da4e0c0ad55"
 dependencies = [
  "diesel_table_macro_syntax",
+ "dsl_auto_type",
  "proc-macro2",
  "quote",
  "syn 2.0.98",
@@ -685,9 +686,9 @@ dependencies = [
 
 [[package]]
 name = "diesel_table_macro_syntax"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fc5557efc453706fed5e4fa85006fe9817c224c3f480a34c7e5959fd700921c5"
+checksum = "209c735641a413bc68c4923a9d6ad4bcb3ca306b794edaa7eb0b3228a99ffb25"
 dependencies = [
  "syn 2.0.98",
 ]
@@ -720,6 +721,20 @@ name = "dotenvy"
 version = "0.15.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
+
+[[package]]
+name = "dsl_auto_type"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "139ae9aca7527f85f26dd76483eb38533fd84bd571065da1739656ef71c5ff5b"
+dependencies = [
+ "darling",
+ "either",
+ "heck",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.98",
+]
 
 [[package]]
 name = "either"
@@ -3283,7 +3298,7 @@ dependencies = [
  "reqwest-middleware",
  "serde",
  "serde_json",
- "shuttle-common",
+ "shuttle-common 0.52.0",
  "tokio",
  "tokio-tungstenite 0.26.2",
  "url",
@@ -3312,7 +3327,24 @@ dependencies = [
  "semver",
  "serde",
  "serde_json",
- "strum",
+ "strum 0.26.3",
+ "tracing",
+ "typeshare",
+ "zeroize",
+]
+
+[[package]]
+name = "shuttle-common"
+version = "0.53.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77e972b361d64c41475fc408154a3ddd0733c8a589554e47040399dbe18cd5b6"
+dependencies = [
+ "chrono",
+ "http 1.2.0",
+ "semver",
+ "serde",
+ "serde_json",
+ "strum 0.27.1",
  "tracing",
  "typeshare",
  "zeroize",
@@ -3334,8 +3366,8 @@ dependencies = [
  "serde_json",
  "shuttle-api-client",
  "shuttle-codegen",
- "shuttle-common",
- "shuttle-service",
+ "shuttle-common 0.52.0",
+ "shuttle-service 0.52.0",
  "strfmt",
  "tokio",
  "tracing",
@@ -3360,23 +3392,37 @@ dependencies = [
  "anyhow",
  "async-trait",
  "serde",
- "shuttle-common",
+ "shuttle-common 0.52.0",
+ "strfmt",
+ "thiserror 2.0.11",
+]
+
+[[package]]
+name = "shuttle-service"
+version = "0.53.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f9d46871efe0633f0456fb76dae5dbad7158eff8a7cc30370110d5c3d4cc12aa"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "serde",
+ "shuttle-common 0.53.0",
  "strfmt",
  "thiserror 2.0.11",
 ]
 
 [[package]]
 name = "shuttle-shared-db"
-version = "0.52.0"
+version = "0.53.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d14bd2ec23ac24e4cbebe6be9bee2f180fdb4ea7e7f85d620dca23acd491476"
+checksum = "7e61ba972bf6b28ef2998cb9d0536edcbf86a1b001847895f6dbb10c2f449994"
 dependencies = [
  "async-trait",
  "diesel-async",
  "opendal",
  "serde",
  "serde_json",
- "shuttle-service",
+ "shuttle-service 0.53.0",
  "sqlx",
 ]
 
@@ -3761,7 +3807,16 @@ version = "0.26.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8fec0f0aef304996cf250b31b5a10dee7980c85da9d759361292b8bca5a18f06"
 dependencies = [
- "strum_macros",
+ "strum_macros 0.26.4",
+]
+
+[[package]]
+name = "strum"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f64def088c51c9510a8579e3c5d67c65349dcf755e5479ad3d010aa6454e2c32"
+dependencies = [
+ "strum_macros 0.27.1",
 ]
 
 [[package]]
@@ -3769,6 +3824,19 @@ name = "strum_macros"
 version = "0.26.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4c6bee85a5a24955dc440386795aa378cd9cf82acd5f764469152d2270e581be"
+dependencies = [
+ "heck",
+ "proc-macro2",
+ "quote",
+ "rustversion",
+ "syn 2.0.98",
+]
+
+[[package]]
+name = "strum_macros"
+version = "0.27.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c77a8c5abcaf0f9ce05d62342b7d298c346515365c36b673df4ebe3ced01fde8"
 dependencies = [
  "heck",
  "proc-macro2",
