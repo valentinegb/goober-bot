@@ -15,11 +15,13 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use poise::{
-    serenity_prelude::{GuildId, RoleId},
+    serenity_prelude::{CreateActionRow, CreateButton, GuildId, RoleId, SkuId},
     CreateReply,
 };
 
 use crate::emoji::*;
+
+const EARLY_ACCESS_SKU_ID: u64 = 1351234259867926671;
 
 /// Returns `Ok(true)` or sends a reply and returns `Ok(false)`.
 ///
@@ -30,24 +32,42 @@ pub(super) async fn has_early_access(
 ) -> Result<bool, poise_error::anyhow::Error> {
     let author_id = ctx.author().id;
     let goober_bot_dev_guild = GuildId::new(1250948547403055114);
-    let early_access_role = RoleId::new(1337229578472652846);
+    let og_early_access_role = RoleId::new(1337229578472652846);
 
     if goober_bot_dev_guild
         .member(ctx, author_id)
         .await
-        .is_ok_and(|member| member.roles.contains(&early_access_role))
+        .is_ok_and(|member| member.roles.contains(&og_early_access_role))
     {
         return Ok(true);
     }
 
-    ctx.send(
-        CreateReply::default()
-            .content(format!(
-                "Hark! This command is in **Early Access**- but you're not! You *could* be, though, if you would consider [supporting the developer](https://buymeacoffee.com/im_valentinegb/membership)... {FLOOF_HEART}",
-            ))
-            .ephemeral(true),
-    )
-    .await?;
+    let entitlements = ctx
+        .http()
+        .get_entitlements(
+            Some(ctx.author().id),
+            Some(vec![SkuId::new(EARLY_ACCESS_SKU_ID)]),
+            None,
+            None,
+            None,
+            None,
+            Some(true),
+        )
+        .await?;
 
-    Ok(false)
+    if entitlements.is_empty() {
+        ctx.send(
+            CreateReply::default()
+                .content(format!(
+                    "Hark! This command is in **Early Access**- but you're not! You *could* be, though, if you would consider **supporting the developer**... {FLOOF_HEART}",
+                ))
+                .components(vec![CreateActionRow::Buttons(vec![CreateButton::new_premium(EARLY_ACCESS_SKU_ID)])])
+                .ephemeral(true),
+        )
+        .await?;
+
+        return Ok(false);
+    }
+
+    Ok(true)
 }
