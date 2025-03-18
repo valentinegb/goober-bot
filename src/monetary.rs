@@ -15,8 +15,8 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use poise::{
-    serenity_prelude::{CreateActionRow, CreateButton, GuildId, RoleId, SkuId},
     CreateReply,
+    serenity_prelude::{CreateActionRow, CreateButton, GuildId, RoleId, SkuId},
 };
 
 use crate::emoji::*;
@@ -45,7 +45,7 @@ pub(super) async fn has_early_access(
     let entitlements = ctx
         .http()
         .get_entitlements(
-            Some(ctx.author().id),
+            Some(author_id),
             Some(vec![SkuId::new(EARLY_ACCESS_SKU_ID)]),
             None,
             None,
