@@ -1131,7 +1131,7 @@ dependencies = [
  "charts-rs",
  "chrono",
  "commit-history",
- "opendal",
+ "opendal 0.52.0",
  "paste",
  "poise",
  "poise_error",
@@ -2150,6 +2150,33 @@ dependencies = [
  "serde",
  "serde_json",
  "sqlx",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
+name = "opendal"
+version = "0.52.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a55c840b5a6ad96106d6c0612fabb8f35a5ace826e0474fc55ebda33042b8d33"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "backon",
+ "base64 0.22.1",
+ "bytes",
+ "chrono",
+ "futures",
+ "getrandom 0.2.15",
+ "http 1.2.0",
+ "log",
+ "md-5",
+ "once_cell",
+ "percent-encoding",
+ "quick-xml",
+ "reqwest 0.12.14",
+ "serde",
+ "serde_json",
  "tokio",
  "uuid",
 ]
@@ -3388,7 +3415,7 @@ checksum = "7e61ba972bf6b28ef2998cb9d0536edcbf86a1b001847895f6dbb10c2f449994"
 dependencies = [
  "async-trait",
  "diesel-async",
- "opendal",
+ "opendal 0.51.2",
  "serde",
  "serde_json",
  "shuttle-service",
