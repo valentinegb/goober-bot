@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 charts-rs = { version = "0.3.20", features = ["image-encoder"] }
 chrono = "0.4.40"
-commit-history = { version = "0.1.0", path = "commit-history" }
+crabtime = "1.1.1"
 opendal = { version = "0.51.2", default-features = false }
 paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
@@ -26,6 +26,3 @@ tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 # Ensures that poise_error uses the same version of poise
 [patch.crates-io]
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
-
-[workspace]
-members = ["commit-history"]

@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use commit_history::commit_history;
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{Color, CreateEmbed},
-    CreateReply,
 };
 
 use crate::Context;
@@ -36,7 +34,37 @@ pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), poise_error::anyhow:
         CreateReply::default().embed(
             CreateEmbed::new()
                 .title("Updates")
-                .description(format!("{}\n. . .\n\nSee the [GitHub repository](https://github.com/valentinegb/goober-bot/commits/v1/) for more!", commit_history!()))
+                .description(format!(
+                    "{}\n. . .\n\nSee the [GitHub repository](https://github.com/valentinegb/goober-bot/commits/v1/) for more!",
+                    crabtime::eval! {
+                        #![dependency(git2 = "0.20.1")]
+                        use git2::Repository;
+
+                        let repo = Repository::open(crabtime::WORKSPACE_PATH).unwrap();
+                        let mut revwalk = repo.revwalk().unwrap();
+                        let mut string = String::new();
+
+                        revwalk.push_head().unwrap();
+
+                        for (i, oid) in revwalk.take(10).enumerate() {
+                            let oid = oid.unwrap();
+                            let commit = repo.find_commit(oid).unwrap();
+
+                            if i == 0 {
+                                string += &format!("The last change was <t:{}:R>.\n", commit.time().seconds());
+                            }
+
+                            string += &format!(
+                                "\n[{}](https://github.com/valentinegb/goober-bot/commit/{}): {}",
+                                &oid.to_string()[..7],
+                                oid,
+                                commit.message().unwrap().lines().next().unwrap(),
+                            );
+                        }
+
+                        format!("{string:?}")
+                    }
+                ))
                 .color(Color::BLUE),
         ),
     )
