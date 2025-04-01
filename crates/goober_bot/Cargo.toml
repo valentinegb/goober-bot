@@ -16,5 +16,6 @@ shared.workspace = true
 shuttle-runtime.workspace = true
 shuttle-serenity.workspace = true
 shuttle-shared-db.workspace = true
-tracing.workspace = true
+topgg.workspace = true
 tracing-subscriber.workspace = true
+tracing.workspace = true

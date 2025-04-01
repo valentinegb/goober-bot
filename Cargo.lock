@@ -1209,6 +1209,7 @@ dependencies = [
  "shuttle-runtime",
  "shuttle-serenity",
  "shuttle-shared-db",
+ "topgg",
  "tracing",
  "tracing-subscriber",
 ]
