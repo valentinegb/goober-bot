@@ -33,3 +33,8 @@ pub(super) use timestamp::*;
 pub(super) use updates::*;
 #[cfg(not(debug_assertions))]
 pub(super) use vote::*;
+
+#[derive(Default)]
+pub(super) struct CustomData {
+    pub(super) early_access: bool,
+}

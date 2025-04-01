@@ -17,13 +17,13 @@
 use std::collections::BTreeMap;
 
 use chrono::Utc;
-use poise::{command, ChoiceParameter};
+use poise::{ChoiceParameter, command};
 use poise_error::{
-    anyhow::{anyhow, bail},
     UserError,
+    anyhow::{anyhow, bail},
 };
 
-use crate::{config::get_config_key, emoji::*, Context, Data};
+use crate::{Context, Data, commands::CustomData, config::get_config_key, emoji::*};
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {
@@ -105,6 +105,12 @@ async fn commands(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
             }
         }
 
+        if let Some(custom_data) = command.custom_data.downcast_ref::<CustomData>() {
+            if custom_data.early_access {
+                string += " (Early Access)";
+            }
+        }
+
         string += "`";
 
         if command.name == "vote" {
@@ -144,7 +150,7 @@ async fn commands(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
 
     string += &format!(
         "## Commands\n\n*Last updated {}*\n",
-        Utc::now().format("%b %e, %Y")
+        Utc::now().format("%b %-e, %Y")
     );
 
     for category in category_keys {

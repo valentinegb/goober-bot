@@ -31,7 +31,9 @@ mod monetary;
 use std::{collections::HashSet, fmt::Debug};
 
 use analytics::analytics;
+use commands::CustomData;
 use config::config;
+use monetary::has_early_access;
 use poise::{
     Framework, FrameworkOptions,
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
@@ -91,39 +93,49 @@ async fn main(
 
         client_builder.event_handler_arc(autoposter.handler())
     };
+    let mut commands = vec![
+        analytics(),
+        commands::anon(),
+        commands::arrest(),
+        commands::bap(),
+        commands::bite(),
+        commands::blow_up(),
+        commands::boop(),
+        commands::carry(),
+        commands::debug(),
+        commands::defenestrate(),
+        commands::gnaw(),
+        commands::hamburger(),
+        commands::hug(),
+        commands::jumpscare(),
+        commands::kiss(),
+        commands::meow(),
+        commands::murder(),
+        commands::pat(),
+        commands::poke(),
+        commands::revive(),
+        commands::rock_paper_scissors(),
+        commands::slap(),
+        commands::strike(),
+        commands::tickle(),
+        commands::timestamp(),
+        commands::updates(),
+        #[cfg(not(debug_assertions))]
+        commands::vote(),
+        config(),
+    ];
+
+    for command in commands.iter_mut() {
+        if let Some(custom_data) = command.custom_data.downcast_ref::<CustomData>() {
+            if custom_data.early_access {
+                command.checks.push(|ctx| Box::pin(has_early_access(ctx)));
+            }
+        }
+    }
+
     let framework = Framework::builder()
         .options(FrameworkOptions {
-            commands: vec![
-                analytics(),
-                commands::anon(),
-                commands::arrest(),
-                commands::bap(),
-                commands::bite(),
-                commands::blow_up(),
-                commands::boop(),
-                commands::carry(),
-                commands::debug(),
-                commands::defenestrate(),
-                commands::gnaw(),
-                commands::hamburger(),
-                commands::hug(),
-                commands::jumpscare(),
-                commands::kiss(),
-                commands::meow(),
-                commands::murder(),
-                commands::pat(),
-                commands::poke(),
-                commands::revive(),
-                commands::rock_paper_scissors(),
-                commands::slap(),
-                commands::strike(),
-                commands::tickle(),
-                commands::timestamp(),
-                commands::updates(),
-                #[cfg(not(debug_assertions))]
-                commands::vote(),
-                config(),
-            ],
+            commands,
             on_error,
             pre_command: |ctx| {
                 Box::pin(async move {

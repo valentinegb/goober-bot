@@ -22,6 +22,8 @@ use rand::{rng, seq::IteratorRandom};
 
 use crate::{Context, emoji::*};
 
+use super::CustomData;
+
 /// ```
 /// silly_command!(
 ///     /// Command description
@@ -40,7 +42,7 @@ macro_rules! silly_command {
     (
         #[doc = $doc:expr]
         #[early_access]
-        $(#[command($command_extra:expr)])?
+        $(#[command($($command_extra:expr),+)])?
         fn $name:ident($user_description:literal) {
             bot_message = $bot_message:literal;
             author_message = $author_message:literal;
@@ -51,7 +53,7 @@ macro_rules! silly_command {
     ) => {
         silly_command! {
             #[doc = $doc]
-            #[command(check = "crate::monetary::has_early_access"$(, $command_extra)?)]
+            #[command(custom_data = "CustomData { early_access: true }"$(, $($command_extra),+)?)]
             fn $name($user_description) {
                 bot_message = $bot_message;
                 author_message = $author_message;
@@ -63,7 +65,7 @@ macro_rules! silly_command {
     };
     (
         #[doc = $doc:expr]
-        $(#[command($command_extra:expr)])?
+        $(#[command($($command_extra:expr),+)])?
         fn $name:ident($user_description:literal) {
             bot_message = $bot_message:literal;
             author_message = $author_message:literal;
@@ -79,7 +81,7 @@ macro_rules! silly_command {
             install_context = "Guild|User",
             interaction_context = "Guild|BotDm|PrivateChannel",
             required_bot_permissions = "USE_EXTERNAL_EMOJIS",
-            $($command_extra)?
+            $($($command_extra),+)?
         )]
         pub(crate) async fn $name(
             ctx: Context<'_>,
