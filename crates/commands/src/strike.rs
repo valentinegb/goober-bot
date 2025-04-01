@@ -17,26 +17,22 @@
 use std::fmt;
 
 use chrono::Months;
+use config::{Config, get_config_key};
+use database::read_or_write_default;
+use emoji::*;
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{
         ChannelId, Color, CreateAllowedMentions, CreateEmbed, CreateEmbedAuthor, CreateMessage,
         Mentionable, Timestamp, User, UserId,
     },
-    CreateReply,
 };
 use poise_error::{
-    anyhow::{anyhow, bail, Context as _},
     UserError,
+    anyhow::{Context as _, anyhow, bail},
 };
-use serde::{de::Visitor, Deserialize, Deserializer, Serialize};
-
-use crate::{
-    config::{get_config_key, Config},
-    database::read_or_write_default,
-    emoji::*,
-    Context,
-};
+use serde::{Deserialize, Deserializer, Serialize, de::Visitor};
+use shared::Context;
 
 const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "failed to send message in strike log channel";
 
@@ -189,7 +185,7 @@ async fn pre_strike_command(
     interaction_context = "Guild",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
-pub(crate) async fn strike(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn strike(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!()
 }
 

@@ -1,10 +1,27 @@
-[package]
-name = "goober-bot"
+# Ensures that poise_error uses the same version of poise
+[patch.crates-io]
+poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
+
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+default-members = ["crates/goober_bot"]
+
+[workspace.package]
 version = "1.0.0"
 edition = "2024"
 publish = false
 
-[dependencies]
+[workspace.dependencies]
+activity = { path = "crates/activity" }
+analytics = { path = "crates/analytics" }
+commands = { path = "crates/commands" }
+config = { path = "crates/config" }
+database = { path = "crates/database" }
+emoji = { path = "crates/emoji" }
+monetary = { path = "crates/monetary" }
+shared = { path = "crates/shared" }
+
 charts-rs = { version = "0.3.20", features = ["image-encoder"] }
 chrono = "0.4.40"
 crabtime = "1.1.2"
@@ -22,7 +39,3 @@ tokio = "1.44.1"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
-
-# Ensures that poise_error uses the same version of poise
-[patch.crates-io]
-poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }

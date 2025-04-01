@@ -14,19 +14,18 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use emoji::*;
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{
-        futures::StreamExt, ButtonStyle, CreateActionRow, CreateAllowedMentions, CreateButton,
+        ButtonStyle, CreateActionRow, CreateAllowedMentions, CreateButton,
         CreateInteractionResponse, CreateInteractionResponseFollowup,
-        CreateInteractionResponseMessage, Mentionable, ReactionType, UserId,
+        CreateInteractionResponseMessage, Mentionable, ReactionType, UserId, futures::StreamExt,
     },
-    CreateReply,
 };
-use poise_error::anyhow::{bail, Context as _};
+use poise_error::anyhow::{Context as _, bail};
 use rand::{rng, seq::IteratorRandom};
-
-use crate::{emoji::*, Context};
+use shared::Context;
 
 /// Challenge someone to a game of Rock Paper Scissors
 #[command(
@@ -36,7 +35,7 @@ use crate::{emoji::*, Context};
     interaction_context = "Guild|BotDm|PrivateChannel",
     required_bot_permissions = "USE_EXTERNAL_EMOJIS"
 )]
-pub(crate) async fn rock_paper_scissors(
+pub async fn rock_paper_scissors(
     ctx: Context<'_>,
     #[description = "Person you want to play with"] user: UserId,
 ) -> Result<(), poise_error::anyhow::Error> {
@@ -359,27 +358,39 @@ pub(crate) async fn rock_paper_scissors(
                                     "scissors" => format!(
                                         "Rock beats scissors and {user_mention} wins! {FLOOF_HAPPY}",
                                     ),
-                                    other => bail!(r#"expected component to have custom ID of either "paper" or "scissors", got {other:?}"#),
+                                    other => bail!(
+                                        r#"expected component to have custom ID of either "paper" or "scissors", got {other:?}"#
+                                    ),
                                 },
-                                "paper" => match author_choose_interaction.data.custom_id.as_str() {
-                                    "rock" => format!(
-                                        "Paper beats rock and {user_mention} wins! {FLOOF_HAPPY}",
-                                    ),
-                                    "scissors" => format!(
-                                        "Scissors beats paper and {author_mention} wins! {FLOOF_HAPPY}",
-                                    ),
-                                    other => bail!(r#"expected component to have custom ID of either "rock" or "scissors", got {other:?}"#),
-                                },
-                                "scissors" => match author_choose_interaction.data.custom_id.as_str() {
-                                    "rock" => format!(
-                                        "Rock beats scissors and {author_mention} wins! {FLOOF_HAPPY}",
-                                    ),
-                                    "paper" => format!(
-                                        "Scissors beats paper and {user_mention} wins! {FLOOF_HAPPY}",
-                                    ),
-                                    other => bail!(r#"expected component to have custom ID of either "rock" or "paper", got {other:?}"#),
-                                },
-                                other => bail!(r#"expected component to have custom ID of either "rock", "paper", or "scissors", got {other:?}"#),
+                                "paper" => {
+                                    match author_choose_interaction.data.custom_id.as_str() {
+                                        "rock" => format!(
+                                            "Paper beats rock and {user_mention} wins! {FLOOF_HAPPY}",
+                                        ),
+                                        "scissors" => format!(
+                                            "Scissors beats paper and {author_mention} wins! {FLOOF_HAPPY}",
+                                        ),
+                                        other => bail!(
+                                            r#"expected component to have custom ID of either "rock" or "scissors", got {other:?}"#
+                                        ),
+                                    }
+                                }
+                                "scissors" => {
+                                    match author_choose_interaction.data.custom_id.as_str() {
+                                        "rock" => format!(
+                                            "Rock beats scissors and {author_mention} wins! {FLOOF_HAPPY}",
+                                        ),
+                                        "paper" => format!(
+                                            "Scissors beats paper and {user_mention} wins! {FLOOF_HAPPY}",
+                                        ),
+                                        other => bail!(
+                                            r#"expected component to have custom ID of either "rock" or "paper", got {other:?}"#
+                                        ),
+                                    }
+                                }
+                                other => bail!(
+                                    r#"expected component to have custom ID of either "rock", "paper", or "scissors", got {other:?}"#
+                                ),
                             }
                         };
 

@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use config::{Config, get_config_key};
+use database::read_or_write_default;
+use emoji::*;
 use poise::{
     command,
     serenity_prelude::{
@@ -22,16 +25,10 @@ use poise::{
     },
 };
 use poise_error::{
-    anyhow::{anyhow, bail, Context as _},
     UserError,
+    anyhow::{Context as _, anyhow, bail},
 };
-
-use crate::{
-    config::{get_config_key, Config},
-    database::read_or_write_default,
-    emoji::*,
-    Context,
-};
+use shared::Context;
 
 /// Sends a message anonymously
 #[command(
@@ -42,7 +39,7 @@ use crate::{
     required_bot_permissions = "MANAGE_WEBHOOKS|SEND_MESSAGES|USE_EXTERNAL_EMOJIS",
     ephemeral
 )]
-pub(crate) async fn anon(
+pub async fn anon(
     ctx: Context<'_>,
     #[description = "Message to send anonymously"] message: String,
 ) -> Result<(), poise_error::anyhow::Error> {

@@ -15,17 +15,16 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use chrono::{Datelike, FixedOffset, TimeZone, Timelike, Utc};
+use emoji::*;
 use poise::{
-    command,
+    ChoiceParameter, command,
     serenity_prelude::{FormattedTimestamp, FormattedTimestampStyle},
-    ChoiceParameter,
 };
 use poise_error::{
-    anyhow::{anyhow, Context as _},
     UserError,
+    anyhow::{Context as _, anyhow},
 };
-
-use crate::{emoji::*, Context};
+use shared::Context;
 
 const SECONDS_PER_HOUR: i32 = 3600;
 
@@ -70,7 +69,7 @@ impl From<FormattedTimestampStyleChoice> for FormattedTimestampStyle {
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn timestamp(
+pub async fn timestamp(
     ctx: Context<'_>,
     #[description = "Default is current year"]
     // Where the heck did these big ol' numbers come from?

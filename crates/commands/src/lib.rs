@@ -24,17 +24,17 @@ mod updates;
 #[cfg(not(debug_assertions))]
 mod vote;
 
-pub(super) use anon::*;
-pub(super) use debug::*;
-pub(super) use rock_paper_scissors::*;
-pub(super) use silly::*;
-pub(super) use strike::*;
-pub(super) use timestamp::*;
-pub(super) use updates::*;
+pub use anon::*;
+pub use debug::*;
+pub use rock_paper_scissors::*;
+pub use silly::*;
+pub use strike::*;
+pub use timestamp::*;
+pub use updates::*;
 #[cfg(not(debug_assertions))]
-pub(super) use vote::*;
+pub use vote::*;
 
 #[derive(Default)]
-pub(super) struct CustomData {
-    pub(super) early_access: bool,
+pub struct CustomData {
+    pub early_access: bool,
 }

@@ -18,9 +18,9 @@ use std::collections::{HashMap, HashSet};
 
 use charts_rs::{HorizontalBarChart, THEME_DARK};
 use chrono::{DateTime, TimeDelta, Utc};
-use poise::{command, serenity_prelude::CreateAttachment, CreateReply};
-
-use crate::{database::read_or_write_default, Context};
+use database::read_or_write_default;
+use poise::{CreateReply, command, serenity_prelude::CreateAttachment};
+use shared::Context;
 
 const KEY: &str = "analytics";
 
@@ -55,7 +55,7 @@ async fn load(ctx: Context<'_>) -> Result<Analytics, poise_error::anyhow::Error>
     Ok(analytics)
 }
 
-pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let mut analytics = load(ctx).await?;
     let root_command = ctx
         .parent_commands()
@@ -79,7 +79,7 @@ pub(super) async fn increment(ctx: Context<'_>) -> Result<(), poise_error::anyho
     owners_only,
     ephemeral
 )]
-pub(super) async fn analytics(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn analytics(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.defer_ephemeral().await?;
 
     let mut analytics: Vec<(_, _)> = load(ctx).await?.into_iter().collect();

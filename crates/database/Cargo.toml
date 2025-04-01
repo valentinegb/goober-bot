@@ -1,0 +1,10 @@
+[package]
+name = "database"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+opendal.workspace = true
+serde.workspace = true
+shared.workspace = true

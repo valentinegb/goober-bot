@@ -17,13 +17,16 @@
 use std::collections::BTreeMap;
 
 use chrono::Utc;
+use config::get_config_key;
+use emoji::*;
 use poise::{ChoiceParameter, command};
 use poise_error::{
     UserError,
     anyhow::{anyhow, bail},
 };
+use shared::{Context, Data};
 
-use crate::{Context, Data, commands::CustomData, config::get_config_key, emoji::*};
+use super::CustomData;
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {
@@ -34,7 +37,7 @@ enum ErrorKind {
 
 /// Commands to aid in development of the bot
 #[command(slash_command, subcommands("error", "delete_config", "commands"))]
-pub(crate) async fn debug(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn debug(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!();
 }
 

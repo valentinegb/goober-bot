@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#![allow(dead_code)]
-
 use paste::paste;
 
 // Hey,
@@ -40,10 +38,10 @@ macro_rules! emoji {
             #[allow(clippy::suspicious_doc_comments)]
             #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $debug_id, ".", $format, "?quality=lossless)")]
             #[cfg(debug_assertions)]
-            pub(crate) const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $debug_id, ">");
+            pub const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $debug_id, ">");
             #[doc = concat!("![](https://cdn.discordapp.com/emojis/", $release_id, ".", $format, "?quality=lossless)")]
             #[cfg(not(debug_assertions))]
-            pub(crate) const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $release_id, ">");
+            pub const [<$name:snake:upper>]: &str = concat!("<", $prefix, ":", $name, ":", $release_id, ">");
         }
     };
     ($name:literal, $debug_id:literal, $release_id:literal$(, false)?) => {

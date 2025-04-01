@@ -20,16 +20,9 @@
 //       mentions when https://github.com/serenity-rs/poise/issues/235 is
 //       resolved
 
-mod activity;
-mod analytics;
-mod commands;
-mod config;
-mod database;
-mod emoji;
-mod monetary;
+use std::collections::HashSet;
 
-use std::{collections::HashSet, fmt::Debug};
-
+use activity::start_activity_loop;
 use analytics::analytics;
 use commands::CustomData;
 use config::config;
@@ -39,22 +32,11 @@ use poise::{
     serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
 };
 use poise_error::{anyhow::Context as _, on_error};
+use shared::Data;
 use shuttle_runtime::{CustomError, SecretStore};
 use shuttle_serenity::ShuttleSerenity;
 use shuttle_shared_db::SerdeJsonOperator;
 use tracing::{error, info};
-
-use crate::activity::start_activity_loop;
-
-/// User data, which is stored and accessible in all command invocations
-#[derive(Debug)]
-struct Data {
-    op: SerdeJsonOperator,
-    #[cfg(not(debug_assertions))]
-    topgg_client: topgg::Client,
-}
-
-type Context<'a> = poise::Context<'a, Data, poise_error::anyhow::Error>;
 
 #[shuttle_runtime::main]
 async fn main(

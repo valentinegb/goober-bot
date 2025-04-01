@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use database::read_or_write_default;
+use emoji::*;
 use paste::paste;
 use poise::{
-    command,
+    CreateReply, FrameworkError, command,
     serenity_prelude::{ChannelId, Color, CreateEmbed, Mentionable, Timestamp},
-    CreateReply, FrameworkError,
 };
 use poise_error::anyhow::Context as _;
 use serde::{Deserialize, Serialize};
-
-use crate::{database::read_or_write_default, emoji::*, Context, Data};
+use shared::{Context, Data};
 
 trait ToConfigString {
     fn to_config_string(&self) -> String;
@@ -51,7 +51,7 @@ impl ToConfigString for ChannelId {
 }
 
 /// Gets the config key for the server in `ctx`.
-pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::anyhow::Error> {
+pub fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::anyhow::Error> {
     Ok(format!(
         "config_{}",
         ctx.guild_id().context("expected context to be in guild")?
@@ -68,7 +68,7 @@ pub(crate) fn get_config_key(ctx: Context<'_>) -> Result<String, poise_error::an
     required_bot_permissions = "USE_EXTERNAL_EMOJIS",
     default_member_permissions = "MANAGE_GUILD"
 )]
-pub(crate) async fn config(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn config(_ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     unreachable!()
 }
 
@@ -81,8 +81,8 @@ macro_rules! config {
             #[derive(Deserialize, Serialize, Default)]
             #[non_exhaustive]
             #[serde(default)]
-            pub(crate) struct Config {
-                $(pub(crate) $name: $type),+
+            pub struct Config {
+                $(pub $name: $type),+
             }
 
             /// Lists all configuration options for this server

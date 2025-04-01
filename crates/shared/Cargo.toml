@@ -1,0 +1,11 @@
+[package]
+name = "shared"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+poise.workspace = true
+poise_error.workspace = true
+shuttle-shared-db.workspace = true
+topgg.workspace = true

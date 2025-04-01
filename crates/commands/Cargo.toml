@@ -1,0 +1,17 @@
+[package]
+name = "commands"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+chrono.workspace = true
+config.workspace = true
+crabtime.workspace = true
+database.workspace = true
+emoji.workspace = true
+poise.workspace = true
+poise_error.workspace = true
+rand.workspace = true
+serde.workspace = true
+shared.workspace = true

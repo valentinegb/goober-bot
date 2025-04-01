@@ -14,16 +14,12 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-use serde::{de::DeserializeOwned, Serialize};
-
-use crate::Context;
+use serde::{Serialize, de::DeserializeOwned};
+use shared::Context;
 
 /// Reads a value from [`shuttle_shared_db::SerdeJsonOperator`] (if the value
 /// exists), or writes the default of the value (if the value does not exist).
-pub(crate) async fn read_or_write_default<T>(
-    ctx: Context<'_>,
-    key: &str,
-) -> Result<T, opendal::Error>
+pub async fn read_or_write_default<T>(ctx: Context<'_>, key: &str) -> Result<T, opendal::Error>
 where
     T: DeserializeOwned + Serialize + Default,
 {

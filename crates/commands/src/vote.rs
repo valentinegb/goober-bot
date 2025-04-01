@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use emoji::*;
 use poise::command;
 use poise_error::anyhow::Context as _;
-
-use crate::{emoji::*, Context};
+use shared::Context;
 
 /// Vote for Goober Bot on Top.gg!
 #[command(
@@ -27,7 +27,7 @@ use crate::{emoji::*, Context};
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn vote(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn vote(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     let has_voted = ctx
         .data()
         .topgg_client

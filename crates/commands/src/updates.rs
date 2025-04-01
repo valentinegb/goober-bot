@@ -18,8 +18,7 @@ use poise::{
     CreateReply, command,
     serenity_prelude::{Color, CreateEmbed},
 };
-
-use crate::Context;
+use shared::Context;
 
 /// Lists the 10 most recent Goober Bot changes
 #[command(
@@ -29,7 +28,7 @@ use crate::Context;
     interaction_context = "Guild|BotDm|PrivateChannel",
     ephemeral
 )]
-pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
+pub async fn updates(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
     ctx.send(
         CreateReply::default().embed(
             CreateEmbed::new()
@@ -37,6 +36,8 @@ pub(crate) async fn updates(ctx: Context<'_>) -> Result<(), poise_error::anyhow:
                 .description(format!(
                     "{}\n. . .\n\nSee the [GitHub repository](https://github.com/valentinegb/goober-bot/commits/v1/) for more!",
                     crabtime::eval! {
+                        // Make sure to move this into [dev-dependencies] when
+                        // that becomes supported on stable Rust!
                         #![dependency(git2 = "0.20.1")]
                         use git2::Repository;
 

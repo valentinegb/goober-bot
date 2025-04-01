@@ -23,7 +23,7 @@ use tracing::info;
 
 const SLEEP_SECS: u64 = 10 * 60;
 
-pub(super) fn start_activity_loop(ctx: serenity_prelude::Context) {
+pub fn start_activity_loop(ctx: serenity_prelude::Context) {
     fn activity_to_string(activity: ActivityData) -> String {
         if let Some(state) = activity.state {
             return state;

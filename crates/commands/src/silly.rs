@@ -14,13 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use emoji::*;
 use poise::{
     CreateReply, command,
     serenity_prelude::{CreateAllowedMentions, Mentionable, UserId},
 };
 use rand::{rng, seq::IteratorRandom};
-
-use crate::{Context, emoji::*};
+use shared::Context;
 
 use super::CustomData;
 
@@ -83,7 +83,7 @@ macro_rules! silly_command {
             required_bot_permissions = "USE_EXTERNAL_EMOJIS",
             $($($command_extra),+)?
         )]
-        pub(crate) async fn $name(
+        pub async fn $name(
             ctx: Context<'_>,
             #[description = $user_description] user: UserId,
         ) -> Result<(), poise_error::anyhow::Error> {
