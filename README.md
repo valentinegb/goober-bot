@@ -25,15 +25,15 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ### Silly
 
-- `/arrest <user> (Early Access)`
+- `/arrest <user>` (Early Access)
 - `/bap <user>`
 - `/bite <user>`
-- `/blow_up <user> (Early Access)`
+- `/blow_up <user>` (Early Access)
 - `/boop <user>`
 - `/carry <user>`
-- `/defenestrate <user> (Early Access)`
+- `/defenestrate <user>` (Early Access)
 - `/gnaw <user>`
-- `/hamburger <user> (Early Access)`
+- `/hamburger <user>` (Early Access)
 - `/hug <user>`
 - `/jumpscare <user>`
 - `/kiss <user>`
@@ -43,7 +43,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/poke <user>`
 - `/revive <user>`
 - `/slap <user>`
-- `/tickle <user> (Early Access)`
+- `/tickle <user>` (Early Access)
 
 ### Strikes
 
