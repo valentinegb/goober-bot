@@ -16,7 +16,9 @@
 
 use poise::{
     CreateReply,
-    serenity_prelude::{CreateActionRow, CreateButton, GuildId, RoleId, SkuId},
+    serenity_prelude::{
+        CreateActionRow, CreateButton, CreateEmbed, GuildId, RoleId, SkuId, colours::css::WARNING,
+    },
 };
 
 use crate::emoji::*;
@@ -58,10 +60,21 @@ pub(super) async fn has_early_access(
     if entitlements.is_empty() {
         ctx.send(
             CreateReply::default()
-                .content(format!(
-                    "Hark! This command is in **Early Access**- but you're not! You *could* be, though, if you would consider **supporting the developer**... {FLOOF_HEART}",
-                ))
-                .components(vec![CreateActionRow::Buttons(vec![CreateButton::new_premium(EARLY_ACCESS_SKU_ID)])])
+                .embed(
+                    CreateEmbed::new()
+                        .title("Early Access command")
+                        .description(format!(
+                            "Sorry to stop you, but this command is exclusive to \
+                            **Early Access**! If you would be so kind as to \
+                            support development, it'd really help a ton, and I'd \
+                            reward you with a handful of extra commands that no \
+                            one else can use! {FLOOF_HEART}",
+                        ))
+                        .color(WARNING),
+                )
+                .components(vec![CreateActionRow::Buttons(vec![
+                    CreateButton::new_premium(EARLY_ACCESS_SKU_ID),
+                ])])
                 .ephemeral(true),
         )
         .await?;
