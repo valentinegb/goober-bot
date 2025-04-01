@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use commands_shared::CustomData;
 use emoji::*;
 use poise::{
     CreateReply, command,
@@ -21,8 +22,6 @@ use poise::{
 };
 use rand::{rng, seq::IteratorRandom};
 use shared::Context;
-
-use super::CustomData;
 
 /// ```
 /// silly_command!(

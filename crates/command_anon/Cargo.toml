@@ -1,0 +1,13 @@
+[package]
+name = "command_anon"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+config.workspace = true
+database.workspace = true
+emoji.workspace = true
+poise.workspace = true
+poise_error.workspace = true
+shared.workspace = true

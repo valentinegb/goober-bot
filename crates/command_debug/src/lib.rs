@@ -17,6 +17,7 @@
 use std::collections::BTreeMap;
 
 use chrono::Utc;
+use commands_shared::CustomData;
 use config::get_config_key;
 use emoji::*;
 use poise::{ChoiceParameter, command};
@@ -25,8 +26,6 @@ use poise_error::{
     anyhow::{anyhow, bail},
 };
 use shared::{Context, Data};
-
-use super::CustomData;
 
 #[derive(ChoiceParameter)]
 enum ErrorKind {

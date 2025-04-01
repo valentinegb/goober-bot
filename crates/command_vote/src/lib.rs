@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+#![cfg(not(debug_assertions))]
+
 use emoji::*;
 use poise::command;
 use poise_error::anyhow::Context as _;

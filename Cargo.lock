@@ -426,6 +426,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
 
 [[package]]
+name = "command_anon"
+version = "1.0.0"
+dependencies = [
+ "config",
+ "database",
+ "emoji",
+ "poise",
+ "poise_error",
+ "shared",
+]
+
+[[package]]
 name = "command_attr"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -437,20 +449,104 @@ dependencies = [
 ]
 
 [[package]]
-name = "commands"
+name = "command_debug"
 version = "1.0.0"
 dependencies = [
  "chrono",
+ "commands_shared",
  "config",
- "crabtime",
- "database",
+ "emoji",
+ "poise",
+ "poise_error",
+ "shared",
+]
+
+[[package]]
+name = "command_rock_paper_scissors"
+version = "1.0.0"
+dependencies = [
  "emoji",
  "poise",
  "poise_error",
  "rand 0.9.0",
+ "shared",
+]
+
+[[package]]
+name = "command_silly"
+version = "1.0.0"
+dependencies = [
+ "commands_shared",
+ "emoji",
+ "poise",
+ "poise_error",
+ "rand 0.9.0",
+ "shared",
+]
+
+[[package]]
+name = "command_strike"
+version = "1.0.0"
+dependencies = [
+ "chrono",
+ "config",
+ "database",
+ "emoji",
+ "poise",
+ "poise_error",
  "serde",
  "shared",
 ]
+
+[[package]]
+name = "command_timestamp"
+version = "1.0.0"
+dependencies = [
+ "chrono",
+ "emoji",
+ "poise",
+ "poise_error",
+ "shared",
+]
+
+[[package]]
+name = "command_updates"
+version = "1.0.0"
+dependencies = [
+ "crabtime",
+ "poise",
+ "poise_error",
+ "shared",
+]
+
+[[package]]
+name = "command_vote"
+version = "1.0.0"
+dependencies = [
+ "emoji",
+ "poise",
+ "poise_error",
+ "shared",
+]
+
+[[package]]
+name = "commands"
+version = "1.0.0"
+dependencies = [
+ "command_anon",
+ "command_debug",
+ "command_rock_paper_scissors",
+ "command_silly",
+ "command_strike",
+ "command_timestamp",
+ "command_updates",
+ "command_vote",
+ "commands_shared",
+]
+
+[[package]]
+name = "commands_shared"
+version = "1.0.0"
 
 [[package]]
 name = "concurrent-queue"

@@ -14,27 +14,13 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-mod anon;
-mod debug;
-mod rock_paper_scissors;
-mod silly;
-mod strike;
-mod timestamp;
-mod updates;
+pub use command_anon::*;
+pub use command_debug::*;
+pub use command_rock_paper_scissors::*;
+pub use command_silly::*;
+pub use command_strike::*;
+pub use command_timestamp::*;
+pub use command_updates::*;
 #[cfg(not(debug_assertions))]
-mod vote;
-
-pub use anon::*;
-pub use debug::*;
-pub use rock_paper_scissors::*;
-pub use silly::*;
-pub use strike::*;
-pub use timestamp::*;
-pub use updates::*;
-#[cfg(not(debug_assertions))]
-pub use vote::*;
-
-#[derive(Default)]
-pub struct CustomData {
-    pub early_access: bool,
-}
+pub use command_vote::*;
+pub use commands_shared::*;

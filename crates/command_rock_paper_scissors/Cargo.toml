@@ -1,0 +1,12 @@
+[package]
+name = "command_rock_paper_scissors"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+emoji.workspace = true
+poise.workspace = true
+poise_error.workspace = true
+rand.workspace = true
+shared.workspace = true

@@ -1,0 +1,13 @@
+[package]
+name = "command_silly"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+commands_shared.workspace = true
+emoji.workspace = true
+poise.workspace = true
+poise_error.workspace = true
+rand.workspace = true
+shared.workspace = true

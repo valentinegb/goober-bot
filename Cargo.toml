@@ -15,7 +15,16 @@ publish = false
 [workspace.dependencies]
 activity = { path = "crates/activity" }
 analytics = { path = "crates/analytics" }
+command_anon = { path = "crates/command_anon" }
+command_debug = { path = "crates/command_debug" }
+command_rock_paper_scissors = { path = "crates/command_rock_paper_scissors" }
+command_silly = { path = "crates/command_silly" }
+command_strike = { path = "crates/command_strike" }
+command_timestamp = { path = "crates/command_timestamp" }
+command_updates = { path = "crates/command_updates" }
+command_vote = { path = "crates/command_vote" }
 commands = { path = "crates/commands" }
+commands_shared = { path = "crates/commands_shared" }
 config = { path = "crates/config" }
 database = { path = "crates/database" }
 emoji = { path = "crates/emoji" }
