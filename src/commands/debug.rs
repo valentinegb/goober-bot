@@ -105,13 +105,13 @@ async fn commands(ctx: Context<'_>) -> Result<(), poise_error::anyhow::Error> {
             }
         }
 
+        string += "`";
+
         if let Some(custom_data) = command.custom_data.downcast_ref::<CustomData>() {
             if custom_data.early_access {
                 string += " (Early Access)";
             }
         }
-
-        string += "`";
 
         if command.name == "vote" {
             string += " ❤️";
