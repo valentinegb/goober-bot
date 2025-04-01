@@ -22,6 +22,7 @@ command_silly = { path = "crates/command_silly" }
 command_strike = { path = "crates/command_strike" }
 command_timestamp = { path = "crates/command_timestamp" }
 command_updates = { path = "crates/command_updates" }
+command_updates_proc_macro = { path = "crates/command_updates_proc_macro" }
 command_vote = { path = "crates/command_vote" }
 commands = { path = "crates/commands" }
 commands_shared = { path = "crates/commands_shared" }
@@ -34,6 +35,7 @@ shared = { path = "crates/shared" }
 charts-rs = { version = "0.3.20", features = ["image-encoder"] }
 chrono = "0.4.40"
 crabtime = "1.1.2"
+git2 = "0.20.1"
 opendal = { version = "0.51.2", default-features = false }
 paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }

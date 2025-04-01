@@ -5,7 +5,7 @@ edition.workspace = true
 publish.workspace = true
 
 [dependencies]
-crabtime.workspace = true
+command_updates_proc_macro.workspace = true
 poise.workspace = true
 poise_error.workspace = true
 shared.workspace = true

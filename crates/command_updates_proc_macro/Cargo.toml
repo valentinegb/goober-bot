@@ -1,0 +1,11 @@
+[package]
+name = "command_updates_proc_macro"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+git2.workspace = true
