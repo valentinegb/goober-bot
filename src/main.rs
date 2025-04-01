@@ -33,8 +33,8 @@ use std::{collections::HashSet, fmt::Debug};
 use analytics::analytics;
 use config::config;
 use poise::{
-    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
     Framework, FrameworkOptions,
+    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
 };
 use poise_error::{anyhow::Context as _, on_error};
 use shuttle_runtime::{CustomError, SecretStore};
@@ -96,6 +96,7 @@ async fn main(
             commands: vec![
                 analytics(),
                 commands::anon(),
+                commands::arrest(),
                 commands::bap(),
                 commands::bite(),
                 commands::blow_up(),

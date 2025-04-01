@@ -15,13 +15,12 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 use poise::{
-    command,
+    CreateReply, command,
     serenity_prelude::{CreateAllowedMentions, Mentionable, UserId},
-    CreateReply,
 };
 use rand::{rng, seq::IteratorRandom};
 
-use crate::{emoji::*, Context};
+use crate::{Context, emoji::*};
 
 /// ```
 /// silly_command!(
@@ -315,7 +314,7 @@ silly_command! {
             "{author} just, grabbed {user} and started carrying them over their shoulder {FLOOF_OWO}",
             "Oh my- {author} is now carrying {user}! {FLOOF_OWO}",
             "{author} must be strong- they just picked {user} right up! {FLOOF_OWO}",
-            "Woah! {author} picked up {user}- I wonder where {author}'s gonna take them? {FLOOF_HAPPY}",
+            "Whoa! {author} picked up {user}- I wonder where {author}'s gonna take them? {FLOOF_HAPPY}",
             "Hey! {author} just stole something and took off! They stole... {user}!! {FLOOF_OWO}",
             "Awww {author}'s giving {user} a piggy back ride {FLOOF_HAPPY}",
             "Pfft, {author} just started carrying {user} under {author}'s arm as if they were luggage {FLOOF_LOL}",
@@ -349,8 +348,8 @@ silly_command! {
             "Oh no- {user}, {author}'s discovered your weakness: *tickles* {FLOOF_NERVOUS}",
             "The crime: {user}'s been *killed*\nThe criminal: {author}\nThe weapon: *tickles* {FLOOF_SAD}",
             "All it took from {author} was a little \\*tickle\\* \\*tickle\\* and {user} totally collapsed {FLOOF_LOL}",
-            "WOAH, OH MY GOD, {author} TACKLED {user} TO THE GROUND AND- oh {author}'s just tickling them, they'll be fine {FLOOF_HAPPY}",
-            "{author} tried to tickle {user}, ***but they resisted...*** woah, that's crazy, honestly {FLOOF_OWO}",
+            "WHOA, OH MY GOD, {author} TACKLED {user} TO THE GROUND AND- oh {author}'s just tickling them, they'll be fine {FLOOF_HAPPY}",
+            "{author} tried to tickle {user}, ***but they resisted...*** whoa, that's crazy, honestly {FLOOF_OWO}",
             "Alright, so, {author}, you wanna take down {user}, huh? *Well I've got just the thing, one weird trick discovered by a mom, **tickles*** {FLOOF_COOL}",
             "Oof, {author} suddenly tickled {user}, but got punched in the face by {user}'s reflexes- ouch... {FLOOF_LURK}"
         ];
@@ -422,6 +421,24 @@ silly_command! {
             "Hey {author}, where'd {user} go?\n \\*suspiciously {user} shaped hole in the window* {FLOOF_LOAD_ANIMATED}",
             "Oopsies {author} just committed a crime on {user}! They pushed {user} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
             "{author}, you just pushed {user} out of a window... don't play dumb, you knew what the word meant, you're a smart cookie- and a criminal {FLOOF_WHAT}",
+        ];
+    }
+}
+
+silly_command! {
+    /// Stop in the name of the law!
+    #[early_access]
+    fn arrest("Anything you say can and will be used against you.") {
+        bot_message = "Heh... {author} ordered my arrest, but they're a *fool*, I *am* the law!!! {FLOOF_MISCHIEF}";
+        author_message = "Uh, {author} just slapped on a pair of handcuffs... I guess they're arresting themselves {FLOOF_TIRED}";
+        messages = [
+            "*Wee woo wee woo*, stop right there {user}, this is the Goober Police! We have warrant for you arrest, on behalf of {author} {FLOOF_MISCHIEF}",
+            "{user}, on behalf of {author}, you are under arrest! Anything you say can and will be used against you {FLOOF_MISCHIEF}",
+            "Whoa, it turns out {author} was an undercover cop the whole time- and now they're arresting {user} {FLOOF_OWO}",
+            "{author} picked up {user} and put them in baby jail {FLOOF_TIRED}",
+            "{author} sentenced {user} to a life behind bars... dang, that's rough {FLOOF_SAD}",
+            "Hey there, uh, {user}? Is it? Yeah, uhm, we've got a noise complaint from {author} for you... we're gonna have to put you under arrest {FLOOF_SMUG}",
+            "{author} is arresting {user}? Wait, they're not a cop- where'd they get those handcuffs? {FLOOF_LOAD_ANIMATED}",
         ];
     }
 }
