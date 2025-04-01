@@ -6,7 +6,19 @@ Bot that is also a goober for any server, DM, or group chat!
 
 Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try the bot or [install it](https://discord.com/oauth2/authorize?client_id=1226752321971687537) to a guild or your user now!
 
-<img width="674" alt="Screenshot 2024-04-09 at 9 52 04 AM" src="https://github.com/valentinegb/goober-bot/assets/35977727/57d110bf-97da-4c2e-a78a-fee1eb5e0307">
+<img width="719" alt="Screenshot 2025-04-01 at 2 12 09 PM" src="https://github.com/user-attachments/assets/2fac1a1b-5997-469c-9aed-0954dd2dea99" />
+
+<img width="520" alt="Screenshot 2025-04-01 at 2 12 24 PM" src="https://github.com/user-attachments/assets/d69dca55-1830-4810-bc33-61e7d36e5fb1" />
+
+<img width="821" alt="Screenshot 2025-04-01 at 2 11 46 PM" src="https://github.com/user-attachments/assets/f67db504-63ed-4ab8-9941-314dbfe1b777" />
+
+<img width="607" alt="Screenshot 2025-04-01 at 2 11 17 PM" src="https://github.com/user-attachments/assets/7fcd8530-742d-411e-94b5-b217fa395437" />
+
+<img width="641" alt="Screenshot 2025-04-01 at 2 13 47 PM" src="https://github.com/user-attachments/assets/395dfbf2-73ec-4b71-b633-057c4bb46c4c" />
+
+<img width="638" alt="Screenshot 2025-04-01 at 2 13 10 PM" src="https://github.com/user-attachments/assets/2e6c98c4-cb62-4c0b-9e82-e6cd195c5e8f" />
+
+<img width="221" alt="Screenshot 2025-04-01 at 2 03 42 PM" src="https://github.com/user-attachments/assets/598d8ecb-6e75-4681-8803-b4e68b765af7" />
 
 *Adorable [floof emojis](https://volpeon.ink/emojis/floof/) courtesy of [Volpeon](https://volpeon.ink)!*
 
