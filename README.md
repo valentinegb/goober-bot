@@ -21,17 +21,19 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 
 ## Commands
 
-*Last updated Mar 16, 2025*
+*Last updated Apr 1, 2025*
 
 ### Silly
 
+- `/arrest <user> (Early Access)`
 - `/bap <user>`
 - `/bite <user>`
-- `/blow_up <user>`
+- `/blow_up <user> (Early Access)`
 - `/boop <user>`
 - `/carry <user>`
-- `/defenestrate <user>`
+- `/defenestrate <user> (Early Access)`
 - `/gnaw <user>`
+- `/hamburger <user> (Early Access)`
 - `/hug <user>`
 - `/jumpscare <user>`
 - `/kiss <user>`
@@ -41,7 +43,7 @@ Join the [Goober Bot Dev](https://discord.gg/7v2aY2YzJU) Discord server to try t
 - `/poke <user>`
 - `/revive <user>`
 - `/slap <user>`
-- `/tickle <user>`
+- `/tickle <user> (Early Access)`
 
 ### Strikes
 
