@@ -1,6 +1,6 @@
 # Goober Bot
 
-[![CI](https://github.com/valentinegb/goober-bot/actions/workflows/ci.yml/badge.svg)](https://github.com/valentinegb/goober-bot/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/valentinegb/goober-bot/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/valentinegb/goober-bot/actions/workflows/ci-cd.yml)
 
 Bot that is also a goober for any server, DM, or group chat!
 

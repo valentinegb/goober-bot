@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -27,7 +27,16 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
       - name: Spellcheck
         uses: crate-ci/typos@v1.29.4
-      - name: Build
-        run: cargo build --release --verbose
-      - name: Run tests
+      - name: Clippy
+        run: cargo clippy --release --verbose
+      - name: Test
         run: cargo test --release --verbose
+      - uses: shuttle-hq/deploy-action@v2
+        with:
+          shuttle-api-key: ${{ secrets.SHUTTLE_API_KEY }}
+          project-id: proj_01JHKAYMCMR2ZP8GW5Q5109TPT
+          cargo-shuttle-version: 0.53.0
+          secrets: |
+            DISCORD_TOKEN = '${{ secrets.DISCORD_TOKEN }}'
+            TOPGG_TOKEN = '${{ secrets.TOPGG_TOKEN }}'
+        if: ${{ github.event_name == 'push' }}
