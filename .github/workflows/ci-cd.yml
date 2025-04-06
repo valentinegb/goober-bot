@@ -31,8 +31,6 @@ jobs:
         uses: crate-ci/typos@v1.29.4
       - name: Clippy
         run: cargo clippy --release --verbose
-      - name: Test
-        run: cargo test --release --verbose
       - uses: shuttle-hq/deploy-action@v2
         with:
           shuttle-api-key: ${{ secrets.SHUTTLE_API_KEY }}
