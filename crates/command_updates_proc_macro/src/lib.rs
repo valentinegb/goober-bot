@@ -18,7 +18,7 @@ pub fn commits_string(_item: TokenStream) -> TokenStream {
         }
 
         string += &format!(
-            "\n[{}](https://github.com/valentinegb/goober-bot/commit/{}): {}",
+            "\n[`{}`](https://github.com/valentinegb/goober-bot/commit/{}): {}",
             &oid.to_string()[..7],
             oid,
             commit.message().unwrap().lines().next().unwrap(),
