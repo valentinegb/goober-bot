@@ -63,18 +63,19 @@ async fn main(
 
         ClientBuilder::new(discord_token, GatewayIntents::GUILDS)
     };
+    // `Autoposter` will stop its thread if it is dropped. Don't do that!
     #[cfg(not(debug_assertions))]
-    let client_builder = {
+    let autoposter = {
         use std::time::Duration;
 
         use topgg::Autoposter;
 
         info!("Bot will post stats to Top.gg");
 
-        let autoposter = Autoposter::serenity(&topgg_client, Duration::from_secs(1800));
-
-        client_builder.event_handler_arc(autoposter.handler())
+        Autoposter::serenity(&topgg_client, Duration::from_secs(1800))
     };
+    #[cfg(not(debug_assertions))]
+    let client_builder = client_builder.event_handler_arc(autoposter.handler());
     let mut commands = vec![
         analytics(),
         commands::anon(),
