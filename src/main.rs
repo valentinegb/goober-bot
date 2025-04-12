@@ -20,8 +20,6 @@
 //       mentions when https://github.com/serenity-rs/poise/issues/235 is
 //       resolved
 
-use std::collections::HashSet;
-
 use activity::start_activity_loop;
 use analytics::analytics;
 use commands::CustomData;
@@ -29,7 +27,7 @@ use config::config;
 use monetary::has_early_access;
 use poise::{
     Framework, FrameworkOptions,
-    serenity_prelude::{ClientBuilder, GatewayIntents, UserId},
+    serenity_prelude::{ClientBuilder, GatewayIntents},
 };
 use poise_error::{anyhow::Context as _, on_error};
 use shared::Data;
@@ -45,7 +43,28 @@ async fn main(
 ) -> ShuttleSerenity {
     tracing_subscriber::fmt()
         // If making a new crate, make sure to add it here.
-        .with_env_filter("goober_bot=debug,activity=debug,analytics=debug,command_anon=debug,command_debug=debug,command_rock_paper_scissors=debug,command_silly=debug,command_strike=debug,command_timestamp=debug,command_updates=debug,command_updates_proc_macro=debug,command_vote=debug,commands=debug,commands_shared=debug,config=debug,database=debug,emoji=debug,monetary=debug,shared=debug,info")
+        .with_env_filter(
+            "goober_bot=debug,\
+            activity=debug,\
+            analytics=debug,\
+            command_anon=debug,\
+            command_debug=debug,\
+            command_rock_paper_scissors=debug,\
+            command_silly=debug,\
+            command_strike=debug,\
+            command_timestamp=debug,\
+            command_updates=debug,\
+            command_updates_proc_macro=debug,\
+            command_vote=debug,\
+            commands=debug,\
+            commands_shared=debug,\
+            config=debug,\
+            database=debug,\
+            emoji=debug,\
+            monetary=debug,\
+            shared=debug,\
+            info",
+        )
         .without_time()
         .init();
 
@@ -142,7 +161,6 @@ async fn main(
                     );
                 })
             },
-            owners: HashSet::from([UserId::new(1016154932354744330)]),
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {

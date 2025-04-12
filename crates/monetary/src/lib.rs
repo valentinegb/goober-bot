@@ -21,6 +21,7 @@ use poise::{
         CreateActionRow, CreateButton, CreateEmbed, GuildId, RoleId, SkuId, colours::css::WARNING,
     },
 };
+use poise_error::anyhow;
 
 const EARLY_ACCESS_SKU_ID: u64 = 1351234259867926671;
 
@@ -28,9 +29,7 @@ const EARLY_ACCESS_SKU_ID: u64 = 1351234259867926671;
 ///
 /// May return `Err(_)` if it fails to send a reply.
 #[allow(unused)]
-pub async fn has_early_access(
-    ctx: shared::Context<'_>,
-) -> Result<bool, poise_error::anyhow::Error> {
+pub async fn has_early_access(ctx: shared::Context<'_>) -> Result<bool, anyhow::Error> {
     let author_id = ctx.author().id;
     let goober_bot_dev_guild = GuildId::new(1250948547403055114);
     let og_early_access_role = RoleId::new(1337229578472652846);
