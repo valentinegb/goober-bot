@@ -5,6 +5,7 @@ edition.workspace = true
 publish.workspace = true
 
 [dependencies]
+commands_shared.workspace = true
 config.workspace = true
 database.workspace = true
 emoji.workspace = true

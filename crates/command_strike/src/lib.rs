@@ -17,6 +17,7 @@
 use std::fmt;
 
 use chrono::Months;
+use commands_shared::LogChannelContextualizable;
 use config::{Config, get_config_key};
 use database::read_or_write_default;
 use emoji::*;
@@ -33,8 +34,6 @@ use poise_error::{
 };
 use serde::{Deserialize, Deserializer, Serialize, de::Visitor};
 use shared::Context;
-
-const SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR: &str = "failed to send message in strike log channel";
 
 type Strikes = Vec<Strike>;
 
@@ -260,7 +259,7 @@ async fn give(
                     .allowed_mentions(allowed_mentions),
             )
             .await
-            .context(SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR)?;
+            .contextualize_log_channel_errors()?;
     }
 
     Ok(())
@@ -415,7 +414,7 @@ async fn repeal(
                     .allowed_mentions(allowed_mentions),
             )
             .await
-            .context(SEND_STRIKE_LOG_CHANNEL_MESSAGE_ERROR)?;
+            .contextualize_log_channel_errors()?;
     }
 
     Ok(())

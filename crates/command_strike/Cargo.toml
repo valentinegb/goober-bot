@@ -6,6 +6,7 @@ publish.workspace = true
 
 [dependencies]
 chrono.workspace = true
+commands_shared.workspace = true
 config.workspace = true
 database.workspace = true
 emoji.workspace = true

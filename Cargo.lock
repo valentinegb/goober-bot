@@ -429,6 +429,7 @@ checksum = "3d7b894f5411737b7867f4827955924d7c254fc9f4d91a6aad6b097804b1018b"
 name = "command_anon"
 version = "1.0.0"
 dependencies = [
+ "commands_shared",
  "config",
  "database",
  "emoji",
@@ -489,6 +490,7 @@ name = "command_strike"
 version = "1.0.0"
 dependencies = [
  "chrono",
+ "commands_shared",
  "config",
  "database",
  "emoji",
@@ -554,6 +556,10 @@ dependencies = [
 [[package]]
 name = "commands_shared"
 version = "1.0.0"
+dependencies = [
+ "poise",
+ "poise_error",
+]
 
 [[package]]
 name = "concurrent-queue"

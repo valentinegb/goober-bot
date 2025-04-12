@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+use commands_shared::LogChannelContextualizable;
 use config::{Config, get_config_key};
 use database::read_or_write_default;
 use emoji::*;
@@ -111,13 +112,13 @@ pub async fn anon(
                     .allowed_mentions(CreateAllowedMentions::new()),
             )
             .await
-            .context("failed to log anonymous message")?;
+            .contextualize_log_channel_errors()?;
     }
 
     webhook
         .execute(ctx, false, ExecuteWebhook::new().content(message))
         .await
-        .context("failed to send message in anon log channel")?;
+        .context("failed to send anon message")?;
 
     ctx.say(format!("Message sent anonymously {FLOOF_HAPPY}"))
         .await?;
