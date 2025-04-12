@@ -44,7 +44,8 @@ async fn main(
     #[shuttle_shared_db::Postgres] op: SerdeJsonOperator,
 ) -> ShuttleSerenity {
     tracing_subscriber::fmt()
-        .with_env_filter("goober_bot=debug,info")
+        // If making a new crate, make sure to add it here.
+        .with_env_filter("goober_bot=debug,activity=debug,analytics=debug,command_anon=debug,command_debug=debug,command_rock_paper_scissors=debug,command_silly=debug,command_strike=debug,command_timestamp=debug,command_updates=debug,command_updates_proc_macro=debug,command_vote=debug,commands=debug,commands_shared=debug,config=debug,database=debug,emoji=debug,monetary=debug,shared=debug,info")
         .without_time()
         .init();
 
