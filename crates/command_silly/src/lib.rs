@@ -430,7 +430,7 @@ silly_command! {
     /// Stop in the name of the law!
     #[early_access]
     fn arrest("Anything you say can and will be used against you.") {
-        bot_message = "Heh... {author} ordered my arrest, but they're a *fool*, I *am* the law!!! {FLOOF_MISCHIEF}";
+        bot_message = "PUT ME DOWN {author} I AM THE LAW {I_AM_THE_LAW}";
         author_message = "Uh, {author} just slapped on a pair of handcuffs... I guess they're arresting themselves {FLOOF_TIRED}";
         messages = [
             "*Wee woo wee woo*, stop right there {user}, this is the Goober Police! We have warrant for you arrest, on behalf of {author} {FLOOF_MISCHIEF}",
