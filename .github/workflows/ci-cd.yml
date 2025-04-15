@@ -10,8 +10,34 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  ci:
+    name: CI
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Spellcheck
+        uses: crate-ci/typos@v1.29.4
+      - name: Clippy
+        run: cargo clippy --release --verbose
+
+  cd:
+    name: CD
+    runs-on: self-hosted
+    environment: production
+    concurrency: production
+    needs: ci
+    if: ${{ github.event_name == 'push' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -27,10 +53,6 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
-      - name: Spellcheck
-        uses: crate-ci/typos@v1.29.4
-      - name: Clippy
-        run: cargo clippy --release --verbose
       - uses: shuttle-hq/deploy-action@v2
         with:
           shuttle-api-key: ${{ secrets.SHUTTLE_API_KEY }}
@@ -39,4 +61,3 @@ jobs:
           secrets: |
             DISCORD_TOKEN = '${{ secrets.DISCORD_TOKEN }}'
             TOPGG_TOKEN = '${{ secrets.TOPGG_TOKEN }}'
-        if: ${{ github.event_name == 'push' }}
