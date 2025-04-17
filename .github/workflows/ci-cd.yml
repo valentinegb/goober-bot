@@ -27,7 +27,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
       - name: Spellcheck
-        uses: crate-ci/typos@v1.29.4
+        uses: crate-ci/typos@v1.31.1
       - name: Clippy
         run: cargo clippy --release --verbose
 
