@@ -29,11 +29,7 @@ jobs:
       - name: Spellcheck
         uses: crate-ci/typos@v1.31.1
       - name: Clippy
-        run: |
-          sudo apt-get update
-          sudo apt-get install musl-dev
-          rustup target add aarch64-unknown-linux-musl
-          cargo clippy --verbose --release --target aarch64-unknown-linux-musl
+        run: cargo clippy --verbose --release
 
   cd:
     name: CD
@@ -58,11 +54,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
       - name: Build
-        run: |
-          sudo apt-get update
-          sudo apt-get install musl-dev
-          rustup target add aarch64-unknown-linux-musl
-          cargo build --verbose --release --target aarch64-unknown-linux-musl
+        run: cargo build --verbose --release
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           TOPGG_TOKEN: ${{ secrets.TOPGG_TOKEN }}
@@ -73,4 +65,4 @@ jobs:
           ssh-keyscan ${{ secrets.SERVER_ADDRESS }} >> ~/.ssh/known_hosts
           eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY }}"
-          scp target/aarch64-unknown-linux-musl/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
+          scp target/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
