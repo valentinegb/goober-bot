@@ -61,5 +61,5 @@ jobs:
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
-          cat -n "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo -n "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           scp target/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
