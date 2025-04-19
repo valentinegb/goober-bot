@@ -62,7 +62,6 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           TOPGG_TOKEN: ${{ secrets.TOPGG_TOKEN }}
-          OPENSSL_STATIC: 1
       - name: Deploy
         run: |
           mkdir -p ~/.ssh

@@ -9,3 +9,4 @@ proc-macro = true
 
 [dependencies]
 git2.workspace = true
+openssl-sys.workspace = true
