@@ -61,5 +61,7 @@ jobs:
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
-          echo -n "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          touch ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.SERVER_ADDRESS }} >> ~/.ssh/known_hosts
+          ssh-add - <<< "${{ secrets.SSH_KEY }}"
           scp target/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
