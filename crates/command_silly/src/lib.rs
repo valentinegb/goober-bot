@@ -228,6 +228,21 @@ silly_command! {
 }
 
 silly_command! {
+    /// :3
+    fn rickroll("the victim") {
+        bot_message = "{author} just rickrolled me... {FLOOF_TIRED}";
+        author_message = "{author} just rickrolled themselves... maybe they're bored? {FLOOF_TIRED}";
+        messages = [
+            "{author} just rickrolled {user}!!! {FLOOF_OWO}",
+            "{user} just got rickrolled by {author}?? {FLOOF_WHAT}",
+            "{author}'s never gonna give {user} up {FLOOF_BLEP}",
+            "{author} just rickrolled {user} and now they're never gonna let them down {FLOOF_SMUG}",
+            "hey {user} {author} thinks rickrolls are still funny in 2025, what a loser {FLOOF_LOL}",
+        ];
+    }
+}
+
+silly_command! {
     /// Doesn't this count as necromancy?
     fn revive("The deceased") {
         bot_message = "What- I- {author}, I'm not dead- {FLOOF_WHAT}";
