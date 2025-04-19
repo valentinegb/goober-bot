@@ -56,12 +56,13 @@ jobs:
       - name: Build
         run: |
           sudo apt-get update
-          sudo apt-get install musl-dev libssl-dev
+          sudo apt-get install musl-dev
           rustup target add aarch64-unknown-linux-musl
           cargo build --verbose --release --target aarch64-unknown-linux-musl
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           TOPGG_TOKEN: ${{ secrets.TOPGG_TOKEN }}
+          OPENSSL_STATIC: 1
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
