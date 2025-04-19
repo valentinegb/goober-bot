@@ -61,12 +61,8 @@ jobs:
       - name: Deploy
         run: |
           mkdir -p ~/.ssh
-          echo "Made .ssh directory"
           touch ~/.ssh/known_hosts
-          echo "Made known_hosts file"
           ssh-keyscan ${{ secrets.SERVER_ADDRESS }} >> ~/.ssh/known_hosts
-          echo "Added Raspberry Pi to known hosts"
+          eval `ssh-agent -s`
           ssh-add - <<< "${{ secrets.SSH_KEY }}"
-          echo "Added private key to SSH auth agent"
           scp target/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
-          echo "Transferred goober_bot build to Raspberry Pi"
