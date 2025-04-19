@@ -55,7 +55,8 @@ jobs:
           restore-keys: ${{ runner.os }}-cargo-
       - name: Build
         run: |
-          apt install musl-dev
+          sudo apt-get update
+          sudo apt-get install musl-dev
           rustup target add aarch64-unknown-linux-musl
           cargo build --verbose --release --target aarch64-unknown-linux-musl
         env:
