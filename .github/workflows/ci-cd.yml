@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: ["v1"]
+    branches: ["shuttle-independence"]
   pull_request:
-    branches: ["v1"]
+    branches: ["shuttle-independence"]
 
 env:
   CARGO_TERM_COLOR: always
@@ -34,8 +34,8 @@ jobs:
   cd:
     name: CD
     runs-on: ubuntu-24.04-arm
-    environment: production
-    concurrency: production
+    environment: raspberry-pi
+    concurrency: raspberry-pi
     needs: ci
     if: ${{ github.event_name == 'push' }}
 
@@ -53,11 +53,12 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
-      - uses: shuttle-hq/deploy-action@v2
-        with:
-          shuttle-api-key: ${{ secrets.SHUTTLE_API_KEY }}
-          project-id: proj_01JHKAYMCMR2ZP8GW5Q5109TPT
-          cargo-shuttle-version: 0.53.0
-          secrets: |
-            DISCORD_TOKEN = '${{ secrets.DISCORD_TOKEN }}'
-            TOPGG_TOKEN = '${{ secrets.TOPGG_TOKEN }}'
+      - name: Build
+        run: cargo build --release --verbose
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          TOPGG_TOKEN: ${{ secrets.TOPGG_TOKEN }}
+      - name: Deploy
+        run: |
+          cat -n "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
+          scp target/release/goober_bot github@${{ secrets.SERVER_ADDRESS }}:/DEPLOYMENT_TEST/goober_bot
