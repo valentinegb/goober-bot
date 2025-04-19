@@ -243,6 +243,21 @@ silly_command! {
 }
 
 silly_command! {
+    /// throw a bean at someone :protobeanstare:
+    fn throw_bean("The bean's target") {
+        bot_message = "{author} threw a bean at me! {FLOOF_OWO}";
+        author_message = "{author} threw a bean into the air! It landed on their head {FLOOF_BLEP}";
+        messages = [
+            "{author} just threw a silly little protobean at {user} {FLOOF_HAPPY}",
+            "{author} should be careful, {user} might steal their protobean {FLOOF_PEEK}",
+            "{author} decided that a protobean would be a good projectile and threw one at {user} {FLOOF_OWO}",
+            "{user}, why not give this protobean a new home? {author} threw it at you, after all. {FLOOF_SMUG}",
+            "{author} is carelessly throwing protobeans at {user} and I don't know how to feel about it {FLOOF_TIRED}",
+        ];
+    }
+}
+
+silly_command! {
     /// Doesn't this count as necromancy?
     fn revive("The deceased") {
         bot_message = "What- I- {author}, I'm not dead- {FLOOF_WHAT}";
