@@ -29,7 +29,11 @@ jobs:
       - name: Spellcheck
         uses: crate-ci/typos@v1.31.1
       - name: Clippy
-        run: cargo clippy --verbose --release
+        run: |
+          sudo apt-get update
+          sudo apt-get install musl-dev
+          rustup target add aarch64-unknown-linux-musl
+          cargo clippy --verbose --release --target aarch64-unknown-linux-musl
 
   cd:
     name: CD
