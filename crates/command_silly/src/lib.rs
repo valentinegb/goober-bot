@@ -228,36 +228,6 @@ silly_command! {
 }
 
 silly_command! {
-    /// :3
-    fn rickroll("the victim") {
-        bot_message = "{author} just rickrolled me... {FLOOF_TIRED}";
-        author_message = "{author} just rickrolled themselves... maybe they're bored? {FLOOF_TIRED}";
-        messages = [
-            "{author} just rickrolled {user}!!! {FLOOF_OWO}",
-            "{user} just got rickrolled by {author}?? {FLOOF_WHAT}",
-            "{author}'s never gonna give {user} up {FLOOF_BLEP}",
-            "{author} just rickrolled {user} and now they're never gonna let them down {FLOOF_SMUG}",
-            "hey {user} {author} thinks rickrolls are still funny in 2025, what a loser {FLOOF_LOL}",
-        ];
-    }
-}
-
-silly_command! {
-    /// throw a bean at someone :protobeanstare:
-    fn throw_bean("The bean's target") {
-        bot_message = "{author} threw a bean at me! {FLOOF_OWO}";
-        author_message = "{author} threw a bean into the air! It landed on their head {FLOOF_BLEP}";
-        messages = [
-            "{author} just threw a silly little protobean at {user} {FLOOF_HAPPY}",
-            "{author} should be careful, {user} might steal their protobean {FLOOF_PEEK}",
-            "{author} decided that a protobean would be a good projectile and threw one at {user} {FLOOF_OWO}",
-            "{user}, why not give this protobean a new home? {author} threw it at you, after all. {FLOOF_SMUG}",
-            "{author} is carelessly throwing protobeans at {user} and I don't know how to feel about it {FLOOF_TIRED}",
-        ];
-    }
-}
-
-silly_command! {
     /// Doesn't this count as necromancy?
     fn revive("The deceased") {
         bot_message = "What- I- {author}, I'm not dead- {FLOOF_WHAT}";
@@ -371,7 +341,6 @@ silly_command! {
 
 silly_command! {
     /// Wh- HO- HAH HAH HAH- ST- STOP IT HAH-
-    #[early_access]
     fn tickle("TICKLE SOMEBODY ELSE, PLEEAASE") {
         bot_message = "N- NO- HAH HAH- HEEE- HO- HAH- PLEASE- SOMEBODY- MAKE {author} STOPPPP HUHEHAH- {FLOOF_SCARED}";
         author_message = "{author}- you can't tickle *yourself*, it won't work... {FLOOF_TIRED}";
@@ -474,4 +443,34 @@ silly_command! {
     }
 }
 
+silly_command! {
+    /// :3
+    #[early_access]
+    fn rickroll("The victim") {
+        bot_message = "{author} just rickrolled me... {FLOOF_TIRED}";
+        author_message = "{author} just rickrolled themselves... maybe they're bored? {FLOOF_TIRED}";
+        messages = [
+            "{author} just rickrolled {user}!!! {FLOOF_OWO}",
+            "{user} just got rickrolled by {author}?? {FLOOF_WHAT}",
+            "{author}'s never gonna give {user} up {FLOOF_BLEP}",
+            "{author} just rickrolled {user} and now they're never gonna let them down {FLOOF_SMUG}",
+            "Hey {user} {author} thinks rickrolls are still funny in 2025, what a loser {FLOOF_LOL}",
+        ];
+    }
+}
+
+// silly_command! {
+//     /// throw a bean at someone :protobeanstare:
+//     fn throw_bean("The bean's target") {
+//         bot_message = "{author} threw a bean at me! {FLOOF_OWO}";
+//         author_message = "{author} threw a bean into the air! It landed on their head {FLOOF_BLEP}";
+//         messages = [
+//             "{author} just threw a silly little protobean at {user} {FLOOF_HAPPY}",
+//             "{author} should be careful, {user} might steal their protobean {FLOOF_PEEK}",
+//             "{author} decided that a protobean would be a good projectile and threw one at {user} {FLOOF_OWO}",
+//             "{user}, why not give this protobean a new home? {author} threw it at you, after all. {FLOOF_SMUG}",
+//             "{author} is carelessly throwing protobeans at {user} and I don't know how to feel about it {FLOOF_TIRED}",
+//         ];
+//     }
+// } commenting out for now since the goob branch is part of a PR for the rickroll cmd
 // TODO: /cuddle
