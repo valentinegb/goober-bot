@@ -376,9 +376,9 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "charts-rs"
-version = "0.3.20"
+version = "0.3.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3ec3b684a5194b577bcd4b843933dddd3023acc80c41b71663b4e56782a0a5b"
+checksum = "e585cdea469f708028b82b9e16aaaf307e81658251278343fc55c2e47d4e7869"
 dependencies = [
  "ahash",
  "arc-swap",
@@ -396,9 +396,9 @@ dependencies = [
 
 [[package]]
 name = "charts-rs-derive"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "218a07f694e17fb902c2fe72ba31ab821f2d57c146d51761aae00ab5614a3727"
+checksum = "9b92ffcacae7b226114b0cbd2b6c1bd9d5ac3435d977f3827b44c20be00e7315"
 dependencies = [
  "quote",
  "syn 2.0.100",
@@ -3047,9 +3047,9 @@ dependencies = [
 
 [[package]]
 name = "resvg"
-version = "0.45.0"
+version = "0.45.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd43d1c474e9dadf09a8fdf22d713ba668b499b5117b9b9079500224e26b5b29"
+checksum = "a8928798c0a55e03c9ca6c4c6846f76377427d2c1e1f7e6de3c06ae57942df43"
 dependencies = [
  "log",
  "pico-args",
@@ -4802,9 +4802,9 @@ dependencies = [
 
 [[package]]
 name = "usvg"
-version = "0.45.0"
+version = "0.45.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2ac8e0e3e4696253dc06167990b3fe9a2668ab66270adf949a464db4088cb354"
+checksum = "80be9b06fbae3b8b303400ab20778c80bbaf338f563afe567cf3c9eea17b47ef"
 dependencies = [
  "base64 0.22.1",
  "data-url",

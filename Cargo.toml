@@ -54,7 +54,7 @@ emoji = { path = "crates/emoji" }
 monetary = { path = "crates/monetary" }
 shared = { path = "crates/shared" }
 
-charts-rs = { version = "0.3.20", features = ["image-encoder"] }
+charts-rs = { version = "0.3.22", features = ["image-encoder"] }
 chrono = "0.4.40"
 git2 = "0.20.1"
 opendal = { version = "0.51.2", default-features = false }
