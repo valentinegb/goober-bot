@@ -361,7 +361,7 @@ silly_command! {
     /// *Blows up pancakes with mind*
     #[early_access]
     fn blow_up(r#""Mah fricking pancakes""#) {
-        bot_message = "{author} blew up Goober B... wait, wh- {EXPLOSION}";
+        bot_message = "{author} blew up Goober B... wait, wh- {FLOOF_SPLODE}";
         author_message = "***{author}'S SELF DESTRUCTING!!! {FLOOF_SCARED}***";
         messages = [
             "{author} blew up {user} with their mind {FLOOF_NERVOUS}",
@@ -369,7 +369,7 @@ silly_command! {
             "{author} just, said \"blow up\", and then {user} blew up?? {FLOOF_NERVOUS}",
             "{user} was engulfed in an explosion, meanwhile {author} walked the other way, wearing sunglasses, of course {FLOOF_COOL}",
             "Oh no... {author} hit the big red button, and {user} *exploded* {FLOOF_NERVOUS}",
-            "*{user}, get out of here! {author}'s gonna-* {EXPLOSION}",
+            "*{user}, get out of here! {author}'s gonna-* {FLOOF_SPLODE}",
             "Oops, {author} found out that the trigger word for the explosive implant in {user}'s head was \"petrichor\" {FLOOF_NERVOUS}"
         ];
     }
