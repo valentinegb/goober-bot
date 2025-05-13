@@ -56,7 +56,7 @@ shared = { path = "crates/shared" }
 
 charts-rs = { version = "0.3.22", features = ["image-encoder"] }
 chrono = "0.4.41"
-git2 = "0.20.1"
+git2 = "0.20.2"
 opendal = { version = "0.51.2", default-features = false }
 paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
