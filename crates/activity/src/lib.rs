@@ -62,6 +62,7 @@ pub fn start_activity_loop(ctx: serenity_prelude::Context) {
             ActivityData::watching("Doctor Who"),
             ActivityData::playing("ENA: Dream BBQ"),
             ActivityData::watching("speedrunning videos"),
+            ActivityData::playing("Deadlock"),
         ];
         let mut rng = rng();
         let mut last_activity = None;
