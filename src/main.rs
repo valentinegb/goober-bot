@@ -1,11 +1,29 @@
 use dotenvy_macro::dotenv;
-use poise::serenity_prelude::{Client, GatewayIntents};
+use poise::{
+    FrameworkOptions,
+    serenity_prelude::{Client, GatewayIntents},
+};
 use poise_error::anyhow::{self, anyhow};
-use tracing::{error, warn};
+use tracing::{error, info, warn};
 use tracing_subscriber::{EnvFilter, Layer, layer::SubscriberExt, util::SubscriberInitExt};
 
 async fn try_main() -> anyhow::Result<()> {
-    let mut client = Client::builder(dotenv!("DISCORD_TOKEN"), GatewayIntents::empty()).await?;
+    let framework = poise::Framework::builder()
+        .options(FrameworkOptions {
+            on_error: poise_error::on_error,
+            ..Default::default()
+        })
+        .setup(|_ctx, ready, _framework| {
+            Box::pin(async move {
+                info!("Logged in as {}", ready.user.display_name());
+
+                Ok(())
+            })
+        })
+        .build();
+    let mut client = Client::builder(dotenv!("DISCORD_TOKEN"), GatewayIntents::empty())
+        .framework(framework)
+        .await?;
 
     client.start_autosharded().await?;
 
@@ -28,6 +46,17 @@ async fn main() {
             );
         }
     }
+
+    info!(
+        "Running {} v{} ({} build)",
+        env!("CARGO_PKG_NAME"),
+        env!("CARGO_PKG_VERSION"),
+        if cfg!(debug_assertions) {
+            "debug"
+        } else {
+            "release"
+        },
+    );
 
     if let Err(err) = try_main().await {
         error!("A fatal error occurred: {err:#}")
