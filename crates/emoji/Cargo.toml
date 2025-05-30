@@ -1,8 +1,0 @@
-[package]
-name = "emoji"
-version.workspace = true
-edition.workspace = true
-publish.workspace = true
-
-[dependencies]
-paste.workspace = true
