@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "goober_bot"
+name = "goober-bot"
 version = "2.0.0-alpha"
