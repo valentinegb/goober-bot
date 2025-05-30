@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/4faa5f5321320e49a78ae7848582f684d64783e9";
+    nixpkgs.url = "github:NixOS/nixpkgs/b366c9ee8ee169da482aa724eed85a63824f4448";
   };
 
   outputs =
@@ -14,7 +14,10 @@
 
           src = ./.;
 
-          cargoLock.lockFile = ./Cargo.lock;
+          cargoLock = {
+            lockFile = ./Cargo.lock;
+            allowBuiltinFetchGit = true;
+          };
         };
         default = self.packages.${system}.goober-bot;
       });
@@ -23,11 +26,18 @@
         system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style
       );
 
-      devShells = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (system: {
-        default = nixpkgs.legacyPackages.${system}.mkShell {
-          inputsFrom = [ self.packages.${system}.goober-bot ];
-        };
-      });
+      devShells = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+        in
+        {
+          default = pkgs.mkShell {
+            packages = with pkgs; [ clippy ];
+            inputsFrom = [ self.packages.${system}.goober-bot ];
+          };
+        }
+      );
 
     };
 }

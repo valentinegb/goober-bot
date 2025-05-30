@@ -2,3 +2,15 @@
 name = "goober-bot"
 version = "2.0.0-alpha"
 edition = "2024"
+
+[dependencies]
+dotenvy_macro = "0.15.7"
+poise = { git = "https://github.com/serenity-rs/poise.git", rev = "518ff0564865bca2abf01ae8995b77340f439ef9", version = "0.6.1" }
+poise_error = "1.4.0"
+tokio = { version = "1.45.1", features = ["macros", "rt-multi-thread"] }
+tracing = "0.1.41"
+tracing-journald = "0.3.1"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+
+[patch.crates-io]
+poise = { git = "https://github.com/serenity-rs/poise.git", rev = "518ff0564865bca2abf01ae8995b77340f439ef9", version = "0.6.1" }
