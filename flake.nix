@@ -18,6 +18,8 @@
             lockFile = ./Cargo.lock;
             allowBuiltinFetchGit = true;
           };
+
+          meta.mainProgram = "goober-bot";
         };
         default = self.packages.${system}.goober-bot;
       });
@@ -25,6 +27,32 @@
       formatter = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
         system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style
       );
+
+      nixosModules = {
+        goober-bot =
+          {
+            lib,
+            config,
+            pkgs,
+            ...
+          }:
+          {
+            options = {
+              services.goober-bot.enable = lib.mkEnableOption "goober-bot";
+            };
+            config = lib.mkIf config.services.goober-bot.enable {
+              systemd.services.goober-bot = {
+                wantedBy = [ "multi-user.target" ];
+                after = [ "network.target" ];
+                serviceConfig = {
+                  ExecStart = lib.getExe self.packages.${pkgs.system}.goober-bot;
+                  Restart = "always";
+                };
+              };
+            };
+          };
+        default = self.nixosModules.goober-bot;
+      };
 
       devShells = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed (
         system:
