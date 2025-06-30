@@ -376,9 +376,9 @@ checksum = "613afe47fcd5fac7ccf1db93babcb082c5994d996f20b8b159f2ad1658eb5724"
 
 [[package]]
 name = "charts-rs"
-version = "0.3.23"
+version = "0.3.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8958936c03fe145e89d929608a57f7573ef18bd1a323d24acc7ec558ede106be"
+checksum = "badceab877515b655e5b071d7510ea979e3943d901c5ea5dbfea57ad0cf284af"
 dependencies = [
  "ahash",
  "arc-swap",
