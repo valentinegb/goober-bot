@@ -1,6 +1,9 @@
 [package]
 name = "goober-bot"
 version = "2.0.0"
-edition = "2024"
+edition.workspace = true
 
 [dependencies]
+
+[workspace.package]
+edition = "2024"
