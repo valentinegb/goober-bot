@@ -1,0 +1,125 @@
+[floof]
+production_id = 1263609061539315722
+development_id = 1263605435785810104
+
+[floofAngry]
+production_id = 1263609077661962331
+development_id = 1263605462927016077
+
+[floofBlep]
+production_id = 1263609094791495724
+development_id = 1263605485488308295
+
+[floofCat]
+production_id = 1263609111581560862
+development_id = 1263605506593915053
+
+[floofCool]
+production_id = 1263609129683910761
+development_id = 1263605526160474112
+
+[floofCry]
+production_id = 1263609147824410684
+development_id = 1263605545852600393
+
+[floofDrool]
+production_id = 1263609166875066438
+development_id = 1263605564035039323
+
+[floofHappy]
+production_id = 1263609184415383613
+development_id = 1263605580380110890
+
+[floofHeart]
+production_id = 1263609201431675002
+development_id = 1263605598524539001
+
+[floofInnocent]
+production_id = 1263609220725608519
+development_id = 1263605617034006619
+
+[floofLoad]
+production_id = 1263609237762871336
+development_id = 1263605636411949118
+
+[floofLoadAnimated]
+production_id = 1263609041179906059
+development_id = 1263605189995266058
+animated = true
+
+[floofLol]
+production_id = 1263609255647510668
+development_id = 1263605657886654495
+
+[floofLurk]
+production_id = 1263609272818729082
+development_id = 1263605681420894258
+
+[floofMischief]
+production_id = 1263609299838697552
+development_id = 1263605706733650041
+
+[floofMug]
+production_id = 1263609319555993792
+development_id = 1263605736517271634
+
+[floofNervous]
+production_id = 1263609339013501008
+development_id = 1263605768700301386
+
+[floofNom]
+production_id = 1263609382801903666
+development_id = 1263605793710800897
+
+[floofOwo]
+production_id = 1263609400732418089
+development_id = 1263605821338816583
+
+[floofPat]
+production_id = 1263609418214543371
+development_id = 1263605857300643951
+
+[floofPeek]
+production_id = 1263609437726179479
+development_id = 1263605875906449570
+
+[floofPlead]
+production_id = 1263609456760062072
+development_id = 1263605895930052668
+
+[floofSad]
+production_id = 1263609478440288317
+development_id = 1263605923188965428
+
+[floofScared]
+production_id = 1263609529820647544
+development_id = 1263605944839831614
+
+[floofSmug]
+production_id = 1263609552356773971
+development_id = 1263605963877912577
+
+[floofSplode]
+production_id = 1369873221213749288
+development_id = 1369873448817655828
+animated = true
+
+[floofTeehee]
+production_id = 1263609577815933061
+development_id = 1263605984115560478
+
+[floofTired]
+production_id = 1263609597382496308
+development_id = 1263606003082199131
+
+[floofWhat]
+production_id = 1263609615036190821
+development_id = 1263606024892321945
+
+[floofWoozy]
+production_id = 1263609632333762592
+development_id = 1263606042840010752
+
+[iAmTheLaw]
+production_id = 1360450936056840313
+development_id = 1360451308770955275

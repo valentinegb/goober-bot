@@ -1,0 +1,7 @@
+[package]
+name = "emoji"
+edition.workspace = true
+
+[build-dependencies]
+toml.workspace = true
+serde.workspace = true
