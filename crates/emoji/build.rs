@@ -14,37 +14,44 @@ fn main() {
     println!("cargo:rerun-if-changed=src/emojis.toml");
 
     let mut emojis_rs = String::new();
-    let emojis: HashMap<String, Emoji> =
-        toml::from_slice(include_bytes!("src/emojis.toml")).unwrap();
+    let emojis: Result<HashMap<String, Emoji>, _> =
+        toml::from_slice(include_bytes!("src/emojis.toml"));
 
-    for (
-        name,
-        Emoji {
-            production_id,
-            development_id,
-            animated,
-        },
-    ) in emojis
-    {
-        let prefix = if animated { "a" } else { "" };
-        let format = if animated { "gif" } else { "webp" };
-        let identifier = to_upper_camel_case(&name);
+    match emojis {
+        Err(err) => println!("cargo::error=could not deserialize `emojis.toml`: {err}"),
+        Ok(emojis) => {
+            for (
+                name,
+                Emoji {
+                    production_id,
+                    development_id,
+                    animated,
+                },
+            ) in emojis
+            {
+                let prefix = if animated { "a" } else { "" };
+                let format = if animated { "gif" } else { "webp" };
+                let identifier = to_upper_camel_case(&name);
 
-        emojis_rs += &format!(
-            "/// ![:{name}:](https://cdn.discordapp.com/emojis/{production_id}.{format}?quality=lossless)\n\
-            #[cfg(not(debug_assertions))]\n\
-            pub const {identifier}: &str = \"<{prefix}:{name}:{production_id}>\";\n\
-            /// ![:{name}:](https://cdn.discordapp.com/emojis/{development_id}.{format}?quality=lossless)\n\
-            #[cfg(debug_assertions)]\n\
-            pub const {identifier}: &str = \"<{prefix}:{name}:{development_id}>\";\n"
-        );
+                emojis_rs += &format!(
+                    "/// ![:{name}:](https://cdn.discordapp.com/emojis/{production_id}.{format}?quality=lossless)\n\
+                    #[cfg(not(debug_assertions))]\n\
+                    pub const {identifier}: &str = \"<{prefix}:{name}:{production_id}>\";\n\
+                    /// ![:{name}:](https://cdn.discordapp.com/emojis/{development_id}.{format}?quality=lossless)\n\
+                    #[cfg(debug_assertions)]\n\
+                    pub const {identifier}: &str = \"<{prefix}:{name}:{development_id}>\";\n"
+                );
+            }
+        }
     }
 
-    std::fs::write(
-        Path::new(&env::var_os("OUT_DIR").unwrap()).join("emojis.rs"),
+    if let Err(err) = std::fs::write(
+        Path::new(&env::var_os("OUT_DIR").expect("build scripts should always have `$OUT_DIR`"))
+            .join("emojis.rs"),
         emojis_rs,
-    )
-    .unwrap();
+    ) {
+        println!("cargo::error=failed to write `emojis.rs`: {err}");
+    }
 }
 
 fn to_upper_camel_case(str: &str) -> String {

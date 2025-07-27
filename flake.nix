@@ -14,7 +14,10 @@
               pname = "goober-bot";
               version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
               src = ./.;
-              cargoLock.lockFile = ./Cargo.lock;
+              cargoLock = {
+                lockFile = ./Cargo.lock;
+                allowBuiltinFetchGit = true;
+              };
             };
 
             default = self.packages.${system}.goober-bot;

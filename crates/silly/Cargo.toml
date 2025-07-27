@@ -1,0 +1,14 @@
+[package]
+name = "silly"
+edition.workspace = true
+
+[dependencies]
+emoji.workspace = true
+
+poise.workspace = true
+poise_error.workspace = true
+rand.workspace = true
+
+[build-dependencies]
+serde.workspace = true
+toml.workspace = true

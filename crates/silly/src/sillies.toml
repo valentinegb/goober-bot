@@ -1,0 +1,12 @@
+[boop]
+description = "Boops a being :3c"
+target_description = "Your victim >:3"
+self_response = "{author} just booped themselves... that's a little sad, won't someone else boop them? {FLOOF_SAD}"
+bot_response = "I have been booped by {author} {FLOOF_OWO}"
+other_responses = [
+  "{author} booped {target}!!! {FLOOF_OWO}",
+  "{target} just got booped by {author}?? {FLOOF_LOAD_ANIMATED}",
+  "Lmao I just saw {author} boop {target} {FLOOF_LOL}",
+  "Dear {target},\n\nGet booped, nerd. {FLOOF_SMUG}\n\nSincerely, {author}",
+  "{author} booped {target}, I think they're trying to pick a fight {FLOOF_NERVOUS}",
+]
