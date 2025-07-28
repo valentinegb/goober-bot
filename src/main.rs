@@ -32,6 +32,15 @@ async fn try_main() -> anyhow::Result<()> {
                     }
                 })
             },
+            pre_command: |ctx| {
+                Box::pin(async move {
+                    info!(
+                        "User '{}' invoked '{}'",
+                        ctx.author().name,
+                        ctx.invocation_string(),
+                    )
+                })
+            },
             ..Default::default()
         })
         .setup(|ctx, ready, framework| {
