@@ -56,7 +56,7 @@ fn main() {
                     #[command(\n    \
                         slash_command,\n    \
                         install_context = \"Guild | User\",\n    \
-                        interaction_context = \"Guild | BotDm | PrivateChannel\"{early_access_check}\n\
+                        interaction_context = \"Guild | BotDm | PrivateChannel\"{early_access_check}\n            \
                     )]\n\
                     async fn {name}(\n    \
                         ctx: poise_error::Context<'_>,\n    \

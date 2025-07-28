@@ -70,11 +70,11 @@ where
                             .title("Early Access Required")
                             .description(format!(
                                 "This command requires you to be a member of **Early Access**.\n\
-                            \n\
-                            Subscribing to **Early Access** gives you access to a handful of \
-                            commands before anyone else while also supporting me, the \
-                            developer (hi!), and the continued development of {}. I appreciate \
-                            it more than you know!",
+                                \n\
+                                Subscribing to **Early Access** gives you access to a handful of \
+                                commands before anyone else while also supporting me, the \
+                                developer (hi!), and the continued development of {}. I appreciate \
+                                it more than you know!",
                                 ctx.framework().bot_id.mention(),
                             ))
                             .color(BLURPLE),
