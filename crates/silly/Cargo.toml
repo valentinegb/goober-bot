@@ -3,6 +3,7 @@ name = "silly"
 edition.workspace = true
 
 [dependencies]
+early_access.workspace = true
 emoji.workspace = true
 
 poise.workspace = true

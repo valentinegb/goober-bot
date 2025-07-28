@@ -10,3 +10,19 @@ other_responses = [
   "Dear {target},\n\nGet booped, nerd. {FLOOF_SMUG}\n\nSincerely, {author}",
   "{author} booped {target}, I think they're trying to pick a fight {FLOOF_NERVOUS}",
 ]
+
+[arrest]
+description = "Stop in the name of the law!"
+target_description = "Anything you say can and will be used against you."
+self_response = "Uh, {author} just slapped on a pair of handcuffs... I guess they're arresting themselves {FLOOF_TIRED}"
+bot_response = "PUT ME DOWN {author} I AM THE LAW {I_AM_THE_LAW}"
+other_responses = [
+    "*Wee woo wee woo*, stop right there {target}, this is the Goober Police! We have warrant for you arrest, on behalf of {author} {FLOOF_MISCHIEF}",
+    "{target}, on behalf of {author}, you are under arrest! Anything you say can and will be used against you {FLOOF_MISCHIEF}",
+    "Whoa, it turns out {author} was an undercover cop the whole time- and now they're arresting {target} {FLOOF_OWO}",
+    "{author} picked up {target} and put them in baby jail {FLOOF_TIRED}",
+    "{author} sentenced {target} to a life behind bars... dang, that's rough {FLOOF_SAD}",
+    "Hey there, uh, {target}? Is it? Yeah, uhm, we've got a noise complaint from {author} for you... we're gonna have to put you under arrest {FLOOF_SMUG}",
+    "{author} is arresting {target}? Wait, they're not a cop- where'd they get those handcuffs? {FLOOF_LOAD_ANIMATED}",
+]
+early_access = true

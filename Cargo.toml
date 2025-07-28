@@ -10,6 +10,7 @@ tokio.workspace = true
 tracing-subscriber.workspace = true
 tracing.workspace = true
 
+early_access.workspace = true
 silly.workspace = true
 
 [build-dependencies]
@@ -23,14 +24,16 @@ poise = { git = "https://github.com/serenity-rs/poise.git", rev = "518ff0564865b
 edition = "2024"
 
 [workspace.dependencies]
+early_access.path = "crates/early_access"
 emoji.path = "crates/emoji"
 silly.path = "crates/silly"
 
 dotenvy = "0.15.7"
 poise = "0.6.1"
-poise_error = "1.5.0"
+poise_error = "1.6.0"
 rand = "0.9.2"
 serde = { version = "1.0.219", features = ["derive"] }
+thiserror = "2.0.12"
 tokio = { version = "1.47.0", features = ["rt-multi-thread", "macros"] }
 toml = { version = "0.9.2", default-features = false, features = ["parse", "serde", "std"] }
 tracing = "0.1.41"

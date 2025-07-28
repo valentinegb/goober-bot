@@ -3,7 +3,7 @@ use poise::{
     samples::register_globally,
     serenity_prelude::{ClientBuilder, GatewayIntents},
 };
-use poise_error::anyhow;
+use poise_error::{anyhow, dedup_error_chain};
 use tracing::{error, info};
 
 #[tokio::main]
@@ -20,7 +20,18 @@ async fn try_main() -> anyhow::Result<()> {
 
     let framework = Framework::builder()
         .options(FrameworkOptions {
-            on_error: poise_error::on_error,
+            commands: Vec::new().into_iter().chain(silly::commands()).collect(),
+            on_error: |error| {
+                Box::pin(async move {
+                    if let Err(mut err) =
+                        early_access::try_handle_error_or(error, poise_error::try_handle_error)
+                            .await
+                    {
+                        dedup_error_chain(&mut err);
+                        error!("Failed to handle error: {err:#}");
+                    }
+                })
+            },
             ..Default::default()
         })
         .setup(|ctx, ready, framework| {

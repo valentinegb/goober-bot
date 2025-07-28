@@ -1,0 +1,8 @@
+[package]
+name = "early_access"
+edition.workspace = true
+
+[dependencies]
+poise.workspace = true
+poise_error.workspace = true
+thiserror.workspace = true

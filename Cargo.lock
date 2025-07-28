@@ -367,6 +367,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 
 [[package]]
+name = "early_access"
+version = "0.0.0"
+dependencies = [
+ "poise",
+ "poise_error",
+ "thiserror 2.0.12",
+]
+
+[[package]]
 name = "emoji"
 version = "0.0.0"
 dependencies = [
@@ -575,6 +584,7 @@ name = "goober-bot"
 version = "2.0.0"
 dependencies = [
  "dotenvy",
+ "early_access",
  "poise",
  "poise_error",
  "silly",
@@ -1081,9 +1091,9 @@ dependencies = [
 
 [[package]]
 name = "poise_error"
-version = "1.5.0"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "28a7a46d4938f0b4252fc929d28b05e2a90d2b9e93b4f89f51fdae8bd6b408a4"
+checksum = "134fc4e9e13940df01942808ba71e56502bf9378b44d546327b1c44fb64610bf"
 dependencies = [
  "anyhow",
  "poise",
@@ -1582,6 +1592,7 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 name = "silly"
 version = "0.0.0"
 dependencies = [
+ "early_access",
  "emoji",
  "poise",
  "poise_error",

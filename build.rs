@@ -4,7 +4,7 @@ fn main() {
     println!("cargo::rerun-if-changed=.env");
 
     match dotenv_iter() {
-        Err(err) if !error.not_found() => {
+        Err(err) if !err.not_found() => {
             println!("cargo::error=could not load `.env` file: {err}")
         }
         Ok(vars) => {
