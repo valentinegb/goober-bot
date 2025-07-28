@@ -11,6 +11,264 @@ other_responses = [
   "{author} booped {target}, I think they're trying to pick a fight {FLOOF_NERVOUS}",
 ]
 
+[gnaw]
+description = "Embrace the bobin within us all and gnaw on one's bones"
+target_description = "The subject of today's gnawing"
+bot_response = "GRAAAHH {author} STOP GNAWING MY BONES GET OFF HELP {FLOOF_SCARED}"
+self_response = "{author}'s gnawing on... their own bones? Are they good...? {FLOOF_LOAD_ANIMATED}"
+other_responses = [
+  "{author} is gnawing on {target}'s bones {FLOOF_NOM}",
+  "{author} craves the bones of {target} {FLOOF_NOM}",
+  "{author} hungers for the bones of a {target} {FLOOF_NOM}",
+  "Hey uh, {target}, did you know there's a {author} gnawing on your bones? {FLOOF_LURK}",
+]
+
+[bite]
+description = "You wild animal..."
+target_description = "That tame person..."
+bot_response = "BAH- {author}'S BITING ME- GET IT OFF GET IT OFF- {FLOOF_SCARED}"
+self_response = "{author} bit themselves... why'd they do that? {FLOOF_LOAD_ANIMATED}"
+other_responses = [
+  "D- did {author} just bite {target}?? {FLOOF_OWO}",
+  "The intrusive thoughts won and now {author}'s biting {target} {FLOOF_MISCHIEF}",
+  "\\*CHOMP\\*\n{author} bit {target} {FLOOF_NOM}",
+  "Oh, sorry {target}, I guess {author} got hungry {FLOOF_TIRED}",
+  "Eeeeek! {target}, didn't you know? *{author} bites!* {FLOOF_NERVOUS}",
+  "{target} got a little too close to {author} and got bit {FLOOF_NERVOUS}",
+]
+
+[meow]
+description = "You know what you are"
+target_description = "Get their attention"
+bot_response = "Hm? What's that {author}? Oh I see... mhm... okay, okay, I understand {FLOOF_CAT}"
+self_response = "{author} is meowing at themselves lol, schizophrenic cat {FLOOF_CAT}"
+other_responses = [
+  "Uhh, {author} just meowed at {target} {FLOOF_WHAT}",
+  "{author} is a furry and they want {target} to know it {FLOOF_MISCHIEF}",
+  "{author} is so silly, they think {target} can understand their meowing {FLOOF_LOL}",
+  "{target}, be afraid... {author} is meowing at you {FLOOF_PEEK}",
+  "{target}, {author} is meowing at you, won't you give them what they want? {FLOOF_PLEAD}",
+  "{target}, I have a message for you: \"meow meow meow meow meow meow meow meow\"\n{author} gave it to me {FLOOF_HAPPY}",
+  "{author} just *nya*-ed all over the place- {target}, clean this up! {FLOOF_WHAT}",
+  "{target}... sire... I have a message for you, from {author}... \\*ahem\\*... \"meow meow meow, meow meow, meow meow meow meow meow, meow!\"\nI'm just the messenger please don't hurt me {FLOOF_NERVOUS}",
+]
+
+[murder]
+description = "MURRRRRDEERRRRRRRRRRR"
+target_description = "KILL THEM KILL THEM KILL THEM >:D"
+bot_response = "GAH {author} HAS A KNIFE AND IS RUNNING AT ME WAAAA {FLOOF_SCARED}"
+self_response = "BAH- {author} JUST K-KILLED THEMSELVES??? NOOOOOOOOOO {FLOOF_SCARED}"
+other_responses = [
+  "{author} crept up behind {target} and murdered them!!! {FLOOF_OWO}",
+  "{author} just pulled out a bazooka and blew {target} up!?!? {FLOOF_OWO}",
+  "{author} stared directly into {target}'s eyes and shouted \"POMEGRANATE\", triggering the cognitohazard previously planted in {target}'s brain, killing them instantly {FLOOF_NERVOUS}",
+  "{author} just went \"BOO\", giving {target} a fatal heart attack {FLOOF_OWO}",
+  "{author} just went \"OOGA BOOGA\", giving {target} a fatal heart attack {FLOOF_OWO}",
+  "{author} killed {target} when the lights went out so no one would know it was them... {FLOOF_SMUG}",
+]
+
+[pat]
+description = "Let them know that they're a good being :>"
+target_description = "Good being in question"
+bot_response = "Awawawawa {author} gave me a pat pat on the head {FLOOF_PAT}"
+self_response = "Aw, {author} pat themselves on the head, won't someone else give them a little pat? {FLOOF_PLEAD}"
+other_responses = [
+  "{author} gave {target} a little pat on the head {FLOOF_PAT}",
+  "{author} wants {target} to know they are a good being by giving them a pat on the head {FLOOF_PAT}",
+  "{target} got pat on the head by {author} {FLOOF_PAT}",
+  "{target} has been selected to receive a soothing pat on the head from {author} {FLOOF_PAT}",
+]
+
+[kiss]
+description = "😳"
+target_description = "Omg who is it who is it???"
+bot_response = "\\*gasp* oh- oh my goodness- {author} kissed me!!! {FLOOF_WOOZY}"
+self_response = "{author} kissed themselves? ...how? {FLOOF_WHAT}"
+other_responses = [
+  "AWWWWWWWWW- {author} gave {target} a kiss!!!! {FLOOF_PLEAD}",
+  "Hehehehe, {author} gave {target} a little smooooch {FLOOF_HAPPY}",
+  "OMG- GUYS- {author} JUST KISSED {target}!!! {FLOOF_PLEAD}",
+  "Hehehe {author} and {target} are so cute, they just kissed each other {FLOOF_HAPPY}",
+  "{author} **VIOLENTLY** pulled {target} to them and **SMOOCHED** them on the **LIPS**, not letting **ANYONE ELSE** in {FLOOF_MISCHIEF}",
+]
+
+[revive]
+description = "Doesn't this count as necromancy?"
+target_description = "The deceased"
+bot_response = "What- I- {author}, I'm not dead- {FLOOF_WHAT}"
+self_response = "... Oh my god *{author}'S **IMMORTAL**-* {FLOOF_SCARED}"
+other_responses = [
+  "{author} performed necromancy on {target}, now they're a *zOoOmBiIeE oOoOo* {FLOOF_SMUG}",
+  "{author} crouched by {target} and held `E` for a few seconds {FLOOF}",
+  "{author} graciously donated a health pack to {target} {FLOOF_HAPPY}",
+  "{author} performed a ritual and sacrificed a lamb to bring {target} back to life {FLOOF_OWO}",
+  "In a flash of light, {author} descended upon {target} and gave them the gift of another life {FLOOF_INNOCENT}",
+]
+
+[hug]
+description = "Does somebody want a huuuug :3"
+target_description = "No seriously, who wants a hug? I need to know-"
+bot_response = "Awawawa, thanks for the hug {author} {FLOOF_HEART}"
+self_response = "{author} gave themselves a hug {FLOOF_PLEAD}"
+other_responses = [
+  "{author} gave {target} a much needed hug {FLOOF_HEART}",
+  "{author} wrapped their arms around {target} for a hug {FLOOF_HEART}",
+  "Awww, {author} and {target} are hugging, so wholesome {FLOOF_PLEAD}",
+  "{author} and {target} are hugging and uhh, me too, I'm also a part of the hug {FLOOF_PLEAD}",
+  "Before {target} could say anything, {author} had them trapped in an embrace {FLOOF_HEART}",
+]
+
+[slap]
+description = "Knock some sense into somebody"
+target_description = "Senseless somebody in question"
+bot_response = "OW- HEY- {author} just *slapped* me, what the heck!? {FLOOF_SCARED}"
+self_response = "{author} must think they're dreaming or something, they just slapped themselves {FLOOF_OWO}"
+other_responses = [
+  "{author} slapped {target} and shouted \"SNAP OUT OF IT\" {FLOOF_LOL}",
+  "{author} tried to knock some sense into {target} by slapping them {FLOOF_LOL}",
+  "{author} decided to slap {target} across the face {FLOOF_OWO}",
+  "{author} slapped {target}, just cuz they felt like it {FLOOF_BLEP}",
+  "{target} find themselves facing the opposite direction after {author}'s slap turned them around {FLOOF_OWO}",
+  "In slapstick fashion, {author} slapped {target} causing them to comically spin in circles {FLOOF_LOL}",
+]
+
+[bap]
+description = "*bap* *bap*"
+target_description = "Bap receiver"
+bot_response = "WHAT- oh, {author} just bapped me. What do you want buddy? {FLOOF_TIRED}"
+self_response = "{author}'s bapping themselves, they seem a little confused... {FLOOF_TIRED}"
+other_responses = [
+  "{author} bapped {target} and {target} jumped {FLOOF_LOL}",
+  "{target} was startled for a moment when {author} snuck up and bapped them {FLOOF_LOL}",
+  "{author} sloooowly reached out... and then bapped {target} {FLOOF_LURK}",
+  "{author} swat at and bapped {target} like a cat {FLOOF_CAT}",
+  "LOOK OUT {target}, {author}'S GONNA- oh, they only bapped you {FLOOF_TIRED}",
+  "{author} bapped {target} before retreating into the shadows... {FLOOF_PEEK}",
+]
+
+[jumpscare]
+description = "FNAF style"
+target_description = "Night guard"
+bot_response = "# *AAAAAAAA-*\n*{author}... \\*gasp\\* **jumpscared** me... jeez...* {FLOOF_SCARED}"
+self_response = "{author} looked in a mirror and went \"raaahhhh!\"\nVery scary {FLOOF_SMUG}"
+other_responses = [
+  "{author} did the bite of '87 on {target} {FLOOF_NOM}",
+  "{target} almost got to 6 AM but {author} got to them first {FLOOF_PEEK}",
+  "{author} ran down the hall and before {target} could shut the door, it was game over {FLOOF_PEEK}",
+  "{target} didn't catch {author} in time and they leapt from the shadows {FLOOF_LURK}",
+  "{target} forgot to wind the music box and {author} went straight to them {FLOOF_MISCHIEF}",
+  "{target} just realized that {author} had snuck up to them, but by then it was already too late {FLOOF_PEEK}",
+  "***RAAAHHHH!!!***\n{author} jumpscared {target} {FLOOF_MISCHIEF}",
+]
+
+[carry]
+description = "Yeah you know, just, carry a person"
+target_description = "Who are you carrying away?"
+bot_response = "Oh- {author} picked me up- okay, where're we going? {FLOOF_HAPPY}"
+self_response = "{author} discovered a physics glitch and carried themselves into the sky... {FLOOF_WHAT}"
+other_responses = [
+  "{author} just, grabbed {target} and started carrying them over their shoulder {FLOOF_OWO}",
+  "Oh my- {author} is now carrying {target}! {FLOOF_OWO}",
+  "{author} must be strong- they just picked {target} right up! {FLOOF_OWO}",
+  "Whoa! {author} picked up {target}- I wonder where {author}'s gonna take them? {FLOOF_HAPPY}",
+  "Hey! {author} just stole something and took off! They stole... {target}!! {FLOOF_OWO}",
+  "Awww {author}'s giving {target} a piggy back ride {FLOOF_HAPPY}",
+  "Pfft, {author} just started carrying {target} under {author}'s arm as if they were luggage {FLOOF_LOL}",
+]
+
+[poke]
+description = "Hey, hey, hey, hey, hey, hey, hey-"
+target_description = "Whom to get the attention of"
+bot_response = "Huh, oh- what do you need {author}? {FLOOF}"
+self_response = "{author} has... poked themselves? I'm not sure why... {FLOOF_WHAT}"
+other_responses = [
+  "Hey {target}, hey {target}, hey {target}, hey {target}-\nI think {author} might want your attention {FLOOF_BLEP}",
+  "\\*poke* \\*poke*\n{author}'s poking you, {target} {FLOOF_BLEP}",
+  "{author} poked {target} with a stick from a distance {FLOOF_PEEK}",
+  "{target} felt a sudden poke from {author}, startling them {FLOOF_OWO}",
+  "Sorry {target}, {author}'s not gonna stop poking you until you pay attention to them {FLOOF_TIRED}",
+  "{target} suddenly felt a poke on their shoulder, only to turn and see {author} innocently looking away {FLOOF_INNOCENT}",
+]
+
+[tickle]
+description = "Wh- HO- HAH HAH HAH- ST- STOP IT HAH-"
+target_description = "TICKLE SOMEBODY ELSE, PLEEAASE"
+bot_response = "N- NO- HAH HAH- HEEE- HO- HAH- PLEASE- SOMEBODY- MAKE {author} STOPPPP HUHEHAH- {FLOOF_SCARED}"
+self_response = "{author}- you can't tickle *yourself*, it won't work... {FLOOF_TIRED}"
+other_responses = [
+  "Oh no- {target}, {author}'s discovered your weakness: *tickles* {FLOOF_NERVOUS}",
+  "The crime: {target}'s been *killed*\nThe criminal: {author}\nThe weapon: *tickles* {FLOOF_SAD}",
+  "All it took from {author} was a little \\*tickle\\* \\*tickle\\* and {target} totally collapsed {FLOOF_LOL}",
+  "WHOA, OH MY GOD, {author} TACKLED {target} TO THE GROUND AND- oh {author}'s just tickling them, they'll be fine {FLOOF_HAPPY}",
+  "{author} tried to tickle {target}, ***but they resisted...*** whoa, that's crazy, honestly {FLOOF_OWO}",
+  "Alright, so, {author}, you wanna take down {target}, huh? *Well I've got just the thing, one weird trick discovered by a mom, **tickles*** {FLOOF_COOL}",
+  "Oof, {author} suddenly tickled {target}, but got punched in the face by {target}'s reflexes- ouch... {FLOOF_LURK}",
+]
+early_access = true
+
+[blow_up]
+description = "*Blows up pancakes with mind*"
+target_description = "\"Mah fricking pancakes\""
+bot_response = "{author} blew up Goober B... wait, wh- {FLOOF_SPLODE}"
+self_response = "***{author}'S SELF DESTRUCTING!!! {FLOOF_SCARED}***"
+other_responses = [
+  "{author} blew up {target} with their mind {FLOOF_NERVOUS}",
+  "{author} snapped their fingers and {target} exploded {FLOOF_NERVOUS}",
+  "{author} just, said \"blow up\", and then {target} blew up?? {FLOOF_NERVOUS}",
+  "{target} was engulfed in an explosion, meanwhile {author} walked the other way, wearing sunglasses, of course {FLOOF_COOL}",
+  "Oh no... {author} hit the big red button, and {target} *exploded* {FLOOF_NERVOUS}",
+  "*{target}, get out of here! {author}'s gonna-* {FLOOF_SPLODE}",
+  "Oops, {author} found out that the trigger word for the explosive implant in {target}'s head was \"petrichor\" {FLOOF_NERVOUS}",
+]
+early_access = true
+
+[hamburger]
+description = "hamburger"
+target_description = "hamburger"
+bot_response = "{author} hamburger"
+self_response = "{author} hamburger"
+other_responses = [
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburger",
+  "{author} {target} hamburber",
+]
+early_access = true
+
+[defenestrate]
+description = "What does \"defenestrate\" mean...?"
+target_description = "I guess you could just try it and see..."
+bot_response = "Oh no! {author}'s defenestrating me! Which is a (rare) word which means to throw (someone) out of a window! Oh no!!! {FLOOF_OWO}"
+self_response = "{author} needed out so they swiftly *jumped out of the window* to their immediate left. Seems a little bit rash to me {FLOOF_TIRED}"
+other_responses = [
+  "{author} defenestrated {target}. Haha you thought I was gonna tell you what the word meant hehe {FLOOF_TEEHEE}",
+  "> # de•fen•es•trate |dēˈfenəˌstrāt|\n> -# verb *[with object]*\n> 1. *rare* **throw (someone) out of a window**: *{author} defenestrated {target} in a case that was previously suspected to be suicide.*\n> 2. **remove or dismiss (someone) from a position of power or authority**: *the overwhelming view is that they should be defenestrated before the next election.*\n> \n> ### ORIGIN\n> **early 17th century (as *defenestrated*): see defenestration.**\n\nSo now you know! {FLOOF_BLEP}",
+  "Oh, {author} threw {target} out of a window- so that's what it means... {FLOOF_TIRED}",
+  "{author} *threw* {target} *out of a window*- like, *breaking through the glass, {target} is now a puddle on the ground outside*! Idk how to express how ridiculous this is {FLOOF_NERVOUS}",
+  "Hey {author}, where'd {target} go?\n \\*suspiciously {target} shaped hole in the window* {FLOOF_LOAD_ANIMATED}",
+  "Oopsies {author} just committed a crime on {target}! They pushed {target} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
+  "{author}, you just pushed {target} out of a window... don't play dumb, you knew what the word meant, you're a smart cookie- and a criminal {FLOOF_WHAT}",
+]
+early_access = true
+
 [arrest]
 description = "Stop in the name of the law!"
 target_description = "Anything you say can and will be used against you."
