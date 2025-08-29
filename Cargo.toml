@@ -70,4 +70,4 @@ shuttle-shared-db = { version = "0.53.0", features = ["opendal-postgres"] }
 tokio = "1.47.1"
 topgg = { version = "1.4.2", features = ["autoposter", "serenity-cached"] }
 tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+tracing-subscriber = { version = "0.3.20", features = ["env-filter"] }
