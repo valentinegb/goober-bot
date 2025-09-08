@@ -55,7 +55,7 @@ monetary = { path = "crates/monetary" }
 shared = { path = "crates/shared" }
 
 charts-rs = { version = "0.3.24", features = ["image-encoder"] }
-chrono = "0.4.41"
+chrono = "0.4.42"
 git2 = "0.20.2"
 opendal = { version = "0.51.2", default-features = false }
 paste = "1.0.15"
