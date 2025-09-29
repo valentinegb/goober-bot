@@ -62,7 +62,7 @@ paste = "1.0.15"
 poise = { git = "https://github.com/serenity-rs/poise.git", rev = "80a3a9c3ca1629725f0fa4ec98372d39cf36f6b6" }
 poise_error = "1.6.0"
 rand = "0.9.2"
-serde = { version = "1.0.219", features = ["derive"] }
+serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.145"
 shuttle-runtime = { version = "0.53.0", default-features = false }
 shuttle-serenity = "0.53.0"
