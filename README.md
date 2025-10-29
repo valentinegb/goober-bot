@@ -16,7 +16,7 @@ available.
 4. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
    you uploaded in step 3 \
    You only need to replace `production_id` if you're not developing the bot
-5. Run the following in a shell: \
+5. Run the following in a shell:
    ```sh
    GOOBER_BOT_DISCORD_TOKEN=<put your token here, remove the angle brackets> nix run
    ```
