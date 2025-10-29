@@ -40,16 +40,16 @@ remove the angle brackets.
    ```sh
    cd goober-bot
    ```
-2. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
+3. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
    It doesn't require any privileged intents or any permissions. You don't even
    have to add the `bot` scope when inviting it to a server if you don't want
    to, just `applications.commands`
-3. Upload emojis to the application \
+4. Upload emojis to the application \
    The emojis the bot officially uses can be found [here](https://volpeon.ink/emojis/floof/)
-4. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
-   you uploaded in step 3 \
+5. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
+   you uploaded in step 4 \
    You only need to replace `production_id` if you're not developing the bot
-5. Run the following in a shell:
+6. Run the following in a shell:
    ```sh
    GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> nix run
    ```
