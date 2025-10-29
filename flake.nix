@@ -36,6 +36,7 @@
                 lockFile = ./Cargo.lock;
                 allowBuiltinFetchGit = true;
               };
+              meta.mainProgram = "goober-bot";
             };
 
             default = self.packages.${system}.goober-bot;
