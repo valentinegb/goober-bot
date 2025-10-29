@@ -18,6 +18,7 @@
                 lockFile = ./Cargo.lock;
                 allowBuiltinFetchGit = true;
               };
+              GOOBER_BOT_DISCORD_TOKEN = builtins.getEnv "GOOBER_BOT_DISCORD_TOKEN";
             };
 
             default = self.packages.${system}.goober-bot;

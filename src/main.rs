@@ -53,7 +53,7 @@ async fn try_main() -> anyhow::Result<()> {
             })
         })
         .build();
-    let mut client = ClientBuilder::new(env!("DISCORD_TOKEN"), GatewayIntents::empty())
+    let mut client = ClientBuilder::new(env!("GOOBER_BOT_DISCORD_TOKEN"), GatewayIntents::empty())
         .framework(framework)
         .await?;
 
