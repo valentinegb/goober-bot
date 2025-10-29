@@ -10,7 +10,10 @@ available.
 ## How to host
 
 1. [Install Nix, the package manager](https://nixos.org/download/)
-2. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications)
+2. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
+   It doesn't require any privileged intents or any permissions. You don't even
+   have to add the `bot` scope when inviting it to a server if you don't want
+   to, just `applications.commands`
 3. Upload emojis to the application \
    The emojis the bot officially uses can be found [here](https://volpeon.ink/emojis/floof/)
 4. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
