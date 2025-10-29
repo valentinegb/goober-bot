@@ -12,7 +12,7 @@ available.
 ### Prerequisites
 
 - [Git](https://git-scm.com/install/)
-- [Nix](https://nixos.org/download/)
+- [Nix](https://nixos.org/download/) (Recommended) OR [Rust](https://rust-lang.org/tools/install/)
 
 ### Steps
 
@@ -49,7 +49,11 @@ remove the angle brackets.
 5. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
    you uploaded in step 4 \
    You only need to replace `production_id` if you're not developing the bot
-6. Run the following in a shell:
+6. If using Nix, run the following:
    ```sh
    GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> nix run
+   ```
+   If using Rust, instead run:
+   ```sh
+   GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> cargo run
    ```
