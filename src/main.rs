@@ -1,9 +1,33 @@
+// Goober Bot, the Discord bot
+// Copyright (C) 2025  Valentine Briese
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// You may contact me via electronic mail at <valentinegb@icloud.com>.
+
+use std::env;
+
+use dotenvy::dotenv;
 use poise::{
     Framework, FrameworkOptions,
     samples::register_globally,
     serenity_prelude::{ClientBuilder, GatewayIntents},
 };
-use poise_error::{anyhow, dedup_error_chain};
+use poise_error::{
+    anyhow::{self, Context},
+    dedup_error_chain,
+};
 use tracing::{error, info};
 
 #[tokio::main]
@@ -17,10 +41,11 @@ async fn main() {
 
 async fn try_main() -> anyhow::Result<()> {
     info!("Starting up...");
+    dotenv().ok();
 
     let framework = Framework::builder()
         .options(FrameworkOptions {
-            commands: Vec::new().into_iter().chain(silly::commands()).collect(),
+            commands: silly::commands(),
             on_error: |error| {
                 Box::pin(async move {
                     if let Err(mut err) =
@@ -53,9 +78,12 @@ async fn try_main() -> anyhow::Result<()> {
             })
         })
         .build();
-    let mut client = ClientBuilder::new(env!("GOOBER_BOT_DISCORD_TOKEN"), GatewayIntents::empty())
-        .framework(framework)
-        .await?;
+    let mut client = ClientBuilder::new(
+        env::var("GOOBER_BOT_DISCORD_TOKEN").context("couldn't fetch $GOOBER_BOT_DISCORD_TOKEN")?,
+        GatewayIntents::empty(),
+    )
+    .framework(framework)
+    .await?;
 
     client.start().await?;
 

@@ -1,20 +1,36 @@
+# Goober Bot, the Discord bot
+# Copyright (C) 2025  Valentine Briese
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published
+# by the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# You may contact me via electronic mail at <valentinegb@icloud.com>.
+
 [package]
 name = "goober-bot"
 version = "2.0.0"
 edition.workspace = true
 
 [dependencies]
+early_access.workspace = true
+silly.workspace = true
+
+dotenvy.workspace = true
 poise.workspace = true
 poise_error.workspace = true
 tokio.workspace = true
 tracing-subscriber.workspace = true
 tracing.workspace = true
-
-early_access.workspace = true
-silly.workspace = true
-
-[build-dependencies]
-dotenvy.workspace = true
 
 [patch.crates-io]
 # Use latest commit from serenity-next branch once checks are passing so that components v2 can be used
