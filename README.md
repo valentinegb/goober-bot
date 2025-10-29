@@ -55,5 +55,5 @@ remove the angle brackets.
    ```
    If using Rust, instead run:
    ```sh
-   GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> cargo run
+   GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> cargo run --release
    ```
