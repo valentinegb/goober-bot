@@ -9,7 +9,37 @@ available.
 
 ## How to host
 
-1. [Install Nix, the package manager](https://nixos.org/download/)
+### Prerequisites
+
+- [Git](https://git-scm.com/install/)
+- [Nix](https://nixos.org/download/)
+
+### Steps
+
+Throughout these steps, replace any angled brackets with what they describe and
+remove the angle brackets.
+
+1. Clone the repository \
+   If you don't make any changes except the absolutely necessary ones mentioned
+   in these steps, just clone like this:
+   ```sh
+   git clone https://github.com/valentinegb/goober-bot.git
+   ```
+   However, if you plan on making other changes, you must [fork this repository](https://github.com/valentinegb/goober-bot/fork)
+   and clone your fork.
+   ```sh
+   git clone https://github.com/<your-username>/goober-bot.git
+   ```
+   You must also publish the changes you make. Run this after making changes:
+   ```sh
+   git add .
+   git commit -m "<Describe your changes here>"
+   git push
+   ```
+2. Navigate into the cloned repository
+   ```sh
+   cd goober-bot
+   ```
 2. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
    It doesn't require any privileged intents or any permissions. You don't even
    have to add the `bot` scope when inviting it to a server if you don't want
@@ -21,5 +51,5 @@ available.
    You only need to replace `production_id` if you're not developing the bot
 5. Run the following in a shell:
    ```sh
-   GOOBER_BOT_DISCORD_TOKEN=<put your token here, remove the angle brackets> nix run
+   GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> nix run
    ```
