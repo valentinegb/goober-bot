@@ -33,20 +33,19 @@ use tracing_subscriber::{EnvFilter, layer::SubscriberExt as _, util::SubscriberI
 
 #[tokio::main]
 async fn main() {
-    let fmt_layer = tracing_subscriber::fmt::layer().with_target(false);
-    let filter_layer = EnvFilter::try_from_default_env()
-        .or_else(|_| EnvFilter::try_new("info"))
-        .unwrap();
-    let registry = tracing_subscriber::registry()
-        .with(fmt_layer)
-        .with(filter_layer);
+    let registry = tracing_subscriber::registry();
 
     match tracing_journald::layer() {
         Ok(journald_layer) => {
             registry.with(journald_layer).init();
         }
         Err(_) => {
-            registry.init();
+            let fmt_layer = tracing_subscriber::fmt::layer().with_target(false);
+            let filter_layer = EnvFilter::try_from_default_env()
+                .or_else(|_| EnvFilter::try_new("info"))
+                .unwrap();
+
+            registry.with(fmt_layer).with(filter_layer).init();
         }
     }
 
