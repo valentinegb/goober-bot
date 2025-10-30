@@ -86,7 +86,7 @@ async fn try_main() -> anyhow::Result<()> {
         })
         .setup(|ctx, ready, framework| {
             Box::pin(async move {
-                info!("Online as {}", ready.user.name);
+                info!("Online as {}", ready.user.tag());
                 register_globally(ctx, &framework.options().commands).await?;
                 info!("Finished setup");
 
