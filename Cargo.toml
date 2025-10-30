@@ -29,6 +29,7 @@ dotenvy.workspace = true
 poise.workspace = true
 poise_error.workspace = true
 tokio.workspace = true
+tracing-journald.workspace = true
 tracing-subscriber.workspace = true
 tracing.workspace = true
 
@@ -53,4 +54,5 @@ thiserror = "2.0.12"
 tokio = { version = "1.47.0", features = ["rt-multi-thread", "macros"] }
 toml = { version = "0.9.2", default-features = false, features = ["parse", "serde", "std"] }
 tracing = "0.1.41"
-tracing-subscriber = "0.3.19"
+tracing-journald = "0.3.1"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
