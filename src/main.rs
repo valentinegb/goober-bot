@@ -74,11 +74,7 @@ async fn try_main() -> anyhow::Result<()> {
             },
             pre_command: |ctx| {
                 Box::pin(async move {
-                    info!(
-                        "User '{}' invoked '{}'",
-                        ctx.author().name,
-                        ctx.invocation_string(),
-                    )
+                    info!("{} invoked {}", ctx.author().tag(), ctx.invocation_string())
                 })
             },
             ..Default::default()
