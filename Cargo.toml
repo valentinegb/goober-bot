@@ -22,7 +22,7 @@ version = "2.0.0"
 edition.workspace = true
 
 [dependencies]
-early_access.workspace = true
+monetization.workspace = true
 silly.workspace = true
 
 dotenvy.workspace = true
@@ -41,7 +41,7 @@ poise = { git = "https://github.com/serenity-rs/poise.git", rev = "518ff0564865b
 edition = "2024"
 
 [workspace.dependencies]
-early_access.path = "crates/early_access"
+monetization.path = "crates/monetization"
 emoji.path = "crates/emoji"
 silly.path = "crates/silly"
 

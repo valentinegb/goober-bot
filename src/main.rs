@@ -64,7 +64,7 @@ async fn try_main() -> anyhow::Result<()> {
             on_error: |error| {
                 Box::pin(async move {
                     if let Err(mut err) =
-                        early_access::try_handle_error_or(error, poise_error::try_handle_error)
+                        monetization::try_handle_error_or(error, poise_error::try_handle_error)
                             .await
                     {
                         dedup_error_chain(&mut err);

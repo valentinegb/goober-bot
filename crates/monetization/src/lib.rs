@@ -25,17 +25,17 @@ use poise::{
 use poise_error::anyhow;
 use thiserror::Error;
 
-const EARLY_ACCESS_SKU_ID: SkuId = SkuId::new(1351234259867926671);
+const SUBSCRIPTION_SKU_ID: SkuId = SkuId::new(1351234259867926671);
 
 #[derive(Error, Debug)]
 pub enum Error {
-    #[error("command author does not have early access")]
-    NoEarlyAccess,
-    #[error("attempted to check for early access from a prefix command")]
+    #[error("command author is not a subscriber")]
+    NotSubscriber,
+    #[error("attempted to check for subscription from a prefix command")]
     PrefixContext,
 }
 
-pub async fn has_early_access<U>(
+pub async fn is_subscriber<U>(
     #[allow(unused_variables)] // Used in release build but not debug build
     ctx: poise::Context<'_, U, anyhow::Error>,
 ) -> Result<bool, anyhow::Error> {
@@ -52,14 +52,14 @@ pub async fn has_early_access<U>(
                 .any(|entitlement| {
                     let now = Timestamp::now();
 
-                    entitlement.sku_id == EARLY_ACCESS_SKU_ID
+                    entitlement.sku_id == SUBSCRIPTION_SKU_ID
                         && entitlement
                             .starts_at
                             .is_none_or(|starts_at| starts_at <= now)
                         && entitlement.ends_at.is_none_or(|ends_at| ends_at > now)
                 })
                 .then_some(true)
-                .ok_or(anyhow!(Error::NoEarlyAccess)),
+                .ok_or(anyhow!(Error::NotSubscriber)),
             poise::Context::Prefix(_prefix_context) => Err(anyhow!(Error::PrefixContext)),
         }
     }
@@ -80,7 +80,7 @@ where
             error: Some(error),
             ctx,
             ..
-        } if matches!(error.downcast_ref(), Some(Error::NoEarlyAccess)) => {
+        } if matches!(error.downcast_ref(), Some(Error::NotSubscriber)) => {
             ctx.send(
                 CreateReply::default()
                     .embed(
@@ -98,7 +98,7 @@ where
                             .color(BLURPLE),
                     )
                     .components(vec![CreateActionRow::Buttons(vec![
-                        CreateButton::new_premium(EARLY_ACCESS_SKU_ID),
+                        CreateButton::new_premium(SUBSCRIPTION_SKU_ID),
                     ])])
                     .ephemeral(true),
             )

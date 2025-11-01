@@ -337,15 +337,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 
 [[package]]
-name = "early_access"
-version = "0.0.0"
-dependencies = [
- "poise",
- "poise_error",
- "thiserror 2.0.17",
-]
-
-[[package]]
 name = "emoji"
 version = "0.0.0"
 dependencies = [
@@ -554,7 +545,7 @@ name = "goober-bot"
 version = "2.0.0"
 dependencies = [
  "dotenvy",
- "early_access",
+ "monetization",
  "poise",
  "poise_error",
  "silly",
@@ -946,6 +937,15 @@ dependencies = [
  "libc",
  "wasi",
  "windows-sys 0.61.2",
+]
+
+[[package]]
+name = "monetization"
+version = "0.0.0"
+dependencies = [
+ "poise",
+ "poise_error",
+ "thiserror 2.0.17",
 ]
 
 [[package]]
@@ -1546,8 +1546,8 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 name = "silly"
 version = "0.0.0"
 dependencies = [
- "early_access",
  "emoji",
+ "monetization",
  "poise",
  "poise_error",
  "rand 0.9.2",

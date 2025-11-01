@@ -222,7 +222,7 @@ other_responses = [
   "Alright, so, {author}, you wanna take down {target}, huh? *Well I've got just the thing, one weird trick discovered by a mom, **tickles*** {FLOOF_COOL}",
   "Oof, {author} suddenly tickled {target}, but got punched in the face by {target}'s reflexes- ouch... {FLOOF_LURK}",
 ]
-early_access = true
+subscriber_only = true
 
 [blow_up]
 description = "*Blows up pancakes with mind*"
@@ -238,7 +238,7 @@ other_responses = [
   "*{target}, get out of here! {author}'s gonna-* {FLOOF_SPLODE}",
   "Oops, {author} found out that the trigger word for the explosive implant in {target}'s head was \"petrichor\" {FLOOF_NERVOUS}",
 ]
-early_access = true
+subscriber_only = true
 
 [hamburger]
 description = "hamburger"
@@ -269,7 +269,7 @@ other_responses = [
   "{author} {target} hamburger",
   "{author} {target} hamburber",
 ]
-early_access = true
+subscriber_only = true
 
 [defenestrate]
 description = "What does \"defenestrate\" mean...?"
@@ -285,7 +285,7 @@ other_responses = [
   "Oopsies {author} just committed a crime on {target}! They pushed {target} out of the window of a 12 story building! Whoops! Your honor, I plead: I didn't know what the word meant!!! {FLOOF_PLEAD}",
   "{author}, you just pushed {target} out of a window... don't play dumb, you knew what the word meant, you're a smart cookie- and a criminal {FLOOF_WHAT}",
 ]
-early_access = true
+subscriber_only = true
 
 [arrest]
 description = "Stop in the name of the law!"
@@ -301,4 +301,4 @@ other_responses = [
     "Hey there, uh, {target}? Is it? Yeah, uhm, we've got a noise complaint from {author} for you... we're gonna have to put you under arrest {FLOOF_SMUG}",
     "{author} is arresting {target}? Wait, they're not a cop- where'd they get those handcuffs? {FLOOF_LOAD_ANIMATED}",
 ]
-early_access = true
+subscriber_only = true

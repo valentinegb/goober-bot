@@ -1,3 +1,4 @@
 /target
 /result
-/.env
+.env
+.DS_Store

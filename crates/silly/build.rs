@@ -28,7 +28,7 @@ struct Silly {
     bot_response: String,
     other_responses: Vec<String>,
     #[serde(default)]
-    early_access: bool,
+    subscriber_only: bool,
 }
 
 fn main() {
@@ -54,12 +54,12 @@ fn main() {
                     self_response,
                     bot_response,
                     other_responses,
-                    early_access,
+                    subscriber_only,
                 },
             ) in sillies
             {
-                let early_access_check = if early_access {
-                    ",\ncheck = has_early_access"
+                let subscriber_only_check = if subscriber_only {
+                    ",\ncheck = is_subscriber"
                 } else {
                     ""
                 };
@@ -74,7 +74,7 @@ fn main() {
                     #[command(\n    \
                         slash_command,\n    \
                         install_context = \"Guild | User\",\n    \
-                        interaction_context = \"Guild | BotDm | PrivateChannel\"{early_access_check}\n            \
+                        interaction_context = \"Guild | BotDm | PrivateChannel\"{subscriber_only_check}\n            \
                     )]\n\
                     async fn {name}(\n    \
                         ctx: poise_error::Context<'_>,\n    \

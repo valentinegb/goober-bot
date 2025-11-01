@@ -17,7 +17,7 @@
 # You may contact me via electronic mail at <valentinegb@icloud.com>.
 
 [package]
-name = "early_access"
+name = "monetization"
 edition.workspace = true
 
 [dependencies]

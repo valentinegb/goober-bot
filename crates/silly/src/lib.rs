@@ -16,8 +16,8 @@
 //
 // You may contact me via electronic mail at <valentinegb@icloud.com>.
 
-use early_access::has_early_access;
 use emoji::substitute_emojis;
+use monetization::is_subscriber;
 use poise::{
     command,
     serenity_prelude::{Mentionable, UserId},
