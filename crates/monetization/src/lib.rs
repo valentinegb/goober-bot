@@ -19,7 +19,7 @@
 use poise::{
     CreateReply, FrameworkError,
     serenity_prelude::{
-        CreateActionRow, CreateButton, CreateEmbed, Mentionable, SkuId, colours::branding::BLURPLE,
+        CreateActionRow, CreateButton, CreateEmbed, SkuId, colours::branding::BLURPLE,
     },
 };
 use poise_error::anyhow;
@@ -85,16 +85,17 @@ where
                 CreateReply::default()
                     .embed(
                         CreateEmbed::default()
-                            .title("Early Access Required")
-                            .description(format!(
-                                "This command requires you to be a member of **Early Access**.\n\
+                            .title("Goober Bot Plus Required")
+                            .description(
+                                "This command requires you to be a member of \
+                                **Goober Bot Plus**.\n\
                                 \n\
-                                Subscribing to **Early Access** gives you access to a handful of \
-                                commands before anyone else while also supporting me, the \
-                                developer (hi!), and the continued development of {}. I appreciate \
-                                it more than you know!",
-                                ctx.framework().bot_id.mention(),
-                            ))
+                                Subscribing to **Goober Bot Plus** gives you \
+                                access to a handful of extra commands no one \
+                                else gets while also supporting me, the \
+                                developer (hi!). I appreciate it more than you \
+                                know!",
+                            )
                             .color(BLURPLE),
                     )
                     .components(vec![CreateActionRow::Buttons(vec![
