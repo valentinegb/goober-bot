@@ -1,49 +1,39 @@
-# Privacy Policy for Goober Bot
+# Privacy Policy
 
-**Effective Date: February 15th, 2025**
+**Effective Date: December 2nd, 2025**
 
 ## 1. Data Collection
 
-- **Usernames, User IDs, Server IDs, and Channel IDs:** The bot collects these
-  identifiers. This data is only collected as needed for specific
-  functionalities and is never stored without user initiation.
+- **Usernames:** The bot collects usernames. This data is only collected for
+  debugging purposes.
 - **No Personal Information:** The bot does not collect personal information
   beyond what is mentioned above.
 
 ## 2. Data Usage
 
 - **Usernames:** Collected for logging and debugging purposes.
-- **User IDs and Server IDs:** Used for the bot's strike moderation system.
-- **Server IDs and Channel IDs:** Used for server configuration purposes.
-
-All collected data is crucial for the bot's functionalities and is collected as
-required.
 
 ## 3. Data Sharing
 
 - **No Third-Party Sharing:** The bot does not share any collected data with
   third parties.
-- **Data Access:** Collected data can be accessed by the bot, the developer, and
-  Shuttle.
+- **Data Access:** Collected data can be accessed by the developer.
 
 ## 4. Data Storage and Security
 
-- **Storage:** Data is stored on Shuttle's servers in a shared database.
-- **Security:** Shuttle is responsible for preventing unauthorized access to the
-  data.
+- **Storage:** Data is stored in a log on the device in which the bot runs.
+- **Security:** Individuals with access to the device have access to the log.
 
 ## 5. Data Retention
 
 - **Permanent Storage:** The collected data is stored permanently.
 - **Direct Access, Modification, or Deletion:** Data may be directly accessed,
-  modified, or deleted by the developer or Shuttle for maintenance or
-  migrational purposes.
+  modified, or deleted by the developer for debugging or maintenance.
 
 ## 6. User Rights
 
-- **Data Access, Modification, and Deletion:** Users may not request for their
-  data to be directly accessed, modified, or deleted, since this may allow for
-  reversing moderation actions which may be an overreach.
+- **Data Access, Modification, and Deletion:** Users may request for their data
+  to be directly accessed, modified, or deleted.
 
 ## 7. Changes to the Privacy Policy
 
