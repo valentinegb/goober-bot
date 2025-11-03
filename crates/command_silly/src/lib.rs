@@ -341,7 +341,6 @@ silly_command! {
 
 silly_command! {
     /// Wh- HO- HAH HAH HAH- ST- STOP IT HAH-
-    #[early_access]
     fn tickle("TICKLE SOMEBODY ELSE, PLEEAASE") {
         bot_message = "N- NO- HAH HAH- HEEE- HO- HAH- PLEASE- SOMEBODY- MAKE {author} STOPPPP HUHEHAH- {FLOOF_SCARED}";
         author_message = "{author}- you can't tickle *yourself*, it won't work... {FLOOF_TIRED}";
@@ -444,4 +443,19 @@ silly_command! {
     }
 }
 
+silly_command! {
+    /// :3
+    #[early_access]
+    fn rickroll("The victim") {
+        bot_message = "{author} just rickrolled me... {FLOOF_TIRED}";
+        author_message = "{author} just rickrolled themselves... maybe they're bored? {FLOOF_TIRED}";
+        messages = [
+            "{author} just rickrolled {user}!!! {FLOOF_OWO}",
+            "{author}'s never gonna run around and desert {user} {FLOOF_HAPPY}",
+            "{author}'s never gonna give {user} up {FLOOF_BLEP}",
+            "{author} just rickrolled {user} and now they're never gonna let them down {FLOOF_SMUG}",
+            "Hey {user} {author} thinks rickrolls are still funny in 2025, what a loser {FLOOF_LOL}",
+        ];
+    }
+}
 // TODO: /cuddle
