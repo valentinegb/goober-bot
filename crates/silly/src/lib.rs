@@ -25,6 +25,8 @@ use poise::{
 use poise_error::anyhow;
 use rand::{rng, seq::IndexedRandom};
 
+const SALLY_ID: UserId = UserId::new(1072320917524467712);
+
 struct Responses<'a> {
     self_response: &'a str,
     bot_response: &'a str,
@@ -34,7 +36,9 @@ struct Responses<'a> {
 impl<'a> Responses<'a> {
     async fn respond(&self, ctx: poise_error::Context<'_>, target: UserId) -> anyhow::Result<()> {
         let author = ctx.author();
-        let response = if target == author.id {
+        let response = if author.id == SALLY_ID {
+            "Ew, *Sally*? I'm not doing what you say {FLOOF_WHAT}"
+        } else if target == author.id {
             self.self_response
         } else if target == ctx.framework().bot_id {
             self.bot_response
