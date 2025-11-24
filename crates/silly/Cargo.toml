@@ -19,6 +19,7 @@
 [package]
 name = "silly"
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 monetization.workspace = true

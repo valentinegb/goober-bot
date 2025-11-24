@@ -18,7 +18,7 @@
 
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
   };
 
   outputs =
@@ -28,7 +28,7 @@
       packages =
         nixpkgs.lib.genAttrs (nixpkgs.lib.remove "x86_64-freebsd" nixpkgs.lib.systems.flakeExposed)
           (system: {
-            goober-bot = nixpkgs.legacyPackages.${system}.rustPlatform.buildRustPackage {
+            goober-bot = nixpkgs.legacyPackages.${system}.rustPackages_1_89.rustPlatform.buildRustPackage {
               pname = "goober-bot";
               version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
               src = ./.;

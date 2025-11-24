@@ -19,6 +19,7 @@
 [package]
 name = "emoji"
 edition.workspace = true
+rust-version.workspace = true
 
 [build-dependencies]
 serde.workspace = true

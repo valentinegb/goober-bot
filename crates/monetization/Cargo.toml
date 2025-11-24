@@ -19,6 +19,7 @@
 [package]
 name = "monetization"
 edition.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 poise.workspace = true
