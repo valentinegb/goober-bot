@@ -40,8 +40,8 @@ poise = { git = "https://github.com/serenity-rs/poise.git", rev = "518ff0564865b
 
 [workspace.package]
 edition = "2024"
-# Latest version available on nixos-25.05
-rust-version = "1.89"
+# Latest version available on nixos-25.11
+rust-version = "1.91"
 
 [workspace.dependencies]
 monetization.path = "crates/monetization"
