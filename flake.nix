@@ -42,5 +42,36 @@
             default = self.packages.${system}.goober-bot;
           });
 
+      nixosModules = {
+        goober-bot =
+          {
+            lib,
+            config,
+            pkgs,
+            ...
+          }:
+          {
+            options = {
+              services.goober-bot = {
+                enable = lib.mkEnableOption "goober-bot";
+                token = lib.mkOption { type = lib.types.str; };
+              };
+            };
+            config = lib.mkIf config.services.goober-bot.enable {
+              systemd.services.goober-bot = {
+                wantedBy = [ "multi-user.target" ];
+                after = [ "network.target" ];
+                environment.GOOBER_BOT_DISCORD_TOKEN = config.services.goober-bot.token;
+                serviceConfig = {
+                  ExecStart = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.goober-bot;
+                  Restart = "always";
+                };
+              };
+            };
+          };
+
+        default = self.nixosModules.goober-bot;
+      };
+
     };
 }
