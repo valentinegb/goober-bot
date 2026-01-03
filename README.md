@@ -30,26 +30,28 @@ remove the angle brackets.
    ```sh
    git clone https://github.com/<your-username>/goober-bot.git
    ```
-   You must also publish the changes you make. Run this after making changes:
+2. Navigate into the cloned repository
+   ```sh
+   cd goober-bot
+   ```
+3. You must publish the changes you make, if you make any besides the absolutely
+   necessary changes describes in these instructions. Run this after making
+   changes:
    ```sh
    git add .
    git commit -m "<Describe your changes here>"
    git push
    ```
-2. Navigate into the cloned repository
-   ```sh
-   cd goober-bot
-   ```
-3. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
+4. Create an application on [Discord's developer dashboard](https://discord.com/developers/applications) \
    It doesn't require any privileged intents or any permissions. You don't even
    have to add the `bot` scope when inviting it to a server if you don't want
    to, just `applications.commands`
-4. Upload emojis to the application \
+5. Upload emojis to the application \
    The emojis the bot officially uses can be found [here](https://volpeon.ink/emojis/floof/)
-5. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
+6. Replace the IDs in `crates/emoji/src/emojis.toml` with the IDs of the emojis
    you uploaded in step 4 \
    You only need to replace `production_id` if you're not developing the bot
-6. If using Nix, run the following:
+7. If using Nix, run the following:
    ```sh
    GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> nix run
    ```
@@ -57,3 +59,46 @@ remove the angle brackets.
    ```sh
    GOOBER_BOT_DISCORD_TOKEN=<your.discord.token> cargo run --release
    ```
+   If you are using [NixOS](https://nixos.org) with
+   [flakes](https://wiki.nixos.org/wiki/Flakes), you can use Goober Bot's NixOS
+   module. Add this repository as an input like so:
+   ```nix
+   {
+     inputs = {
+       nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+       goober-bot = {
+         url = "github:valentinegb/goober-bot";
+         inputs.nixpkgs.follows = "nixpkgs";
+       };
+     };
+     outputs =
+       {
+         self,
+         nixpkgs,
+         goober-bot
+       }:
+       {
+         nixosConfigurations = {
+           my-config = nixpkgs.lib.nixosSystem {
+             modules = [
+               goober-bot.nixosModules.goober-bot
+               ./configuration.nix
+             ];
+           };
+         };
+       };
+   }
+   ```
+   Then add the following to your configuration:
+   ```nix
+   { ... }:
+   {
+     # ...
+     services.goober-bot = {
+       enable = true;
+       token = "<your.discord.token>";
+     };
+     # ...
+   }
+   ```
+   Using NixOS is the way I officially run Goober Bot myself.
