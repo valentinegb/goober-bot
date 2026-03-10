@@ -65,6 +65,7 @@
                 serviceConfig = {
                   ExecStart = lib.getExe self.packages.${pkgs.stdenv.hostPlatform.system}.goober-bot;
                   Restart = "always";
+                  RestartSec = "5s";
                 };
               };
             };
