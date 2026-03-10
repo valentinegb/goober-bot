@@ -96,7 +96,7 @@ async fn try_main() -> anyhow::Result<()> {
     .framework(framework)
     .await?;
 
-    client.start().await?;
+    client.start_autosharded().await?;
 
     Ok(())
 }
