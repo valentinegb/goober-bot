@@ -159,7 +159,7 @@ other_responses = [
   "{author} bapped {target} and {target} jumped {FLOOF_LOL}",
   "{target} was startled for a moment when {author} snuck up and bapped them {FLOOF_LOL}",
   "{author} sloooowly reached out... and then bapped {target} {FLOOF_LURK}",
-  "{author} swat at and bapped {target} like a cat {FLOOF_CAT}",
+  "{author} swatted at and bapped {target} like a cat {FLOOF_CAT}",
   "LOOK OUT {target}, {author}'S GONNA- oh, they only bapped you {FLOOF_TIRED}",
   "{author} bapped {target} before retreating into the shadows... {FLOOF_PEEK}",
 ]
