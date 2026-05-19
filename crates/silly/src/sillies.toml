@@ -79,7 +79,7 @@ self_response = "BAH- {author} JUST K-KILLED THEMSELVES??? NOOOOOOOOOO {FLOOF_SC
 other_responses = [
   "{author} crept up behind {target} and murdered them!!! {FLOOF_OWO}",
   "{author} just pulled out a bazooka and blew {target} up!?!? {FLOOF_OWO}",
-  "{author} stared directly into {target}'s eyes and shouted \"POMEGRANATE\", triggering the cognitohazard previously planted in {target}'s brain, killing them instantly {FLOOF_NERVOUS}",
+  "{author} stared directly into {target}'s eyes and shouted \"POMEGRANATE\", triggering the memetic kill agent previously planted in {target}'s brain, killing them instantly {FLOOF_NERVOUS}",
   "{author} just went \"BOO\", giving {target} a fatal heart attack {FLOOF_OWO}",
   "{author} just went \"OOGA BOOGA\", giving {target} a fatal heart attack {FLOOF_OWO}",
   "{author} killed {target} when the lights went out so no one would know it was them... {FLOOF_SMUG}",
