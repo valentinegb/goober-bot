@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1773110118,
-        "narHash": "sha256-mPAG8phMbCReKSiKAijjjd3v7uVcJOQ75gSjGJjt/Rk=",
+        "lastModified": 1779877693,
+        "narHash": "sha256-NOF9NAREhxr50bbBfVcVOq+ArCMSoe8dP79Pk2uyARk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e607cb5360ff1234862ac9f8839522becb853bb9",
+        "rev": "4100e830e085863741bc69b156ec4ccd53ab5be0",
         "type": "github"
       },
       "original": {
@@ -16,9 +16,38 @@
         "type": "github"
       }
     },
+    "nixpkgs-patch-crates-io-fix": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-NeVhUc5akPtDHt73pjA9OovvyllQjee/6BN8fYkS3D4=",
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/pull/524985.diff"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/NixOS/nixpkgs/pull/524985.diff"
+      }
+    },
+    "nixpkgs-patcher": {
+      "locked": {
+        "lastModified": 1779142267,
+        "narHash": "sha256-ozaE7fp0HQ6MCVKz09p2mwSrt8cwpswYOBQc1Oa2Wk4=",
+        "owner": "gepbird",
+        "repo": "nixpkgs-patcher",
+        "rev": "1035997b647799694e4ac1cf217e7ee1c050bce0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gepbird",
+        "repo": "nixpkgs-patcher",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-patch-crates-io-fix": "nixpkgs-patch-crates-io-fix",
+        "nixpkgs-patcher": "nixpkgs-patcher"
       }
     }
   },
