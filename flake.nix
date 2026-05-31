@@ -18,48 +18,29 @@
 
 {
   inputs = {
-    # Move back to a stable channel once Rust 1.92 is available
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    # Remove once this fix lands in nixos-unstable
-    nixpkgs-patcher.url = "github:gepbird/nixpkgs-patcher";
-    nixpkgs-patch-crates-io-fix = {
-      url = "https://github.com/NixOS/nixpkgs/pull/524985.diff";
-      flake = false;
-    };
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
   };
 
   outputs =
-    {
-      self,
-      nixpkgs,
-      nixpkgs-patcher,
-      ...
-    }@inputs:
+    { self, nixpkgs }:
     {
 
       packages =
         nixpkgs.lib.genAttrs (nixpkgs.lib.remove "x86_64-freebsd" nixpkgs.lib.systems.flakeExposed)
-          (
-            system:
-            let
-              nixpkgs-patched = nixpkgs-patcher.lib.patchNixpkgs { inherit inputs system; };
-              pkgs-patched = import nixpkgs-patched { inherit system; };
-            in
-            {
-              goober-bot = pkgs-patched.rustPlatform.buildRustPackage {
-                pname = "goober-bot";
-                version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
-                src = ./.;
-                cargoLock = {
-                  lockFile = ./Cargo.lock;
-                  allowBuiltinFetchGit = true;
-                };
-                meta.mainProgram = "goober-bot";
+          (system: {
+            goober-bot = nixpkgs.legacyPackages.${system}.rustPlatform.buildRustPackage {
+              pname = "goober-bot";
+              version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
+              src = ./.;
+              cargoLock = {
+                lockFile = ./Cargo.lock;
+                allowBuiltinFetchGit = true;
               };
+              meta.mainProgram = "goober-bot";
+            };
 
-              default = self.packages.${system}.goober-bot;
-            }
-          );
+            default = self.packages.${system}.goober-bot;
+          });
 
       nixosModules = {
         goober-bot =
