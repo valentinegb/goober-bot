@@ -48,6 +48,7 @@ monetization.path = "crates/monetization"
 emoji.path = "crates/emoji"
 silly.path = "crates/silly"
 
+aho-corasick = "1.1.4"
 dotenvy = "0.15.7"
 poise = "0.6.1"
 poise_error = "1.6.0"

@@ -22,8 +22,9 @@ edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-monetization.workspace = true
+aho-corasick.workspace = true
 emoji.workspace = true
+monetization.workspace = true
 
 poise.workspace = true
 poise_error.workspace = true

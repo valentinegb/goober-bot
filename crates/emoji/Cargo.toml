@@ -21,6 +21,9 @@ name = "emoji"
 edition.workspace = true
 rust-version.workspace = true
 
+[dependencies]
+aho-corasick.workspace = true
+
 [build-dependencies]
 serde.workspace = true
 toml.workspace = true

@@ -16,6 +16,7 @@
 //
 // You may contact me via electronic mail at <valentinegb@icloud.com>.
 
+use aho_corasick::AhoCorasick;
 use emoji::substitute_emojis;
 use monetization::is_subscriber;
 use poise::{
@@ -43,9 +44,12 @@ impl<'a> Responses<'a> {
         };
 
         ctx.reply(
-            substitute_emojis(response)
-                .replace("{author}", &author.to_string())
-                .replace("{target}", &target.mention().to_string()),
+            AhoCorasick::new(["{author}", "{target}"])
+                .unwrap()
+                .replace_all(
+                    &substitute_emojis(response),
+                    &[author.to_string(), target.mention().to_string()],
+                ),
         )
         .await?;
 

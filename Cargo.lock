@@ -330,6 +330,7 @@ checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 name = "emoji"
 version = "0.0.0"
 dependencies = [
+ "aho-corasick",
  "serde",
  "toml",
 ]
@@ -1643,6 +1644,7 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 name = "silly"
 version = "0.0.0"
 dependencies = [
+ "aho-corasick",
  "emoji",
  "monetization",
  "poise",

@@ -38,21 +38,8 @@ fn main() {
         Err(err) => println!("cargo::error=could not deserialize `emojis.toml`: {err}"),
         Ok(emojis) => {
             let mut emoji_constants = String::new();
-            let mut substitute_emojis_fn = String::from(
-                "/// Substitutes emoji placeholders in a string with corresponding Discord\n\
-                /// formatted emoji.\n\
-                ///\n\
-                /// # Examples\n\
-                ///\n\
-                /// ```ignore\n\
-                /// assert_eq!(\n\
-                ///     substitute_emojis(\"This is a floof -> {FLOOF}\"),\n\
-                ///     \"This is a floof -> <:floof:1263609061539315722>\",\n\
-                /// );\n\
-                /// ```\n\
-                pub fn substitute_emojis(string: &str) -> String {\n    \
-                    string\n",
-            );
+            let mut patterns = String::new();
+            let mut replace_with = String::new();
 
             for (
                 name,
@@ -75,8 +62,8 @@ fn main() {
                     #[cfg(debug_assertions)]\n\
                     pub const {identifier}: &str = \"<{prefix}:{name}:{development_id}>\";\n"
                 );
-                substitute_emojis_fn +=
-                    &format!("        .replace(\"{{{identifier}}}\", {identifier})\n");
+                patterns += &format!("\n        \"{{{identifier}}}\",");
+                replace_with += &format!("\n            {identifier},");
             }
 
             if let Err(err) = std::fs::write(
@@ -84,7 +71,30 @@ fn main() {
                     &env::var_os("OUT_DIR").expect("build scripts should always have `$OUT_DIR`"),
                 )
                 .join("emojis.rs"),
-                format!("{emoji_constants}\n{substitute_emojis_fn}}}"),
+                format!(
+                    "{emoji_constants}\n\
+                    /// Substitutes emoji placeholders in a string with corresponding Discord\n\
+                    /// formatted emoji.\n\
+                    ///\n\
+                    /// # Examples\n\
+                    ///\n\
+                    /// ```ignore\n\
+                    /// assert_eq!(\n\
+                    ///     substitute_emojis(\"This is a floof -> {{FLOOF}}\"),\n\
+                    ///     \"This is a floof -> <:floof:1263609061539315722>\",\n\
+                    /// );\n\
+                    /// ```\n\
+                    pub fn substitute_emojis(string: &str) -> String {{\n    \
+                        aho_corasick::AhoCorasick::new([{patterns}\n    \
+                        ])\n    \
+                        .unwrap()\n    \
+                        .replace_all(\n        \
+                            string,\n        \
+                            &[{replace_with}\n        \
+                            ],\n    \
+                        )\n\
+                    }}"
+                ),
             ) {
                 println!("cargo::error=failed to write `emojis.rs`: {err}");
             }
