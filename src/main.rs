@@ -1,5 +1,5 @@
 // Goober Bot, the Discord bot
-// Copyright (C) 2025  Valentine Briese
+// Copyright (C) 2026  Valentine Briese
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published
