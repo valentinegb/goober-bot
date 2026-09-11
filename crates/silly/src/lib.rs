@@ -37,7 +37,7 @@ impl<'a> Responses<'a> {
         let author = ctx.author();
         let response = if target == author.id {
             self.self_response
-        } else if target == ctx.framework().bot_id {
+        } else if target == ctx.framework().bot_id() {
             self.bot_response
         } else {
             self.other_responses.choose(&mut rng()).unwrap()

@@ -26,16 +26,13 @@
     {
 
       packages =
-        nixpkgs.lib.genAttrs (nixpkgs.lib.remove "x86_64-freebsd" nixpkgs.lib.systems.flakeExposed)
+        nixpkgs.lib.genAttrs (nixpkgs.lib.systems.flakeExposed)
           (system: {
             goober-bot = nixpkgs.legacyPackages.${system}.rustPlatform.buildRustPackage {
               pname = "goober-bot";
-              version = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.version;
+              version = (fromTOML (builtins.readFile ./Cargo.toml)).package.version;
               src = ./.;
-              cargoLock = {
-                lockFile = ./Cargo.lock;
-                allowBuiltinFetchGit = true;
-              };
+              cargoLock.lockFile = ./Cargo.lock;
               meta.mainProgram = "goober-bot";
             };
 
