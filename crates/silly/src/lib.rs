@@ -16,6 +16,8 @@
 //
 // You may contact me via electronic mail at <valentinegb@icloud.com>.
 
+use std::sync::LazyLock;
+
 use aho_corasick::AhoCorasick;
 use monetization::is_subscriber;
 use poise::{
@@ -33,6 +35,9 @@ struct Responses<'a> {
 
 impl<'a> Responses<'a> {
     async fn respond(&self, ctx: poise_error::Context<'_>, target: UserId) -> anyhow::Result<()> {
+        static AHO_CORASICK: LazyLock<AhoCorasick> =
+            LazyLock::new(|| AhoCorasick::new(["{author}", "{target}"]).unwrap());
+
         let author = ctx.author();
         let response = if target == author.id {
             self.self_response
@@ -42,14 +47,10 @@ impl<'a> Responses<'a> {
             self.other_responses.choose(&mut rng()).unwrap()
         };
 
-        ctx.reply(
-            AhoCorasick::new(["{author}", "{target}"])
-                .unwrap()
-                .replace_all(
-                    response,
-                    &[author.to_string(), target.mention().to_string()],
-                ),
-        )
+        ctx.reply(AHO_CORASICK.replace_all(
+            response,
+            &[author.to_string(), target.mention().to_string()],
+        ))
         .await?;
 
         Ok(())

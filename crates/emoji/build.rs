@@ -85,10 +85,13 @@ fn main() {
                     /// );\n\
                     /// ```\n\
                     pub fn substitute_emojis(string: &str) -> String {{\n    \
-                        aho_corasick::AhoCorasick::new([{patterns}\n    \
-                        ])\n    \
-                        .unwrap()\n    \
-                        .replace_all(\n        \
+                        static AHO_CORASICK: std::sync::LazyLock<aho_corasick::AhoCorasick> =\n        \
+                            std::sync::LazyLock::new(|| {{\n            \
+                                aho_corasick::AhoCorasick::new([{patterns}\n                \
+                                ])\n                \
+                                .unwrap()\n            \
+                            }});\n\n    \
+                        AHO_CORASICK.replace_all(\n        \
                             string,\n        \
                             &[{replace_with}\n        \
                             ],\n    \
