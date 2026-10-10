@@ -23,7 +23,6 @@ rust-version.workspace = true
 
 [dependencies]
 aho-corasick.workspace = true
-emoji.workspace = true
 monetization.workspace = true
 
 poise.workspace = true
@@ -31,5 +30,6 @@ poise_error.workspace = true
 rand.workspace = true
 
 [build-dependencies]
+emoji.workspace = true
 serde.workspace = true
 toml.workspace = true

@@ -51,8 +51,8 @@ fn main() {
                 Silly {
                     description,
                     target_description,
-                    self_response,
-                    bot_response,
+                    mut self_response,
+                    mut bot_response,
                     other_responses,
                     subscriber_only,
                 },
@@ -63,9 +63,13 @@ fn main() {
                 } else {
                     ""
                 };
+
+                self_response = emoji::substitute_emojis(&self_response);
+                bot_response = emoji::substitute_emojis(&bot_response);
+
                 let other_responses: Vec<String> = other_responses
                     .into_iter()
-                    .map(|response| format!("{response:?},\n"))
+                    .map(|response| format!("{:?},\n", emoji::substitute_emojis(&response)))
                     .collect();
                 let other_responses = other_responses.join("");
 
