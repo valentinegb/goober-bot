@@ -289,7 +289,6 @@ dependencies = [
  "lock_api",
  "once_cell",
  "parking_lot_core",
- "serde",
 ]
 
 [[package]]
@@ -1534,14 +1533,11 @@ dependencies = [
  "bitflags",
  "bytes",
  "chrono",
- "dashmap",
  "flate2",
  "futures",
  "mime_guess",
- "parking_lot",
  "percent-encoding",
  "reqwest",
- "rustc-hash",
  "secrecy",
  "serde",
  "serde_cow",
